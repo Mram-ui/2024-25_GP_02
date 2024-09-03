@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="login.css"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+          <a href="home.html"><img src="images/3.png" alt="Company Logo"></a>
+      </div>
+      <nav>
+          <a href="#about">About Us</a>
+          <a href="#contact">Contact Us</a>
+      </nav>
+  </header>
+
+    <div class="main">
+      <div class="container a-container" id="a-container">
+        <form class="form" id="a-form"  action="signup.php" method="POST">
+          <h2 class="form_title title">Create Account</h2>
+          <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
+          <input name="email" class="form__input" type="email" placeholder="Email" required>
+          <input name="password" class="form__input" type="password" placeholder="Password" required> <br>
+          <label name="logo" id="label"> Company logo: <br>  <input type="file" name="logo" id="logo" accept="image/*"> </label>
+          <input type="submit" name="submit" class="form__button button submit" id="button" value="Sign up">
+        </form>
+      </div>
+      <div class="container b-container" id="b-container">
+        <form class="form" id="b-form" method="POST" action="">
+          <h2 class="form_title title">Sign in</h2>
+          <input name="semail" class="form__input" type="email" placeholder="Email" required>
+          <input name="spassword" class="form__input" type="password" placeholder="Password" required><a class="form__link">Forgot your password?</a>
+          <button class="form__button button submit">SIGN IN</button>
+        </form>
+      </div>
+      <div class="switch" id="switch-cnt">
+        <div class="switch__circle"></div>
+        <div class="switch__circle switch__circle--t"></div>
+        <div class="switch__container" id="switch-c1">
+          <h2 class="switch__title title side">Already have an account?</h2>
+          <p class="switch__description description">Click sign in to enter your account</p>
+          <button class="switch__button button switch-btn">SIGN IN</button>
+        </div>
+        <div class="switch__container is-hidden" id="switch-c2">
+          <h2 class="switch__title title side">Don't have an account?</h2>
+          <p class="switch__description description">Click sign up to create a new account with us! </p>
+          <button class="switch__button button switch-btn">SIGN UP</button>
+        </div>
+      </div>
+    </div>
+    <script src="login.js"></script>
+  </body>
+</html>
