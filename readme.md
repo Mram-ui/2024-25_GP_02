@@ -1,4 +1,5 @@
-# ![Raqeeb Logo](assets/logo.png)
+<img src="images/Logo2.png" alt="Raqeeb Logo" width="400"/>
+
 #  Raqeeb | رقيب  🔭
 ## **Introduction**
 Raqeeb is a comprehensive crowd management solution designed to empower event organizers. By leveraging real-time tracking, camera integration, and data analytics, Raqeeb provides insights to optimize indoor events, enhance safety, and improve the attendee experience. Key functionalities include real-time crowd monitoring, event registration, camera integration, and data analytics. Raqeeb ensures seamless event operations.
