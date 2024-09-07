@@ -1,4 +1,4 @@
-<img src="images/Logo2.png" alt="Raqeeb Logo" width="400"/>
+<img src="images/Logo2.png" alt="Raqeeb Logo" width="350"/>
 
 #  Raqeeb | رقيب  
 ## **Introduction** 🔭
