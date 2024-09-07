@@ -1,4 +1,4 @@
-# Authors
+# Authors 📝
 - Bashair Alsadhan
 - Rana Alsayyari
 - Rama Alshebel
