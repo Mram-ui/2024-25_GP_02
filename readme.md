@@ -7,10 +7,10 @@
 ## **Technology Stack** 🖥️
 - **Programming Language (Backend):** PHP, Python 🐍
 - **Programming Language (Frontend):** HTML, CSS, JavaScript 🎨
-- **Backend Framework:** Flask or Django ⚙️ *
+- **Backend Framework:** TensorFlow or PyTorch  ⚙️ 
 - **Server:** Apache 🌐
 - **Database:** MySQL 🗄️
 - **Tools:** Visual Studio Code, GitHub, Jira, Figma 🛠️
-- **Services:** OpenCV for camera integration 📹 *
+- **Services:** OpenCV for camera integration 📹 
 
 ## **Launching Instructions** 🚀
