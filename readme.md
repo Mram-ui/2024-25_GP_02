@@ -15,7 +15,7 @@
 
 ## **Launching Instructions** 🚀
   **1. Download the project:** Click the `<> Code` button on this page and select `Download ZIP`. Extract the files to a folder on your computer. <br>
-  **2. Run the project:** Open the folder on your computer, and run it using your local server or preferred development environment. <br> <br> That's it! The project should now be running on your local machine.
+  **2. Run the project:** Open the folder on your computer, and run it using your local server or preferred development environment. <br> <br> 🌟 That's it! The project should now be running on your local machine. 
 
 
 
