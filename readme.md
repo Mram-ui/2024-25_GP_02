@@ -10,7 +10,7 @@
 - **Backend Framework:** TensorFlow or PyTorch  ⚙️ 
 - **Server:** Apache 🌐
 - **Database:** MySQL 🗄️
-- **Tools:** Visual Studio Code, GitHub, Jira, Figma, Canva 🛠️
+- **Tools:** Visual Studio Code, GitHub, Jira, Figma, and Canva 🛠️
 - **Services:** OpenCV for camera integration 📹 
 
 ## **Launching Instructions** 🚀
