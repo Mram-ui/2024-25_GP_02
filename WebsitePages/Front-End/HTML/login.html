@@ -3,6 +3,8 @@
   <head>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta charset="utf-8">
+    <title>Log in </title>
+
     <link rel="stylesheet" type="text/css" href="../CSS/login.css"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
@@ -23,15 +25,15 @@
           <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
           <input name="email" class="form__input" type="email" placeholder="Email" required>
           <input name="password" class="form__input" type="password" placeholder="Password" required> <br>
-          <label name="logo" id="label"> Company logo: <br>  <input type="file" name="logo" id="logo" accept="image/*"> </label>
-          <input type="submit" name="submit" class="form__button button submit" id="button" value="Sign up">
+          <label name="logo" id="label" style="color: #a0a5a8; font-size:13px;"> Company logo: <br>  <input type="file" name="logo" id="logo" accept="image/*"> </label>
+          <input type="submit" name="submit" class="form__button button submit" id="button" value="SIGN UP">
         </form>
       </div>
       <div class="container b-container" id="b-container">
         <form class="form" id="b-form" method="POST" action="">
-          <h2 class="form_title title">Sign in</h2>
+          <h2 class="form_title title">SIGN IN</h2>
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
-          <input name="spassword" class="form__input" type="password" placeholder="Password" required><a class="form__link">Forgot your password?</a>
+          <input name="spassword" class="form__input" type="password" placeholder="Password" required><a class="form__link" href="forgotpass.html">Forgot your password?</a>
           <button class="form__button button submit">SIGN IN</button>
         </form>
       </div>
