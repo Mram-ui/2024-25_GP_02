@@ -140,6 +140,10 @@ nav ul li a:hover {
     transform: translateX(0);
 }
 
+.btn:hover{
+    color: white;
+}
+
 .mainContainer {
         /* box-sizing: border-box;
     width: 100%; */
