@@ -7,3 +7,16 @@ window.addEventListener('scroll', function() {
         header.classList.remove('scrolled');
     }
 });
+
+
+
+// JavaScript for auto-resizing the massage box in contact us 
+document.addEventListener('DOMContentLoaded', function () {
+    const textarea = document.getElementById('message');
+
+    textarea.addEventListener('input', function () {
+        this.style.height = 'auto'; // Reset the height
+        this.style.height = (this.scrollHeight) + 'px'; // Adjust height based on content
+    });
+});
+

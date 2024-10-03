@@ -5,8 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link rel="stylesheet" href="homeStylesheet.css">
-    <script src="scriptHome.js"></script>
+    <link rel="stylesheet" href="..\..\Front-End\CSS\homeStylesheet.css">
+    <!-- icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- font-->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="../../Front-End/JavaScript/scriptHome.js"></script>
 </head>
 
 <body>
@@ -18,13 +25,13 @@
 
         <header class="header">
             <div class="logo">
-                <a href="home.html"><img src="images/3.png" alt="Company Logo"></a>
+                <a href="home.html"><img src="../../images/Logo2.png" alt="Company Logo"></a>
             </div>
             <nav>
                 <a href="#about-us">About Us</a>
                 <a href="#company-services">Services</a>
-                <a href="#contact">Contact Us</a>
-                <a href="#signin" class="sign-in-button">Sign In</a>
+                <a href="#contact-us">Contact Us</a>
+                <a href="signup.php" class="sign-in-button">Sign In</a>
             </nav>
         </header>
 
@@ -34,9 +41,10 @@
         </div>
     </section>
 
-    
+
 
     <!-- Content Section below the background -->
+
     <div id="about-us">
         <h2>About Us</h2>
         <p>We are dedicated to enhancing event experiences with innovative crowd management solutions. Our web application uses advanced computer vision to track and analyze visitor behavior, providing real-time insights and alerts to event organizers.</p>
@@ -46,67 +54,49 @@
     <div id="company-services">
         <h2>Our Solutions</h2>
 
-        <div class="service">
-            <h3>Automated Crowd Monitoring</h3>
-            <p>Real-time tracking and counting of visitors using advanced computer vision.</p>
-        </div>
+        <div id="all-services">
+            <div class="service">
+                <img src="../../images/cat.png" alt="service 1">
+                <h3>Automated Crowd Monitoring</h2>
+                    <p>Real-time tracking and counting of visitors using advanced computer vision.</p>
+            </div>
+            <div class="service">
+                <img src="../../images/cat.png" alt="service 2">
+                <h3>Data-Driven Insights</h2>
+                    <p>Analyze visitor behavior, movement patterns, and peak times for better event planning.</p>
+            </div>
+            <div class="service">
+                <img src="../../images/cat.png" alt="service 3">
+                <h3>Instant Alerts</h2>
+                    <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
+            </div>
+            <div class="service">
+                <img src="../../images/cat.png" alt="service 4">
+                <h3>User-Friendly Dashboard & Reports</h2>
+                    <p>Visualize trends, make informed decisions, and receive post-event summaries to improve future events.</p>
+            </div>
 
-        <div class="service">
-            <h3>Data-Driven Insights</h3>
-            <p>Analyze visitor behavior, movement patterns, and peak times for better event planning.</p>
-        </div>
-
-        <div class="service">
-            <h3>Instant Alerts</h3>
-            <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
-        </div>
-
-        <div class="service">
-            <h3>User-Friendly Dashboard & Reports</h3>
-            <p>Visualize trends, make informed decisions, and receive post-event summaries to improve future events.</p>
         </div>
     </div>
 
 
     <div id="contact-us">
-        <div class="container">
-            <div class="row">
-                <h2>Contact Us</h2>
-            </div>
-            <div class="row">
+
+        <div class="container a-container" id="a-container">
+            <form class="form" id="a-form" action="../../Back-End/PHP/signup.php" method="POST">
+                <h2 class="form_title title">Contact Us</h2>
                 <h4 style="text-align:center">Get in touch</h4>
-            </div>
-            <div class="row input-container">
-                <div class="col-xs-12">
-                    <div class="styled-input wide">
-                        <input type="text" required />
-                        <label>Name</label>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <div class="styled-input">
-                        <input type="text" required />
-                        <label>Email</label>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-12">
-                    <div class="styled-input" style="float:right;">
-                        <input type="text" required />
-                        <label>Phone Number</label>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="styled-input wide">
-                        <textarea required></textarea>
-                        <label>Message</label>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div class="btn-lrg submit-btn">Send Message</div>
-                </div>
-            </div>
+                <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
+                <input name="email" class="form__input" type="email" placeholder="Email" required>
+                <input name="password" class="form__input" type="text" placeholder="Phone Number" required>
+                <textarea name="message" class="form__input" type="text" placeholder="Message" required></textarea> <br>
+                <input type="submit" name="submit" class="form__button button submit" id="button" value="Send Message">
+            </form>
         </div>
+
+
     </div>
+
 
 
 
@@ -117,9 +107,17 @@
 
 <footer class="footer">
     <div class="container">
-        <a href="home.html"><img src="images/3.png" alt="Company Logo"></a>
+        <a href="home.html"><img src="../../images/Logo2.png" alt="Company Logo"></a>
         <p>&copy; 2024 Raqeeb. All rights reserved.</p>
         <p><a href="#about-us">About Us</a> | <a href="#company-services">Services</a> | <a href="#contact-us">Contact Us</a></p>
+    </div>
+    <div class="footerBottom">
+        <div class="socialIcons">
+            <a href="#" target="_blank"><i class="fa-brands fa-telegram"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        </div>
     </div>
 </footer>
 
