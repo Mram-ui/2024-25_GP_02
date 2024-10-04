@@ -18,7 +18,7 @@
     </header>
 
     <div class="main">
-        <a id='arrow' href="#"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
+        <a id='arrow' href="../../Back-End/PHP/cameras.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
         <h2 class="title" >Add a Camera</h2>
         <form id='addcam' class="form" method="POST" action="">
             <label for="cameraName">Camera Name:</label> <input name="cameraName" class="form__input" type="text" placeholder="Camera 1" required>
