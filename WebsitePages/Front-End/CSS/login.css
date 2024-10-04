@@ -142,7 +142,17 @@ body {
     box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
     border: none;
     outline: none;
+    transition: 0.5s;
 }
+
+.button:hover {
+    box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
+    transform: scale(0.985);
+    transition: 0.25s;
+    background-color: #013b87;
+}
+
+
 /**/
 .a-container {
     z-index: 100;
@@ -209,6 +219,7 @@ body {
     box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
     transform: scale(0.985);
     transition: 0.25s;
+    background-color: #231e83d6;
 }
 .switch__button:active, .switch__button:focus {
     box-shadow: 2px 2px 6px #d1d9e6, -2px -2px 6px #f9f9f9;
