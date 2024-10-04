@@ -138,7 +138,7 @@
                                 <i class="far fa-envelope-open"></i>
                                 <div class="cta-text">
                                     <h4>Mail us</h4>
-                                    <span><a href="mailto:Raqeeb.Project@gmail.com" style="text-decoration: none; color: #757575;">Raqeeb.Project@gmail.com</a></span>
+                                    <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
                                 </div>
                             </div>
                         </div>
