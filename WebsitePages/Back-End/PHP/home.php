@@ -52,7 +52,7 @@
     </div>
 
     <div id="company-services">
-        <h2>Our Solutions</h2>
+        <h2 class="textServices">Our Solutions</h2>
 
         <div id="all-services">
             <div class="service">
