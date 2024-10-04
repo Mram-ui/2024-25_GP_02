@@ -44,7 +44,7 @@
                     <li><a class="Hname" style="text-decoration:none" href="#AboutUs" accesskey="s">About Us</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#Service" accesskey="s">Service</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#contact-us" accesskey="y">Contact</a></li>
-                    <li><a class="Hname" style="text-decoration:none" href="signup.php" accesskey="s">SignUp</a></li>
+                    <li><a class="Hname" style="text-decoration:none" href="../../Front-End/HTML/login.html" accesskey="s">SignUp</a></li>
                 </ul>
             </nav>
             <i id="fa2" class="fa-solid fa-bars" onclick="showMenu()"></i>
@@ -52,7 +52,7 @@
 
         <div class="HeaderMain">
             <h1>WELCOME TO OUR COMPANY</h1>
-            <a href="#" accesskey="h"><img src="../../images/Logo2.png" alt="Raqeeb Logo" class="logo"></a>
+            <a href="../../Back-End/PHP/index.php" accesskey="h"><img src="../../images/Logo2.png" alt="Raqeeb Logo" class="logo"></a>
             <h3>Transforming the way events are managed</h3>
             <p>a cutting-edge crowd management system designed to <br> revolutionize the way indoor events are organized
                 and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
@@ -150,7 +150,7 @@
                     <div class="col-xl-4 col-lg-4 mb-50">
                         <div class="footer-widget">
                             <div class="footer-logo">
-                                <a href="index.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
+                                <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                             </div>
                             <div class="footer-text">
                                 <p>Our system provides real-time crowd management, enabling event organizers to track
