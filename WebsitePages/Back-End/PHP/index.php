@@ -71,7 +71,7 @@
             </div>
 
             <div id="aaaallServices">
-            <h2>Our Solutions</h2>
+            <h2 class="textServices">Our Solutions</h2>
 
 <div id="Service" class="row-Services">
     <div class="course-col">
