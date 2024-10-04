@@ -563,10 +563,10 @@
     <body>
         <header class="header">
             <div class="logo">
-                <img src="images/Logo2.png" alt="Company Logo">
+                <img src="../../images/Logo2.png" alt="Company Logo">
             </div>
             <nav>
-                <a href="accountDetails.php"><img src="images/user.png" alt="userCompany"></a>
+                <a href="accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a>
             </nav>
         </header>
       
@@ -578,10 +578,10 @@
                 </div>
                 <div class="Cards">
                     <div class="card">
-                        <a href="addEvent.php"><img class="Plus" src="images/plus.png" alt="Plus"></a>
+                        <a href="addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
                     </div>
                     <div class="card">
-                        <a href="addCamera.php"><img class="camera" src="images/Camera.png" alt="camera"></a>
+                        <a href="#"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
                     </div>
                 </div>
                 <div id="listOfEvents" class="listOfEvents">
@@ -630,7 +630,7 @@
                         <div class="col-xl-4 col-lg-4 mb-50">
                             <div class="footer-widget">
                                 <div class="footer-logo">
-                                    <a href="index.php"><img src="images/Logo3.png" class="img-fluid" alt="logo"></a>
+                                    <a href="index.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                                 </div>
                                 <div class="footer-text">
                                     <p>Our system provides real-time crowd management, enabling event organizers to track
