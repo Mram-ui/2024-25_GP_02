@@ -96,7 +96,7 @@
             <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
     </div>
     <div class="course-col">
-        <img class="Simg" src="../../images/cat.png" alt="Data Analytics">
+        <img class="Simg" src="../../images/dashboard.gif" alt="Dashboard & Reports">
         <!-- <h3>Data Analytics</h3>
         <p>Detailed analytics on crowd behavior and event performance.</p> -->
         <h3>User-Friendly Dashboard & Reports</h2>
