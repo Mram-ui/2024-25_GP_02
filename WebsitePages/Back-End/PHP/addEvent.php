@@ -34,7 +34,7 @@
 
             <div class="hall">
                 <label for="hallName">Hall Name:</label><input name="hallName" class="form__input" type="text" placeholder="main hall" required>
-                <label for="hallCamera">Hall Name:</label>
+                <label for="hallCamera">Hall Camera:</label>
                 <select name="hallCamera">
                     <option>Camera 1</option>
                     <option>Camera 2</option>
