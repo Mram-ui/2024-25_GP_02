@@ -160,7 +160,7 @@
                                 <span>Follow us</span>
                                 <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
                                 <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                <a href="href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
+                                <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
                             </div>
                         </div>
                     </div>
