@@ -566,7 +566,7 @@
                 <img src="../../images/Logo2.png" alt="Company Logo">
             </div>
             <nav>
-                <a href="accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a>
+                <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a>
             </nav>
         </header>
       
@@ -578,7 +578,7 @@
                 </div>
                 <div class="Cards">
                     <div class="card">
-                        <a href="addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
+                        <a href="../../Back-End/PHP/addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
                     </div>
                     <div class="card">
                         <a href="#"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
