@@ -32,14 +32,21 @@
                  <div class="timeBlocks"> <label for="endTime">End Time:  </label>  <input name="endTime" class="form__input time" type="time"  required> </div>
             </div>
 
-            <div class="hall">
-                <label for="hallName">Hall Name:</label><input name="hallName" class="form__input" type="text" placeholder="main hall" required>
-                <label for="hallCamera">Hall Camera:</label>
-                <select name="hallCamera">
-                    <option>Camera 1</option>
-                    <option>Camera 2</option>
-                </select>
-                <label for="hallThreshold">Hall Threshold:</label><input name="hallThreshold" class="form__input" type="text" placeholder="##" required>
+            <div class="AllHalls">
+                <div id="hall" class="hall">
+                    <label for="hallName">Hall Name:</label><br>
+                    <input name="hallName" class="form__input" type="text" placeholder="main hall" required><br>
+                    <label for="hallCamera">Hall Camera:</label><br>
+                    <select name="hallCamera">
+                        <option>Camera 1</option>
+                        <option>Camera 2</option>
+                    </select> <br>
+                    <label for="hallThreshold">Hall Threshold:</label><br>
+                    <input name="hallThreshold" class="form__input" type="text" placeholder="##" required>
+                </div>
+                <div class="card">
+                    <a href="#"><img class="Plus" src="images/plus.png" alt="Plus"></a>
+                </div>
             </div>
             <br>
             <button class="form__button button submit">ADD EVENT</button>
