@@ -563,10 +563,10 @@
     <body>
         <header class="header">
             <div class="logo">
-                <a href="#"><img src="images/Logo2.png" alt="Company Logo"></a>
+                <img src="images/Logo2.png" alt="Company Logo">
             </div>
             <nav>
-                <a href="#"><img src="images/user.png" alt="userCompany"></a>
+                <a href="accountDetails.php"><img src="images/user.png" alt="userCompany"></a>
             </nav>
         </header>
       
@@ -578,10 +578,10 @@
                 </div>
                 <div class="Cards">
                     <div class="card">
-                        <a href="#"><img class="Plus" src="images/plus.png" alt="Plus"></a>
+                        <a href="addEvent.php"><img class="Plus" src="images/plus.png" alt="Plus"></a>
                     </div>
                     <div class="card">
-                        <a href="#"><img class="camera" src="images/Camera.png" alt="camera"></a>
+                        <a href="addCamera.php"><img class="camera" src="images/Camera.png" alt="camera"></a>
                     </div>
                 </div>
                 <div id="listOfEvents" class="listOfEvents">
