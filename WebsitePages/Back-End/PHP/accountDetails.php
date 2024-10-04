@@ -8,7 +8,7 @@
   <body>
     <header class="header">
       <div class="logo">
-          <a href="home.html"><img src="../../images/Logo2.png" alt="Company Logo"></a>
+          <a href="userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
       </div>
       
   </header>
