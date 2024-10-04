@@ -16,7 +16,7 @@ body {
 .Header {
     min-height: 80vh;
     width: 100%;
-    background-image: url('images/Header.png');
+    background-image: url('../../images/Header.png');
     background-size: 100%;
     position: relative;
     background-repeat: no-repeat;
