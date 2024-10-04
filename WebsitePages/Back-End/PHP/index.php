@@ -53,7 +53,7 @@
         <div class="HeaderMain">
             <h1>WELCOME TO OUR COMPANY</h1>
             <a href="#" accesskey="h"><img src="../../images/Logo2.png" alt="Raqeeb Logo" class="logo"></a>
-            <h3 style="margin-top: 2%;">Transforming the way events are managed</h3>
+            <h3>Transforming the way events are managed</h3>
             <p>a cutting-edge crowd management system designed to <br> revolutionize the way indoor events are organized
                 and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
                 the attendees.</p>
