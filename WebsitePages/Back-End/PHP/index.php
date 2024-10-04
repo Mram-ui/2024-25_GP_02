@@ -43,7 +43,7 @@
                 <ul>
                     <li><a class="Hname" style="text-decoration:none" href="#AboutUs" accesskey="s">About Us</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#Service" accesskey="s">Service</a></li>
-                    <li><a class="Hname" style="text-decoration:none" href="#Contact" accesskey="y">Contact</a></li>
+                    <li><a class="Hname" style="text-decoration:none" href="#contact-us" accesskey="y">Contact</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="signup.php" accesskey="s">SignUp</a></li>
                 </ul>
             </nav>
@@ -172,7 +172,7 @@
                             <ul>
                                 <li><a href="#AboutUs">About</a></li>
                                 <li><a href="#Service">Services</a></li>
-                                <li><a href="#Contact">Contact</a></li>
+                                <li><a href="#contact-us">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
