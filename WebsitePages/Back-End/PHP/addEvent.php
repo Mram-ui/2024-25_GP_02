@@ -45,7 +45,7 @@
                     <input name="hallThreshold" class="form__input" type="text" placeholder="##" required>
                 </div>
                 <div class="card">
-                    <a href="#"><img class="Plus" src="images/plus.png" alt="Plus"></a>
+                    <a href="#"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
                 </div>
             </div>
             <br>
