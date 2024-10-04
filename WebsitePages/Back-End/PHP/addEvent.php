@@ -18,7 +18,7 @@
     </header>
 
     <div class="main">
-        <a id='arrow' href="login.html"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
+        <a id='arrow' href="../../Back-End/PHP/userHome.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
         <h2 class="title" >Add Event</h2>
         <form id='addEvent' class="form" method="POST" action="">
             <label for="eventName">Event Name:</label> <input name="eventName" class="form__input" type="text" placeholder="Name" required> <br>
