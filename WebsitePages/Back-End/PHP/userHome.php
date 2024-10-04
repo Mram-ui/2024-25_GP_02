@@ -266,7 +266,7 @@
 
             .BreakLinePCU {
                 color: #507abe0e;
-                width: 78%;
+                width: 76%;
                 margin-top: -1%;
                 margin-bottom: 2%;
                 margin-left: 2%;
