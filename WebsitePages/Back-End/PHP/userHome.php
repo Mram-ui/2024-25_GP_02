@@ -156,7 +156,7 @@
             }
 
             .Addcamera {
-                margin-left: 8%;
+                margin-left: 7%;
             }
 
             .listOfEvents h4 {
