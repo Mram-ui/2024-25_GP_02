@@ -119,6 +119,13 @@ body {
     border: none;
     outline: none;
     align-self: flex-end;
+    transition: 0.25s;
+}
+.button:hover {
+    box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
+    transform: scale(0.985);
+    transition: 0.25s;
+    background-color: #013b87;
 }
 
 
