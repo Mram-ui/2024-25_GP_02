@@ -303,10 +303,24 @@ main {
     font-size: 20px;
     font-weight: 600;
     }
+
     .cta-text span {
     color: #757575;
     font-size: 15px;
     }
+
+    #mail a {
+        color: #757575;
+        transition: 0.25s;
+        text-decoration: none;
+    }
+
+    #mail a:hover {
+        color: #3B5998;
+        transition: 0.25s;
+    }
+
+
     .footer-content {
     position: relative;
     z-index: 2;
@@ -354,7 +368,9 @@ main {
     border-radius: 50%;
     margin-top: 1%;
     margin-bottom: 3%;
+    transition: 0.25s;
     }
+
     .facebook-bg{
     background: #3B5998;
     }
@@ -364,6 +380,29 @@ main {
     .google-bg{
     background: #ff8000;
     }
+
+    .facebook-bg:hover {
+        background: #314b84;
+        width: 42px;
+        height: 42px;
+        transition: 0.25s;
+        line-height: 40px;
+    }
+    .twitter-bg:hover {
+        background: #418fcb;
+        width: 42px;
+        height: 42px;
+        transition: 0.25s;
+        line-height: 40px;
+    }
+    .google-bg:hover {
+        background: #bb5f03;
+        width: 42px;
+        height: 42px;
+        transition: 0.25s;
+        line-height: 40px;
+    }
+
 
     .footer-widget-heading h3 {
     color: #fff;
@@ -385,9 +424,12 @@ main {
     display: inline-block;
     width: 50%;
     margin-bottom: 12px;
+    transition: 0.25s;
+    text-decoration: none;
     }
     .footer-widget ul li a:hover{
     color: #3B5998;
+    transition: 0.25s;
     }
     .footer-widget ul li a {
     color: #878787;
@@ -410,8 +452,16 @@ main {
         background: #3B5998;
         padding: 13px 20px;
         border: 1px solid #3B5998;
-        top: 0;
+        top: 0;    
+        transition: 0.25s;
     }
+
+    .subscribe-form button:hover {
+        background: #264078;
+        border: 1px solid #264078;
+        transition: 0.25s;
+    }
+
     .subscribe-form button i {
     color: #fff;
     font-size: 22px;
