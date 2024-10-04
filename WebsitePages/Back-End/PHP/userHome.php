@@ -676,7 +676,7 @@
     <body>
         <header class="header">
             <div class="logo">
-                <img src="images/Logo2.png" alt="Company Logo">
+                <a href="../../Back-End/PHP/userHome.php"><img src="images/Logo2.png" alt="Company Logo"></a>
             </div>
             <nav>
                 <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
@@ -757,7 +757,7 @@
                         <div class="col-xl-4 col-lg-4 mb-50">
                             <div class="footer-widget">
                                 <div class="footer-logo">
-                                    <img src="../../images/Logo3.png" class="img-fluid" alt="logo">
+                                    <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                                 </div>
                                 <div class="footer-text">
                                     <p>Our system provides real-time crowd management, enabling event organizers to track
