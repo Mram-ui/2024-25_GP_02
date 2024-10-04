@@ -545,6 +545,9 @@
     font-size: 14px;
     color: #878787;
     }
+    body {
+    	font-family: 'Montserrat', sans-serif;
+    }
 /* ---- end footer style */
 
         </style> 
