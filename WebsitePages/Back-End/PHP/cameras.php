@@ -300,11 +300,34 @@
                 color: #2e62b52c;
             }
 
+	    .EventsDetalisDes {
+                font-family: Poppins;
+                margin-left: 0%;
+                margin-top: 3%;
+                margin-bottom: 3%;
+                font-size: 100%;
+                color: #232323;
+                display: flex;
+                font-weight: 300;
+            }
 
-          
+            .EventsDetalisDes .EventDateD {
+                margin-left: 12.4%;
+            }
+
+            .EventsDetalisDes .edit {
+                margin-left: 120%;
+                width: 5%;
+                transition: 0.5;
+            }
+
+            .EventsDetalisDes .EventD {
+                margin-left: 170%;
+                color: #232323;
+            }
 
 
-           
+        
 
          /* ---- Footer Style ---- */
             ul {
@@ -725,6 +748,22 @@
                         <p class="EventName">Camera Name</p>
                         <p class="EventDate">IP</p>
                         <p class="Event">Camera</p>
+                    </div>
+                    <hr class="BreakLine">
+
+		     <div class="EventsDetalisDes">
+                        <p class="EventNameD">Camera 1</p>
+                        <p class="EventDateD">128 123 1 564</p>
+                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                        <a href="#"><p class="EventD">ViewDetails</p></a>
+                    </div>
+                    <hr class="BreakLine">
+
+                    <div class="EventsDetalisDes">
+                        <p class="EventNameD">Camera 1</p>
+                        <p class="EventDateD">128 123 1 564</p>
+                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                        <a href="#"><p class="EventD">ViewDetails</p></a>
                     </div>
                     <hr class="BreakLine">
 
