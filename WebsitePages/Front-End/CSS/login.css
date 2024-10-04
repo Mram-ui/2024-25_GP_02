@@ -152,6 +152,16 @@ body {
     background-color: #013b87;
 }
 
+#forgotpass{
+    text-decoration: none;
+    transition: 0.25%;
+}
+
+#forgotpass:hover {
+    color: #004aad;
+    transition: 0.25%;
+}
+
 
 /**/
 .a-container {
