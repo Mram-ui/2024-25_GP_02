@@ -3,24 +3,28 @@
   <head>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta charset="utf-8">
-    <title>Log in </title>
+    <title>Log In</title>
 
     <link rel="stylesheet" type="text/css" href="../CSS/login.css"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
-    <header class="header">
-      <div class="logo">
-          <a href="home.html"><img src="../../images/Logo2.png" alt="Company Logo"></a>
+  
+    <header class="header" style="background-color: #ecf0f3;">
+     <!-- <div class="logo">
+          <a href="index.html"><img src="images/Logo2.png" alt="Company Logo"></a>
       </div>
       <nav>
-          <a href="#about">About Us</a>
-          <a href="#contact">Contact Us</a>
-      </nav>
-  </header>
+        <ul>
+          <li><a href="index.html/#AboutUs">About Us</a></li>
+          <li><a href="index.html/#contact">Contact Us</a></li>
+        </ul>
+      </nav> -->
+  </header> 
 
     <div class="main">
       <div class="container a-container" id="a-container">
         <form class="form" id="a-form"  action="../../Back-End/PHP/signup.php" method="POST">
+          <img src="images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;">
           <h2 class="form_title title">Create Account</h2>
           <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
           <input name="email" class="form__input" type="email" placeholder="Email" required>
@@ -31,10 +35,11 @@
       </div>
       <div class="container b-container" id="b-container">
         <form class="form" id="b-form" method="POST" action="">
-          <h2 class="form_title title">SIGN IN</h2>
+          <img src="images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;">
+          <h2 class="form_title title">LOG IN</h2>
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
           <input name="spassword" class="form__input" type="password" placeholder="Password" required><a class="form__link" href="forgotpass.html">Forgot your password?</a>
-          <button class="form__button button submit">SIGN IN</button>
+          <button class="form__button button submit">LOG IN</button>
         </form>
       </div>
       <div class="switch" id="switch-cnt">
@@ -43,7 +48,7 @@
         <div class="switch__container" id="switch-c1">
           <h2 class="switch__title title side">Already have an account?</h2>
           <p class="switch__description description">Click sign in to enter your account</p>
-          <button class="switch__button button switch-btn">SIGN IN</button>
+          <button class="switch__button button switch-btn">LOG IN</button>
         </div>
         <div class="switch__container is-hidden" id="switch-c2">
           <h2 class="switch__title title side">Don't have an account?</h2>
