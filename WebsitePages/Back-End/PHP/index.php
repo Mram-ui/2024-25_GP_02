@@ -138,7 +138,7 @@
                                 <i class="far fa-envelope-open"></i>
                                 <div class="cta-text">
                                     <h4>Mail us</h4>
-                                    <span>Raqeeb.Project@gmail.com</span>
+                                    <span><a href="mailto:Raqeeb.Project@gmail.com" style="text-decoration: none; color: #757575;">Raqeeb.Project@gmail.com</a></span>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                                 <span>Follow us</span>
                                 <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
                                 <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                <a href="#"><i class="fab fa-google-plus-g google-bg"></i></a>
+                                <a href="href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
                             </div>
                         </div>
                     </div>
