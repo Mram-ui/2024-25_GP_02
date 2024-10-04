@@ -82,14 +82,14 @@
             <p>Real-time tracking and counting of visitors using advanced computer vision.</p>
     </div>
     <div class="course-col">
-        <img class="Simg" src="../../images/timer.gif" alt="Alerts">
+        <img class="Simg" src="../../images/analytics.gif" alt="Data Analytics">
         <!-- <h3>Alerts and Notifications</h3>
         <p>Immediate alerts for overcrowding <br> and safety risks.</p> -->
         <h3>Data-Driven Insights</h2>
             <p>Analyze visitor behavior, movement patterns, and peak times for better event planning.</p>
     </div>
     <div class="course-col">
-        <img class="Simg" src="../../images/analytics.gif" alt="Data Analytics">
+        <img class="Simg" src="../../images/timer.gif" alt="Alerts">
         <!-- <h3>Data Analytics</h3>
         <p>Detailed analytics on crowd behavior and event performance.</p> -->
         <h3>Instant Alerts</h2>
