@@ -57,13 +57,9 @@
             <p>a cutting-edge crowd management system designed to <br> revolutionize the way indoor events are organized
                 and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
                 the attendees.</p>
-            <a class="btn" href="#">Our Services</a>
+            <a class="btn" href="#Service">Our Services</a>
         </div>
     </header>
-
-
-
-
 
 
     <main>
