@@ -296,6 +296,33 @@
                 color: #2e62b52c;
             }
 
+	    .EventsDetalisDes {
+                font-family: Poppins;
+                margin-left: 0%;
+                margin-top: 3%;
+                margin-bottom: 3%;
+                font-size: 100%;
+                color: #232323;
+                display: flex;
+                font-weight: 300;
+            }
+
+            .EventsDetalisDes .EventDateD {
+                margin-left: 6.4%;
+            }
+
+            .EventsDetalisDes .edit {
+                margin-left: 115%;
+                width: 5%;
+                transition: 0.5;
+            }
+
+            .EventsDetalisDes .EventD {
+                margin-left: 110%;
+                color: #232323;
+            }
+
+
 
           
 
@@ -725,9 +752,24 @@
                         <p class="EventName">Event Name</p>
                         <p class="EventDate">Date</p>
                         <p class="Event">Event</p>
+                 </div>
+                 <hr class="BreakLine">
+		   <div class="EventsDetalisDes">
+                        <p class="EventNameD">Global Ai Summit</p>
+                        <p class="EventDateD">10 - 12 Sept</p>
+                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                        <a href="../../Back-End/PHP/dashboard.php"><p class="EventD">ViewDashboard</p></a>
                     </div>
                     <hr class="BreakLine">
 
+                    <div class="EventsDetalisDes">
+                        <p class="EventNameD">Global Ai Summi</p>
+                        <p class="EventDateD">26 - 28 Nov</p>
+                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                        <a href="../../Back-End/PHP/dashboard.php"><p class="EventD">ViewDashboard</p></a>
+                    </div>
+                    <hr class="BreakLine">
+		
                 </div>
 
 
