@@ -708,7 +708,7 @@
                         <a href="../../Back-End/PHP/addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
                     </div>
                     <div class="card">
-                        <a href="#"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
+                        <a href="../../Back-End/PHP/cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
                     </div>
                 </div>
                 <div id="listOfEvents" class="listOfEvents">
