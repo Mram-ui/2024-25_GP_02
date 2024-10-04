@@ -155,6 +155,10 @@
                 margin-left: 12%; 
             }
 
+	    #AddEvent {
+                margin-left: -0.5%;
+            }
+
             .Addcamera {
                 margin-left: 6%;
             }
