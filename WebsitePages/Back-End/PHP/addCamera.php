@@ -13,12 +13,12 @@
 <body>
     <header class="header">
         <div class="logo">
-            <a href="home.html"><img src="../../images/Logo2.png" alt="Company Logo"></a>
+            <a href="#"><img src="../../images/Logo2.png" alt="Company Logo"></a>
         </div>
     </header>
 
     <div class="main">
-        <a id='arrow' href="login.html"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
+        <a id='arrow' href="#"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
         <h2 class="title" >Add a Camera</h2>
         <form id='addcam' class="form" method="POST" action="">
             <label for="cameraName">Camera Name:</label> <input name="cameraName" class="form__input" type="text" placeholder="Camera 1" required>
