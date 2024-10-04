@@ -15,11 +15,6 @@
         <div class="logo">
             <a href="home.html"><img src="../../images/Logo2.png" alt="Company Logo"></a>
         </div>
-        <nav>
-            <a href="#about">account icon</a>
-            <a href="#contact">Contact Us</a>
-
-        </nav>
     </header>
 
     <div class="main">
