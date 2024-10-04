@@ -71,7 +71,7 @@
                     <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
             </div>
             <div class="service">
-                <img src="../../images/cat.png" alt="service 4">
+                <img class="Simg" src="images/dashboard.gif" alt="Dashboard & Reports">
                 <h3>User-Friendly Dashboard & Reports</h2>
                     <p>Visualize trends, make informed decisions, and receive post-event summaries to improve future events.</p>
             </div>
