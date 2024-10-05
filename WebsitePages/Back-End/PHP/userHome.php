@@ -763,7 +763,7 @@
                     <hr class="BreakLine">
 
                     <div class="EventsDetalisDes">
-                        <p class="EventNameD">Global Ai Summi</p>
+                        <p class="EventNameD">Global Ai Summit</p>
                         <p class="EventDateD">26 - 28 Nov</p>
                         <a href="#"><img class="edit" src="../../images/edit.png"></a>
                         <a href="../../Back-End/PHP/dashboard.php"><p class="EventD">ViewDashboard</p></a>

@@ -32,6 +32,17 @@
         function hideMenu() {
             navLinks.style.right = "-200px";
         }
+
+
+        // Add a scroll event listener to the window
+        window.addEventListener("scroll", function() {
+            var navbar = document.querySelector(".navbar");
+            if (window.scrollY > 100) { // If the user scrolls more than 50px
+                navbar.classList.add("scrolled");
+            } else {
+                navbar.classList.remove("scrolled");
+            }
+        });
     </script>
 </head>
 
@@ -57,7 +68,7 @@
             <p>a cutting-edge crowd management system designed to <br> revolutionize the way indoor events are organized
                 and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
                 the attendees.</p>
-            <a class="btn" href="#Service">Our Services</a>
+            <a class="btn" href="#Service">Our Solutions</a>
         </div>
     </header>
 
@@ -71,38 +82,38 @@
             </div>
 
             <div id="aaaallServices">
-            <h2 class="textServices">Our Solutions</h2>
+                <h2 class="textServices">Our Solutions</h2>
 
-<div id="Service" class="row-Services">
-    <div class="course-col">
-        <img class="Simg" src="../../images/seo.gif" alt="Real-time">
-        <!-- <h3>Real-time Crowd Monitoring</h3>
+                <div id="Service" class="row-Services">
+                    <div class="course-col">
+                        <img class="Simg" src="../../images/seo.gif" alt="Real-time">
+                        <!-- <h3>Real-time Crowd Monitoring</h3>
         <p>AI-powered insights on attendee numbers and movements.</p> -->
-        <h3>Automated Crowd Monitoring</h2>
-            <p>Real-time tracking and counting of visitors using advanced computer vision.</p>
-    </div>
-    <div class="course-col">
-        <img class="Simg" src="../../images/analytics.gif" alt="Data Analytics">
-        <!-- <h3>Alerts and Notifications</h3>
+                        <h3>Automated Crowd Monitoring</h2>
+                            <p>Real-time tracking and counting of visitors using advanced computer vision.</p>
+                    </div>
+                    <div class="course-col">
+                        <img class="Simg" src="../../images/analytics.gif" alt="Data Analytics">
+                        <!-- <h3>Alerts and Notifications</h3>
         <p>Immediate alerts for overcrowding <br> and safety risks.</p> -->
-        <h3>Data-Driven Insights</h2>
-            <p>Analyze visitor behavior, movement patterns, and peak times for better event planning.</p>
-    </div>
-    <div class="course-col">
-        <img class="Simg" src="../../images/timer.gif" alt="Alerts">
-        <!-- <h3>Data Analytics</h3>
+                        <h3>Data-Driven Insights</h2>
+                            <p>Analyze visitor behavior, movement patterns, and peak times for better event planning.</p>
+                    </div>
+                    <div class="course-col">
+                        <img class="Simg" src="../../images/timer.gif" alt="Alerts">
+                        <!-- <h3>Data Analytics</h3>
         <p>Detailed analytics on crowd behavior and event performance.</p> -->
-        <h3>Instant Alerts</h2>
-            <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
-    </div>
-    <div class="course-col">
-        <img class="Simg" src="../../images/dashboard.gif" alt="Dashboard & Reports">
-        <!-- <h3>Data Analytics</h3>
+                        <h3>Instant Alerts</h2>
+                            <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
+                    </div>
+                    <div class="course-col">
+                        <img class="Simg" src="../../images/dashboard.gif" alt="Dashboard & Reports">
+                        <!-- <h3>Data Analytics</h3>
         <p>Detailed analytics on crowd behavior and event performance.</p> -->
-        <h3>User-Friendly Dashboard & Reports</h2>
-            <p>Visualize trends, make informed decisions, and receive post-event summaries to improve future events.</p>
-    </div>
-</div>
+                        <h3>User-Friendly Dashboard & Reports</h2>
+                            <p>Visualize trends, make informed decisions, and receive post-event summaries to improve future events.</p>
+                    </div>
+                </div>
 
             </div>
 
@@ -116,11 +127,24 @@
                         <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
                         <input name="email" class="form__input" type="email" placeholder="Email" required>
                         <input name="password" class="form__input" type="text" placeholder="Phone Number" required>
-                        <textarea name="message" class="form__input" type="text" placeholder="Message" required></textarea> <br>
+                        <textarea name="message" class="form__input" type="text" placeholder="Message" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
                         <input type="submit" name="submit" class="form__button button submit" id="button" value="Send Message">
                     </form>
                 </div>
             </div>
+
+    <script>
+function auto_grow(element) {
+    element.style.height = "auto";
+    element.style.height = (element.scrollHeight)+"px";
+}
+
+function onload() {
+    auto_grow(document.getElementById("result"));
+}
+
+
+</script>
 
 
 
@@ -205,7 +229,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 text-center text-lg-left">
                         <div class="copyright-text">
-                            <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
+                            <p>Copyright &copy; 2024 Raqeeb. All Right Reserved </p>
                         </div>
                     </div>
                     <!-- <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
