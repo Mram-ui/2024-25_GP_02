@@ -1,12 +1,15 @@
 from flask import Flask, render_template, Response
 import cv2
 
+#Initializes a Flask application instance
 app = Flask(__name__)
 
 # Open the video streams (adjust the IP addresses and RTSP links as needed)
 video1 = cv2.VideoCapture("rtsp://Raqeeb1:raqeebCCTV2025@192.168.8.46:554/stream1")
 video2 = cv2.VideoCapture("rtsp://Raqeeb2:raqeebCCTV2025@192.168.8.45:554/stream1")
 
+
+#continuously reads frames from the specified camera
 def generate_frames(camera):
     while True:
         success, frame = camera.read()
@@ -23,6 +26,7 @@ def generate_frames(camera):
             
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
 
 @app.route('/')
 def index():
