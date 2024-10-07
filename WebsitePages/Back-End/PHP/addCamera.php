@@ -20,7 +20,7 @@
     <div class="main">
         <a id='arrow' href="../../Back-End/PHP/cameras.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
         <h2 class="title" >Add a Camera</h2>
-        <form id='addcam' class="form" method="POST" action="">
+        <form id='addcam' class="form" method="POST" action="../../Back-End/PHP/addCamera.php">
             <label for="cameraName">Camera Name:</label> <input name="cameraName" class="form__input" type="text" placeholder="Camera 1" required>
             <label for="cameraIP">Camera IP Address:</label> <input name="cameraIP" class="form__input" type="text" placeholder="000.000.0.000" required>
             <label for="portNo">Port Number:</label> <input name="portNo" class="form__input" type="text" placeholder="0" required>
@@ -36,3 +36,48 @@
 </body>
 
 </html>
+
+
+<?php
+    // DB connection
+    $servername = "localhost"; 
+    $username = "root";
+    $password = "";
+    $dbname = "raqeebdb";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        // Get the form data
+        $cameraName = $_POST['cameraName'];
+        $cameraIP = $_POST['cameraIP'];
+        $portNo = $_POST['portNo'];
+        $stream = $_POST['stream'];
+        $cameraUsername = $_POST['cameraUsername'];
+        $cameraPassword = $_POST['cameraPassword'];
+
+        // Hash the camera password
+        $hashedPassword = password_hash($cameraPassword, PASSWORD_DEFAULT);
+
+        // Prepare and bind the statement
+        $stmt = $conn->prepare("INSERT INTO camera (CameraName, CameraIPAddress, PortNo, StreamingChannel, CameraUsername, CameraPassword) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssisss", $cameraName, $cameraIP, $portNo, $stream, $cameraUsername, $hashedPassword);
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            echo "<script>alert('Camera added successfully!'); window.location.href = 'cameras.php';</script>";
+        } else {
+            echo "<script>alert('Failed to add camera: " . $stmt->error . "'); window.location.href = 'addCameras.php';</script>";
+        }
+
+        // Close the statement and connection
+        $stmt->close();
+        $conn->close();
+    }
+?>
