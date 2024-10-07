@@ -248,6 +248,7 @@
             }
 
 
+           
             .cardContainerEvents {
                 width: 80%;
                 height: 45%;
@@ -285,7 +286,7 @@
             }
 
             .EventsDetalis .EventDate {
-                margin-left: 12%;
+                margin-left: 14%;
             }
 
             .EventsDetalis .Event {
@@ -296,7 +297,7 @@
                 color: #2e62b52c;
             }
 
-	    .EventsDetalisDes {
+            .EventsDetalisDes {
                 font-family: Poppins;
                 margin-left: 0%;
                 margin-top: 3%;
@@ -305,23 +306,99 @@
                 color: #232323;
                 display: flex;
                 font-weight: 300;
+                justify-content: space-between;
             }
 
             .EventsDetalisDes .EventDateD {
-                margin-left: 6.4%;
+                margin-left: 2.2%;
+            }
+
+            .EventsDetalisDes #PED{
+                margin-Right: 56%;
             }
 
             .EventsDetalisDes .edit {
-                margin-left: 115%;
+                text-align: right;
+                margin-left: 100%;
                 width: 5%;
                 transition: 0.5;
             }
 
             .EventsDetalisDes .EventD {
-                margin-left: 110%;
+                margin-left: auto;
+                text-align: right;
                 color: #232323;
+                white-space: nowrap;
             }
 
+
+            .radio-inputs {
+                position: relative;
+                display: flex;
+                border-radius: 0.5rem;
+                background-color: rgb(70, 79, 202);
+                box-sizing: border-box;
+                font-size: 14px;
+                width: 78%;
+                margin-left: 11%;
+                padding: 1rem 1rem 0 1rem;
+            }
+
+            .radio-inputs .radio input {
+                display: none;
+            }
+
+            .radio-inputs .radio .name {
+                display: flex;
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                border-top-left-radius: 0.5rem;
+                border-top-right-radius: 0.5rem;
+                border: none;
+                padding: 0.5rem 0.8rem;
+                color: white;
+                transition: all 0.15s ease-in-out;
+                position: relative;
+                font-weight: 600;
+                font-family: Poppins;
+            }
+
+            .radio-inputs .radio input:checked + .name {
+                background-color: #e9edf3;
+                font-weight: 600;
+                color: rgb(46, 10, 121);;
+            }
+            .radio-inputs .radio input + .name:hover {
+                color: rgb(215, 216, 225);
+            }
+            .radio-inputs .radio input:checked + .name:hover {
+                color: rgb(46, 10, 121);
+            }
+
+            .radio-inputs .radio input:checked + .name::after,
+            .radio-inputs .radio input:checked + .name::before {
+                content: "";
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                background-color: rgb(70, 79, 202);
+                bottom: 0;
+            }
+
+            .radio-inputs .radio input:checked + .name::after {
+                right: -10px;
+                border-bottom-left-radius: 300px;
+                box-shadow: -3px 3px 0px 3px #e8e8e8;
+            }
+            .radio-inputs .radio input:checked + .name::before {
+                left: -10px;
+                border-bottom-right-radius: 300px;
+                box-shadow: 3px 3px 0px 3px #e8e8e8;
+            } 
+
+
+            
 
 
           
@@ -732,45 +809,98 @@
                 </div>
                 <div class="Cards">
                     <div class="card">
-                        <a href="../../Back-End/PHP/addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
+                        <a href="addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
                     </div>
                     <div class="card">
-                        <a href="../../Back-End/PHP/cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
+                        <a href="cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
                     </div>
                 </div>
                 <div id="listOfEvents" class="listOfEvents">
                     <h4>Events</h4>
                 </div>
-                <div class="listOfEventsPCA">
+                <!-- <div class="listOfEventsPCA">
                     <p class="PastEvents">Past Events</p>
                     <p class="CurrentEvents">Current Events</p>
                     <p class="UpcomingEvents">Upcoming Events</p>
-                </div>
+                </div> -->
+                <div class="radio-inputs">
+                    <label class="radio" id="PastEvent">
+                      <input type="radio" name="radio" checked="" />
+                      <span class="name">Past Events</span>
+                    </label>
+                    <label class="radio" id="CurrentEvent">
+                      <input type="radio" name="radio" />
+                      <span class="name">Current Events</span>
+                    </label>
+                  
+                    <label class="radio" id="UpcomingEvent">
+                      <input type="radio" name="radio" />
+                      <span class="name">Upcoming Events</span>
+                    </label>
+                  </div>                  
                 <hr class="BreakLinePCU">
                 <div class="cardContainerEvents">
                     <div class="EventsDetalis">
                         <p class="EventName">Event Name</p>
                         <p class="EventDate">Date</p>
-                        <p class="Event">Event</p>
-                 </div>
-                 <hr class="BreakLine">
-		   <div class="EventsDetalisDes">
-                        <p class="EventNameD">Global Ai Summit</p>
-                        <p class="EventDateD">10 - 12 Sept</p>
-                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                        <a href="../../Back-End/PHP/dashboard.php"><p class="EventD">ViewDashboard</p></a>
+                        <!-- <p class="Event">Event</p> -->
                     </div>
                     <hr class="BreakLine">
+                    
+                    <div class="PE">
+                        <div class="EventsDetalisDes">
+                            <p class="EventNameD">Tech Conference</p>
+                            <p class="EventDateD" id="PED">10 - 12 June</p>
+                            <a href="#"><p class="EventD">ViewReport</p></a>
+                        </div>
+                        <hr class="BreakLine">
 
-                    <div class="EventsDetalisDes">
-                        <p class="EventNameD">Global Ai Summit</p>
-                        <p class="EventDateD">26 - 28 Nov</p>
-                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                        <a href="../../Back-End/PHP/dashboard.php"><p class="EventD">ViewDashboard</p></a>
+                        <div class="EventsDetalisDes">
+                            <p class="EventNameD">Tech Conference</p>
+                            <p class="EventDateD" id="PED">20 - 30 July</p>
+                            <a href="#"><p class="EventD">ViewReport</p></a>
+                        </div>
+                        <hr class="BreakLine">
                     </div>
-                    <hr class="BreakLine">
-		
+
+                    <div class="CE">
+                        <div class="EventsDetalisDes">
+                            <p class="EventNameD">Global Ai Summit</p>
+                            <p class="EventDateD">13 - 17 Oct</p>
+                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                            <a href="dashboard.php"><p class="EventD">ViewDashboard</p></a>
+                        </div>
+                        <hr class="BreakLine">
+
+                        <div class="EventsDetalisDes">
+                            <p class="EventNameD">Global Ai Summi</p>
+                            <p class="EventDateD">26 - 28 Oct</p>
+                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                            <a href="dashboard.php"><p class="EventD">ViewDashboard</p></a>
+                        </div>
+                        <hr class="BreakLine">
+                    </div>
+
+                    <div class="UE">
+                        <div class="EventsDetalisDes">
+                            <p class="EventNameD">Blockchain Expo</p>
+                            <p class="EventDateD">10 - 12 Nov</p>
+                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                            <a href="#"><p class="EventD">ViewDetails</p></a>
+                        </div>
+                        <hr class="BreakLine">
+
+                        <div class="EventsDetalisDes">
+                            <p class="EventNameD">Blockchain Expo</p>
+                            <p class="EventDateD">26 - 28 Des</p>
+                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                            <a href="#"><p class="EventD">ViewDetails</p></a>
+                        </div>
+                        <hr class="BreakLine">
+                    </div>
+
                 </div>
+                
 
 
 
@@ -872,6 +1002,43 @@
                 </div>
             </div>
         </footer>
+       <script> 
+            // Function to show the correct event list based on radio input selection
+            function showEvents(eventType) {
+                // Hide all event types initially
+                document.querySelector('.PE').style.display = 'none';
+                document.querySelector('.CE').style.display = 'none';
+                document.querySelector('.UE').style.display = 'none';
+
+                // Display the correct event type based on the ID passed
+                document.querySelector('.' + eventType).style.display = 'block';
+            }
+
+            // Add event listeners to each radio input
+            document.getElementById('PastEvent').addEventListener('click', function() {
+                showEvents('PE');
+                localStorage.setItem('selectedEvent', 'PE'); // Save selection to localStorage
+            });
+            document.getElementById('CurrentEvent').addEventListener('click', function() {
+                showEvents('CE');
+                localStorage.setItem('selectedEvent', 'CE'); // Save selection to localStorage
+            });
+            document.getElementById('UpcomingEvent').addEventListener('click', function() {
+                showEvents('UE');
+                localStorage.setItem('selectedEvent', 'UE'); // Save selection to localStorage
+            });
+
+            // On page load, check if a selection is stored in localStorage and show the correct event
+            window.addEventListener('load', function() {
+                const savedEvent = localStorage.getItem('selectedEvent');
+                if (savedEvent) {
+                    showEvents(savedEvent); // Show the event type stored in localStorage
+                    document.getElementById(savedEvent.replace('E', 'Event')).querySelector('input').checked = true;
+                } else {
+                    showEvents('PE'); // Default to Past Events if no selection is saved
+                }
+            });
+        </script>
     </body>
 </html>
  
