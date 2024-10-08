@@ -1,3 +1,23 @@
+    <?php
+    session_start();
+    // DB connection
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "raqeebdb";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Fetch cameras from the database
+    $sql = "SELECT CameraID, cameraName FROM camera";
+    $result = $conn->query($sql);
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,12 +47,18 @@
                 box-sizing: border-box;
             }
 
+            html, body {
+                height: 100%;
+                margin: 0; 
+            }
+            
             body {
                 display: flex;
                 flex-direction: column;
-                min-height: 100vh;
                 margin: 0;
                 width: 100%;
+                display: flex;
+                flex-direction: column; 
             }
 
             /* ---- new header style */
@@ -76,7 +102,8 @@
                 width: 100%;
                 margin-top: 10%;
                 margin-bottom: 10%;
-                height: 1000px; /*---------------------------------BACK---------------*/
+                flex: 1; 
+                overflow: auto; 
             }
 
             .Cards {
@@ -251,22 +278,35 @@
                 width: 100%;
             }
 
-
             .cardContainerEvents {
                 width: 80%;
-                height: 45%;
                 border-radius: 20px;
                 margin-bottom: 15%;
                 padding: 30px 30px;
                 box-sizing: border-box;
                 position: relative; 
-                overflow: hidden; 
+                overflow-y: auto; 
                 margin: 1%;
                 background-color: #ffffff; 
                 transition: all 0.88s cubic-bezier(0.23, 1, 0.32, 1);
                 box-shadow: 0rem 6px 13px rgba(10, 60, 255, 0.1);
-                margin-left: 10%; 
+                margin-left: 10%;
             }
+
+           
+            .cardContainerEvents::-webkit-scrollbar {
+                width: 10px;
+            }
+
+            .cardContainerEvents::-webkit-scrollbar-thumb {
+                background: rgba(10, 60, 255, 0.3);
+                border-radius: 10px;
+            }
+
+            .cardContainerEvents::-webkit-scrollbar-track {
+                background: rgba(240, 240, 240, 0.9);
+            }
+
 
             .BreakLinePCU {
                 color: #507abe0e;
@@ -302,17 +342,21 @@
 
 	    .EventsDetalisDes {
                 font-family: Poppins;
-                margin-left: 0%;
+                margin-left: 1%;
                 margin-top: 3%;
                 margin-bottom: 3%;
                 font-size: 100%;
                 color: #232323;
                 display: flex;
                 font-weight: 300;
+                justify-content: space-between;
             }
 
-            .EventsDetalisDes .EventDateD {
-                margin-left: 12.4%;
+            .EventsDetalisDes .EventD {
+                margin-left: auto;
+                color: #232323;
+                white-space: nowrap;
+                margin-right: 20px
             }
 
             .EventsDetalisDes .edit {
@@ -320,12 +364,6 @@
                 width: 5%;
                 transition: 0.5;
             }
-
-            .EventsDetalisDes .EventD {
-                margin-left: 170%;
-                color: #232323;
-            }
-
 
         
 
@@ -722,9 +760,8 @@
                     </a>
                 </label>  -->
             </nav>
-        </header>
-      
-		<main>
+        </header>   
+	<main>
             <div class="mainContainer">
                 <div class="text">
                     <h4 id="AddEvent">Add Camera</h4>
@@ -737,40 +774,35 @@
                 <div id="listOfEvents" class="listOfEvents">
                     <h4>Cameras</h4> 
                 </div><br>
-                <!-- <div class="listOfEventsPCA">
-                    <p class="PastEvents">Past Events</p>
-                    <p class="CurrentEvents">Current Events</p>
-                    <p class="UpcomingEvents">Upcoming Events</p>
-                </div> -->
                 <hr class="BreakLinePCU">
                 <div class="cardContainerEvents">
                     <div class="EventsDetalis">
                         <p class="EventName">Camera Name</p>
-                        <p class="EventDate">IP</p>
-                        <p class="Event">Camera</p>
                     </div>
                     <hr class="BreakLine">
 
-		     <div class="EventsDetalisDes">
-                        <p class="EventNameD">Camera 1</p>
-                        <p class="EventDateD">128 123 1 564</p>
-                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                        <a href="#"><p class="EventD">ViewDetails</p></a>
-                    </div>
-                    <hr class="BreakLine">
-
-                    <div class="EventsDetalisDes">
-                        <p class="EventNameD">Camera 1</p>
-                        <p class="EventDateD">128 123 1 564</p>
-                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                        <a href="#"><p class="EventD">ViewDetails</p></a>
-                    </div>
-                    <hr class="BreakLine">
-
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php 
+                            $cameras = $result->fetch_all(MYSQLI_ASSOC); 
+                            $totalCameras = count($cameras); 
+                            foreach ($cameras as $index => $row):
+                        ?>
+                            <div class="EventsDetalisDes">
+                                <p class="EventNameD"><?= htmlspecialchars($row['cameraName']); ?></p>
+                                <div class="eventLinks" style="text-align: right;"> <!-- Added inline style for text alignment -->
+                                    <a href="../../Back-End/PHP/viewEditCameras.php?cameraId=<?= $row['CameraID']; ?>">
+                                        <p class="EventD">View Details</p>
+                                    </a>                    
+                                </div>
+                            </div>
+                            <?php if ($index < $totalCameras - 1):?>
+                                <hr class="BreakLine">
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No cameras found.</p>
+                    <?php endif; ?>
                 </div>
-
-
-
             </div>
         </main>
        <!-- ------------FOOTER------------- -->
@@ -870,4 +902,8 @@
         </footer>
     </body>
 </html>
+
+<?php
+    $conn->close();
+?>
  
