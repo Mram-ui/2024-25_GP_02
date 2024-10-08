@@ -87,9 +87,9 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         .EditBtn {
             width: 90px;
             height: 40px;
+            margin-left: 160%;
+            margin-bottom: 1%;
             border-radius: 10px;
-            margin-right: -290px;
-            margin-left: 6%;
             font-weight: 600;
             font-size: 14px;
             letter-spacing: 1.15px;
@@ -143,13 +143,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
             margin-right: 20%;
         }
         
-        #title {
-            margin: 10%;
-            margin-left: -1250%;
-            align-items: center;
-            margin-right: 1500%;
-            white-space: nowrap;
-        }
+    
         
         #viewEvent {
             width: 100%;
@@ -163,11 +157,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
             margin-left: 30%;
         }
         
-        .headerTitle {
-            display: flex;
-            margin-top: 2%;
-        }
-        
+     
         .form__input {
             width: 70%;
         }
@@ -215,7 +205,19 @@ while ($hallRow = $hallResult->fetch_assoc()) {
             padding: 10px;
         }
         
-
+          #arrow {
+            margin-left: -138%;
+        }
+        
+        #title {
+            margin-left: -10%;
+        }
+        
+        .headerTitle {
+            margin-top: 3%;
+        }
+        
+      
       
        
         
@@ -236,6 +238,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
     
 <div id="main" class="main">
     <div class="headerTitle">
+        <a id='arrow' href="../../Back-End/PHP/userHome.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
         <h2 class="title" id="title">Event Details</h2>
         <button class="EditBtn" onclick="alert('Edit feature is not available yet.');">Edit</button>
     </div>
