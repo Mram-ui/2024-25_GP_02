@@ -19,7 +19,7 @@
     $cameraId = isset($_GET['cameraId']) ? intval($_GET['cameraId']) : 0;
 
     // Prepare SQL query to fetch camera details
-    $cameraQuery = $conn->prepare("SELECT cameraName, CameraIPAddress, PortNo, StreamingChannel, CameraUsername, CameraPassword FROM camera WHERE CameraID = ?");
+    $cameraQuery = $conn->prepare("SELECT CameraName, CameraIPAddress, PortNo, StreamingChannel, CameraUsername, CameraPassword FROM camera WHERE CameraID = ?");
     $cameraQuery->bind_param("i", $cameraId);
     $cameraQuery->execute();
     $cameraResult = $cameraQuery->get_result();
@@ -41,7 +41,7 @@
 <head>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta charset="utf-8">
-    <title><?= htmlspecialchars($cameraData['cameraName']); ?></title>
+    <title><?= htmlspecialchars($cameraData['CameraName']); ?></title>
     <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/boxes.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
@@ -121,7 +121,7 @@
 
     <form id='addcam' class="form" method="POST" action="../../Back-End/PHP/addCamera.php">
         <label id='lable' for="cameraName">Camera Name:</label>
-        <input name="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['cameraName']); ?>" required>
+        <input name="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraName']); ?>" required>
 
         <label id='lable' for="cameraIP">Camera IP Address:</label>
         <input name="cameraIP" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraIPAddress']); ?>" required>
