@@ -15,7 +15,7 @@
     }
 
     // Fetch cameras from the database
-    $sql = "SELECT CameraID, cameraName FROM camera";
+    $sql = "SELECT CameraID, CameraName FROM camera";
     $result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
@@ -788,7 +788,7 @@
                             foreach ($cameras as $index => $row):
                         ?>
                             <div class="EventsDetalisDes">
-                                <p class="EventNameD"><?= htmlspecialchars($row['cameraName']); ?></p>
+                                <p class="EventNameD"><?= htmlspecialchars($row['CameraName']); ?></p>
                                 <div class="eventLinks" style="text-align: right;"> <!-- Added inline style for text alignment -->
                                     <a href="../../Back-End/PHP/viewEditCameras.php?cameraId=<?= $row['CameraID']; ?>">
                                         <p class="EventD">View Details</p>
