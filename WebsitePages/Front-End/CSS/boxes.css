@@ -19,6 +19,8 @@ body {
     flex-direction: column;
     text-align:left;
     justify-content: space-between;
+    text-align: left;
+
 
 }
 /**/
@@ -40,6 +42,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-align: left;
 }
 
 .form {
@@ -47,6 +50,7 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    text-align: left;
 }
 
 .form__icon {
@@ -300,3 +304,4 @@ select {
         background-position: 200% 0%;
     }
 }
+
