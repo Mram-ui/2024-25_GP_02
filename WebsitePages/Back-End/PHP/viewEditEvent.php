@@ -81,8 +81,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-    
-    
+
     <style>
         .EditBtn {
             width: 90px;
@@ -141,6 +140,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
             padding: 0%;
             margin-left: 20%;
             margin-right: 20%;
+            padding-bottom: 2%;
         }
         
     
@@ -216,10 +216,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         .headerTitle {
             margin-top: 3%;
         }
-        
-      
-      
-       
+    
         
     </style>
      <script>
@@ -229,65 +226,70 @@ while ($hallRow = $hallResult->fetch_assoc()) {
     </script>
 </head>
 <body>
-
     <header class="header">
     <div class="logo">
         <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
     </div>
-</header>
+    </header>
     
-<div id="main" class="main">
-    <div class="headerTitle">
-        <a id='arrow' href="../../Back-End/PHP/userHome.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
-        <h2 class="title" id="title">Event Details</h2>
-        <button class="EditBtn" onclick="alert('Edit feature is not available yet.');">Edit</button>
-    </div>
+    <div id="main" class="main">
+        <div class="headerTitle">
+            <a id='arrow' href="../../Back-End/PHP/userHome.php">
+                <i class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i>
+            </a>
+            <h2 class="title" id="title">Event Details</h2>
 
-    <form id="viewEvent" class="form" method="POST" action="#" onsubmit="return validateDates()" style="align-items: center;">
-        <label id="lable" for="eventName">Event Name:</label> 
-        <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo htmlspecialchars($eventData['EventName']); ?>" required readonly> <br>
-
-        <label id="lable" for="eventLocation">Event Location:</label> 
-        <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo htmlspecialchars($eventData['EventLocation']); ?>" required readonly> <br>
-
-        <div id="times">
-            <div class="timeBlocks">
-                <label for="startDate">Start Date:</label>  
-                <input name="startDate" class="form__input time" type="date" value="<?php echo htmlspecialchars($eventData['EventStartDate']); ?>" required readonly> 
-            </div>
-            <div class="timeBlocks"> 
-                <label for="startTime">Start Time:</label> 
-                <input name="startTime" class="form__input time" type="time" value="<?php echo htmlspecialchars($eventData['EventStartTime']); ?>" required readonly> 
-            </div> 
-            <br>
-            <div class="timeBlocks">
-                <label for="endDate">End Date:</label>  
-                <input name="endDate" class="form__input time" type="date" value="<?php echo htmlspecialchars($eventData['EventEndDate']); ?>" required readonly> 
-            </div>
-            <div class="timeBlocks"> 
-                <label for="endTime">End Time:</label>  
-                <input name="endTime" class="form__input time" type="time" value="<?php echo htmlspecialchars($eventData['EventEndTime']); ?>" required readonly> 
-            </div>
+            <?php if (strtotime($eventData['EventEndDate']) > time()): ?>
+                <button class="EditBtn" onclick="alert('Edit feature is not available yet.');">Edit</button>
+            <?php endif; ?>
         </div>
 
-        <div class="AllHalls">
-            <?php foreach ($halls as $hall): ?>
-                <div id="hall" class="hall" style="margin-left: -30%">
-                    <label for="hallName">Hall Name:</label><br>
-                    <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
-                    <label for="cameraName">Camera:</label><br>
-                    <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['CameraName']); ?>" required readonly><br>
-                    <label for="hallThreshold">Hall Threshold:</label><br>
-                    <input id="HInput" name="hallThreshold" class="form__input" type="number" placeholder="##" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
+        <form id="viewEvent" class="form" method="POST" action="#" onsubmit="return validateDates()" style="align-items: center;">
+            <label id="lable" for="eventName">Event Name:</label> 
+            <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo htmlspecialchars($eventData['EventName']); ?>" required readonly> <br>
+
+            <label id="lable" for="eventLocation">Event Location:</label> 
+            <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo htmlspecialchars($eventData['EventLocation']); ?>" required readonly> <br>
+
+            <div id="times">
+                <div class="timeBlocks">
+                    <label for="startDate">Start Date:</label>  
+                    <input name="startDate" class="form__input time" type="date" value="<?php echo htmlspecialchars($eventData['EventStartDate']); ?>" required readonly> 
                 </div>
-            <?php endforeach; ?>
-        </div>
-        <br>
-    </form>
-    <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Event</button>
-</div>
+                <div class="timeBlocks"> 
+                    <label for="startTime">Start Time:</label> 
+                    <input name="startTime" class="form__input time" type="time" value="<?php echo htmlspecialchars($eventData['EventStartTime']); ?>" required readonly> 
+                </div> 
+                <br>
+                <div class="timeBlocks">
+                    <label for="endDate">End Date:</label>  
+                    <input name="endDate" class="form__input time" type="date" value="<?php echo htmlspecialchars($eventData['EventEndDate']); ?>" required readonly> 
+                </div>
+                <div class="timeBlocks"> 
+                    <label for="endTime">End Time:</label>  
+                    <input name="endTime" class="form__input time" type="time" value="<?php echo htmlspecialchars($eventData['EventEndTime']); ?>" required readonly> 
+                </div>
+            </div>
 
+            <div class="AllHalls">
+                <?php foreach ($halls as $hall): ?>
+                    <div id="hall" class="hall" style="margin-left: -30%">
+                        <label for="hallName">Hall Name:</label><br>
+                        <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
+                        <label for="cameraName">Camera:</label><br>
+                        <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['CameraName']); ?>" required readonly><br>
+                        <label for="hallThreshold">Hall Max Capacity:</label><br>
+                        <input id="HInput" name="hallThreshold" class="form__input" type="number" placeholder="##" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+            <br>
+        </form>
 
+        <?php if (strtotime($eventData['EventEndDate']) <= time() || strtotime($eventData['EventStartDate']) > time()):?>
+            <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Event</button>
+        <?php endif; ?>
+    </div>
     <script>
         function enableEditing() {
         document.querySelectorAll('.form__input').forEach(input => {
@@ -319,7 +321,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
             return false;  // Prevent form submission
         }
 
-        return true;  // Allow form submission
+        return true;
     }
     </script>
 </body>
