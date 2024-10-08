@@ -55,7 +55,7 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Get the form data
-        $cameraName = $_POST['cameraName'];
+        $cameraName = $_POST['CameraName'];
         $cameraIP = $_POST['cameraIP'];
         $portNo = $_POST['portNo'];
         $stream = $_POST['stream'];
