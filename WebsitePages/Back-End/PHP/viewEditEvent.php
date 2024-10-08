@@ -54,7 +54,7 @@
     
     
 $hallQuery = $conn->prepare("
-    SELECT hall.HallName, hall.HallThreshold, hall.CameraID, camera.cameraName
+    SELECT hall.HallName, hall.HallThreshold, hall.CameraID, camera.CameraName
     FROM hall
     LEFT JOIN camera ON hall.CameraID = camera.CameraID
     WHERE hall.EventID = ?
@@ -273,7 +273,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
                     <label for="hallName">Hall Name:</label><br>
                     <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
                     <label for="cameraName">Camera:</label><br>
-                    <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['cameraName']); ?>" required readonly><br>
+                    <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['CameraName']); ?>" required readonly><br>
                     <label for="hallThreshold">Hall Threshold:</label><br>
                     <input id="HInput" name="hallThreshold" class="form__input" type="number" placeholder="##" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
                 </div>
