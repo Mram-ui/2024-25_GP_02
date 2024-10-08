@@ -1,3 +1,7 @@
+<?php 
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -26,6 +30,11 @@
                 padding: 0;
                 box-sizing: border-box;
             }
+            
+            html, body {
+                height: 100%;
+                margin: 0; 
+            }
 
             body {
                 display: flex;
@@ -33,6 +42,8 @@
                 min-height: 100vh;
                 margin: 0;
                 width: 100%;
+                display: flex;
+                flex-direction: column; 
             }
 
             /* ---- new header style */
@@ -76,7 +87,8 @@
                 width: 100%;
                 margin-top: 10%;
                 margin-bottom: 10%;
-                height: 1000px; /*---------------------------------BACK---------------*/
+                flex: 1; 
+                overflow: auto; 
             }
 
             .Cards {
@@ -251,19 +263,34 @@
            
             .cardContainerEvents {
                 width: 80%;
-                height: 45%;
                 border-radius: 20px;
                 margin-bottom: 15%;
                 padding: 30px 30px;
                 box-sizing: border-box;
                 position: relative; 
-                overflow: hidden; 
+                overflow-y: auto;
+                overflow-x: hidden;
                 margin: 1%;
                 background-color: #ffffff; 
                 transition: all 0.88s cubic-bezier(0.23, 1, 0.32, 1);
                 box-shadow: 0rem 6px 13px rgba(10, 60, 255, 0.1);
-                margin-left: 10%; 
+                margin-left: 10%;
             }
+
+            /* Custom scrollbar styling */
+            .cardContainerEvents::-webkit-scrollbar {
+                width: 10px; 
+            }
+
+            .cardContainerEvents::-webkit-scrollbar-thumb {
+                background: rgba(10, 60, 255, 0.3);
+                border-radius: 10px; 
+            }
+
+            .cardContainerEvents::-webkit-scrollbar-track {
+                background: rgba(240, 240, 240, 0.9); 
+            }
+
 
             .BreakLinePCU {
                 color: #507abe0e;
@@ -276,7 +303,7 @@
 
             .EventsDetalis {
                 font-family: Poppins;
-                margin-left: 0%;
+                margin-left: 1%;
                 margin-top: 0%;
                 font-size: 100%;
                 color: #2e62b5;
@@ -299,7 +326,7 @@
 
             .EventsDetalisDes {
                 font-family: Poppins;
-                margin-left: 0%;
+                margin-left: 1%;
                 margin-top: 3%;
                 margin-bottom: 3%;
                 font-size: 100%;
@@ -308,6 +335,7 @@
                 font-weight: 300;
                 justify-content: space-between;
             }
+            
 
             .EventsDetalisDes .EventDateD {
                 margin-left: 2.2%;
@@ -319,17 +347,30 @@
 
             .EventsDetalisDes .edit {
                 text-align: right;
-                margin-left: 100%;
                 width: 5%;
                 transition: 0.5;
             }
 
             .EventsDetalisDes .EventD {
+               margin-left: auto; 
+                color: #232323;
+                white-space: nowrap; 
+                margin-right: 30px;
+            }
+            
+            .eventLinks {
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            
+            img .edit {
                 margin-left: auto;
                 text-align: right;
                 color: #232323;
                 white-space: nowrap;
             }
+            
 
 
             .radio-inputs {
@@ -398,13 +439,6 @@
             } 
 
 
-            
-
-
-          
-
-
-           
 
          /* ---- Footer Style ---- */
             ul {
@@ -800,112 +834,198 @@
                 </label> 
             </nav>
         </header>
-      
-		<main>
-            <div class="mainContainer">
-                <div class="text">
-                    <h4 id="AddEvent">Add Event</h4>
-                    <h4 id="Cameras" class="Addcamera">Cameras</h4>
-                </div>
-                <div class="Cards">
-                    <div class="card">
-                        <a href="addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
+            <main>
+                <div class="mainContainer">
+                    <div class="text">
+                        <h4 id="AddEvent">Add Event</h4>
+                        <h4 id="Cameras" class="Addcamera">Cameras</h4>
                     </div>
-                    <div class="card">
-                        <a href="cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
+                    <div class="Cards">
+                        <div class="card">
+                            <a href="addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
+                        </div>
+                        <div class="card">
+                            <a href="cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
+                        </div>
+                    </div>
+                    <div id="listOfEvents" class="listOfEvents">
+                        <h4>Events</h4>
+                    </div>
+                    <!-- <div class="listOfEventsPCA">
+                        <p class="PastEvents">Past Events</p>
+                        <p class="CurrentEvents">Current Events</p>
+                        <p class="UpcomingEvents">Upcoming Events</p>
+                    </div> -->
+                    <div class="radio-inputs">
+                        <label class="radio" id="PastEvent">
+                          <input type="radio" name="radio" checked="" />
+                          <span class="name">Past Events</span>
+                        </label>
+                        <label class="radio" id="CurrentEvent">
+                          <input type="radio" name="radio" />
+                          <span class="name">Current Events</span>
+                        </label>
+
+                        <label class="radio" id="UpcomingEvent">
+                          <input type="radio" name="radio" />
+                          <span class="name">Upcoming Events</span>
+                        </label>
+                      </div>                  
+                    <hr class="BreakLinePCU">
+                    
+                   <?php
+                        // DB connection
+                        $servername = "localhost";
+                        $username = "root";
+                        $password = "";
+                        $dbname = "raqeebdb";
+
+                        // Create connection
+                        $conn = new mysqli($servername, $username, $password, $dbname);
+
+                        // Check connection
+                        if ($conn->connect_error) {
+                            die("Connection failed: " . $conn->connect_error);
+                        }
+
+                        // Fetch events from the database
+                        $sql = "SELECT EventID, EventName, EventStartDate, EventEndDate FROM events";
+                        $result = $conn->query($sql);
+
+                        $today = new DateTime();  // Get today's date
+
+                        $pastEvents = [];
+                        $currentEvents = [];
+                        $upcomingEvents = [];
+
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $eventId = $row['EventID'];
+                                $eventName = $row['EventName'];
+                                $startDate = new DateTime($row['EventStartDate']);
+                                $endDate = new DateTime($row['EventEndDate']);
+
+                                // Classify event based on the date
+                                if ($endDate < $today) {
+                                    // Event is in the past
+                                    $pastEvents[] = ['id' => $eventId, 'name' => $eventName]; // Store ID and name
+                                } elseif ($startDate <= $today && $endDate >= $today) {
+                                    // Event is currently happening
+                                    $currentEvents[] = ['id' => $eventId, 'name' => $eventName];
+                                } elseif ($startDate > $today) {
+                                    // Event is in the future
+                                    $upcomingEvents[] = ['id' => $eventId, 'name' => $eventName];
+                                }
+                            }
+                        }
+
+                        $conn->close();
+                    ?>
+
+                    <div class="cardContainerEvents">
+                        <div class="EventsDetalis">
+                            <p class="EventName">Event Name</p>
+                        </div>
+                        <hr class="BreakLine">
+
+                        <div class="PE">
+                            <?php foreach ($pastEvents as $index => $event): ?>
+                                <div class="EventsDetalisDes">
+                                    <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                                    <div class="eventLinks">
+                                        <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>">
+                                            <p class="EventD">View Details</p>
+                                        </a>
+                                        <a href="#" class="EventD"><p>View Report</p></a>
+                                    </div>
+                                </div>
+                                <?php if ($index !== count($pastEvents) - 1):?>
+                                    <hr class="BreakLine">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="CE">
+                            <?php foreach ($currentEvents as $index => $event): ?>
+                                <div class="EventsDetalisDes">
+                                    <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                                    <div class="eventLinks">
+                                        <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>">
+                                            <p class="EventD">View Details</p>
+                                        </a>
+                                        <a href="../../Back-End/PHP/dashboard.php?eventId=<?= $event['id']; ?>">
+                                            <p class="EventD">View Dashboard</p>
+                                        </a>
+                                    </div>
+                                </div>
+                                <?php if ($index !== count($currentEvents) - 1): ?>
+                                    <hr class="BreakLine">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="UE">
+                            <?php foreach ($upcomingEvents as $index => $event): ?>
+                                <div class="EventsDetalisDes">
+                                    <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                                    <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>">
+                                        <p class="EventD">View Details</p>
+                                    </a>
+                                </div>
+                                <?php if ($index !== count($upcomingEvents) - 1): ?>
+                                    <hr class="BreakLine">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
-                <div id="listOfEvents" class="listOfEvents">
-                    <h4>Events</h4>
-                </div>
-                <!-- <div class="listOfEventsPCA">
-                    <p class="PastEvents">Past Events</p>
-                    <p class="CurrentEvents">Current Events</p>
-                    <p class="UpcomingEvents">Upcoming Events</p>
-                </div> -->
-                <div class="radio-inputs">
-                    <label class="radio" id="PastEvent">
-                      <input type="radio" name="radio" checked="" />
-                      <span class="name">Past Events</span>
-                    </label>
-                    <label class="radio" id="CurrentEvent">
-                      <input type="radio" name="radio" />
-                      <span class="name">Current Events</span>
-                    </label>
-                  
-                    <label class="radio" id="UpcomingEvent">
-                      <input type="radio" name="radio" />
-                      <span class="name">Upcoming Events</span>
-                    </label>
-                  </div>                  
-                <hr class="BreakLinePCU">
-                <div class="cardContainerEvents">
-                    <div class="EventsDetalis">
-                        <p class="EventName">Event Name</p>
-                        <p class="EventDate">Date</p>
-                        <!-- <p class="Event">Event</p> -->
+        </main>
+        <script>
+            document.getElementById('addEventForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                fetch('addEvent.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Dynamically update event lists (you'd need a function for this)
+                        updateEventLists(data.event);
+                    }
+                });
+            });
+
+            function updateEventLists(event) {
+                const today = new Date();
+                const startDate = new Date(event.EventStartDate);
+                const endDate = new Date(event.EventEndDate);
+
+                let section;
+
+                if (endDate < today) {
+                    section = document.querySelector('.PE');
+                } else if (startDate <= today && endDate >= today) {
+                    section = document.querySelector('.CE');
+                } else if (startDate > today) {
+                    section = document.querySelector('.UE');
+                }
+
+                const eventBlock = `
+                    <div class="EventsDetalisDes">
+                        <p class="EventNameD">${event.EventName}</p>
+                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
+                        <a href="#"><p class="EventD">ViewDetails</p></a>
                     </div>
                     <hr class="BreakLine">
-                    
-                    <div class="PE">
-                        <div class="EventsDetalisDes">
-                            <p class="EventNameD">Tech Conference</p>
-                            <p class="EventDateD" id="PED">10 - 12 June</p>
-                            <a href="#"><p class="EventD">ViewReport</p></a>
-                        </div>
-                        <hr class="BreakLine">
+                `;
 
-                        <div class="EventsDetalisDes">
-                            <p class="EventNameD">Tech Conference</p>
-                            <p class="EventDateD" id="PED">20 - 30 July</p>
-                            <a href="#"><p class="EventD">ViewReport</p></a>
-                        </div>
-                        <hr class="BreakLine">
-                    </div>
-
-                    <div class="CE">
-                        <div class="EventsDetalisDes">
-                            <p class="EventNameD">Global Ai Summit</p>
-                            <p class="EventDateD">13 - 17 Oct</p>
-                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                            <a href="dashboard.php"><p class="EventD">ViewDashboard</p></a>
-                        </div>
-                        <hr class="BreakLine">
-
-                        <div class="EventsDetalisDes">
-                            <p class="EventNameD">Global Ai Summi</p>
-                            <p class="EventDateD">26 - 28 Oct</p>
-                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                            <a href="dashboard.php"><p class="EventD">ViewDashboard</p></a>
-                        </div>
-                        <hr class="BreakLine">
-                    </div>
-
-                    <div class="UE">
-                        <div class="EventsDetalisDes">
-                            <p class="EventNameD">Blockchain Expo</p>
-                            <p class="EventDateD">10 - 12 Nov</p>
-                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                            <a href="#"><p class="EventD">ViewDetails</p></a>
-                        </div>
-                        <hr class="BreakLine">
-
-                        <div class="EventsDetalisDes">
-                            <p class="EventNameD">Blockchain Expo</p>
-                            <p class="EventDateD">26 - 28 Des</p>
-                            <a href="#"><img class="edit" src="../../images/edit.png"></a>
-                            <a href="#"><p class="EventD">ViewDetails</p></a>
-                        </div>
-                        <hr class="BreakLine">
-                    </div>
-
-                </div>
-                
-
-
-
-            </div>
-        </main>
+                section.insertAdjacentHTML('beforeend', eventBlock);
+            }
+        </script>
        <!-- ------------FOOTER------------- -->
         <footer class="footer-section">
             <div class="container">
@@ -1002,7 +1122,7 @@
                 </div>
             </div>
         </footer>
-       <script> 
+       <script>
             // Function to show the correct event list based on radio input selection
             function showEvents(eventType) {
                 // Hide all event types initially
@@ -1014,29 +1134,29 @@
                 document.querySelector('.' + eventType).style.display = 'block';
             }
 
+            // Function to check and set the radio button
+            function checkRadioButton(eventType) {
+                const radioButton = document.getElementById(eventType.replace('E', 'Event'));
+                if (radioButton) {
+                    radioButton.checked = true;
+                }
+            }
+
             // Add event listeners to each radio input
             document.getElementById('PastEvent').addEventListener('click', function() {
                 showEvents('PE');
-                localStorage.setItem('selectedEvent', 'PE'); // Save selection to localStorage
             });
             document.getElementById('CurrentEvent').addEventListener('click', function() {
                 showEvents('CE');
-                localStorage.setItem('selectedEvent', 'CE'); // Save selection to localStorage
             });
             document.getElementById('UpcomingEvent').addEventListener('click', function() {
                 showEvents('UE');
-                localStorage.setItem('selectedEvent', 'UE'); // Save selection to localStorage
             });
 
-            // On page load, check if a selection is stored in localStorage and show the correct event
+            // On page load, default to Past Events
             window.addEventListener('load', function() {
-                const savedEvent = localStorage.getItem('selectedEvent');
-                if (savedEvent) {
-                    showEvents(savedEvent); // Show the event type stored in localStorage
-                    document.getElementById(savedEvent.replace('E', 'Event')).querySelector('input').checked = true;
-                } else {
-                    showEvents('PE'); // Default to Past Events if no selection is saved
-                }
+                showEvents('PE');
+                checkRadioButton('PE');
             });
         </script>
     </body>
