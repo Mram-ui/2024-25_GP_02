@@ -101,6 +101,10 @@
             background-color: #FFBDBD;
         }
         
+        #arrow {
+            margin-left: -70%;
+        }
+        
         
         
     </style>
@@ -115,6 +119,7 @@
     
 <div id="main" class="main">
     <div class="headerTitle">
+        <a id='arrow' href="../../Back-End/PHP/cameras.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
         <h2 class="title" id="title">Camera Details</h2>
         <button class="EditBtn" onclick="alert('Edit feature is not available yet.');">Edit</button>
     </div>
