@@ -105,6 +105,10 @@
             margin-left: -70%;
         }
         
+        #title {
+            margin-left: -10%;
+        }
+        
         
         
     </style>
