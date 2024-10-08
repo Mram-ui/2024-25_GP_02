@@ -148,7 +148,7 @@
         <input name="cameraPassword" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraPassword']); ?>" required>
     </form>
 
-    <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Event</button>
+    <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Camera</button>
 </div>
 
 </body>
