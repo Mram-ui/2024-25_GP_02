@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!--  Fonts Link  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Tilt+Neon&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+
+
+    <script>
+        function fetchStaticData() {
+            fetch('/get_static_data')
+                .then(response => response.json())
+                .then(data => {
+                    let eventInfo = data.event[0];  // Assuming one company with CompanyID=1
+                    document.getElementById('EventName').innerText = eventInfo['EventName'];
+                    document.getElementById('EventLocation').innerText = eventInfo['EventLocation'];
+                    //date
+                    let startDate = eventInfo['EventStartDate'].split(' ');
+                    let endDate = eventInfo['EventEndDate'].split(' ');
+                    let formattedDate = `${startDate[1]} ${startDate[2]} ${startDate[3]} - ${endDate[1]} ${endDate[2]} ${endDate[3]}`;  // Extract hour and minute
+                    document.getElementById('EventDate').innerText = formattedDate;
+
+
+                    //time
+                    // Format the start time to show only hours and minutes
+                    let startTime = eventInfo['EventStartTime'].split(':');
+                    let endTime = eventInfo['EventEndTime'].split(':');
+                    let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
+                    document.getElementById('EventTime').innerText = formattedTime;
+
+
+                    // Retrieve camera information data
+                    let cameraInfo = data.cameras[0];  // Corrected array initialization
+                    document.getElementById('infoStat').innerText = cameraInfo.numOfHalls;
+                    document.getElementById('infoHallName').innerText = cameraInfo.HallName;
+
+                });
+        }
+
+        window.onload = fetchStaticData;  // Fetch static data when page loads
+    </script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="../../Back-End/PHP/userHome.php"><img src="{{ url_for('static', filename='images/Logo2.png') }}"
+                    alt="Company Logo"></a>
+        </div>
+    </header>
+
+    <main>
+        <div class="eventInformation">
+            <h3><span id="EventName">EventName</span></h3>
+            <p><strong>Event Date:</strong> <span id="EventDate"></span></p>
+            <p><strong>Event Time:</strong> <span id="EventTime"></span></p>
+            <p><strong>Event Location:</strong> <span id="EventLocation"></span></p>
+        </div>
+
+        <div class="infoBoxes">
+
+            {% for camera in cameras %}
+            <div class="infoBox">
+                <p>Current Visitors</p>
+                <h3><span id="">No Data</span></h3>
+                <p style="font-weight: bold;">{{ camera.HallName }}</p>
+            </div>
+            {% endfor %}
+
+            <div class="infoBox">
+                <p>Number of Halls</p>
+                <h3><span id="infoStat"></span></h3>
+                <p style="font-weight: bold;"><span id="infoHallName"></span></p>
+            </div>
+            <div class="infoBox">
+                <p>Total of visitors</p>
+                <h2><span id="">No Data</span></h2>
+            </div>
+
+
+        </div>
+
+
+
+        <!-- Loop through the cameras list passed from Flask -->
+        <div class="camera">
+            <h3><span class="dot"></span> Live Stream</h3>
+            <div id="cameraFeeds">
+                    {% for camera in cameras %}
+                <div id="cameraFeed">
+                    <h4 style="margin: 0; margin-bottom: 2.5%;">{{ camera.HallName }}</h4>
+                    <img src="{{ url_for('video_feed', camera_id=camera.CameraID) }}" width="600">
+                </div>
+                {% endfor %}
+            </div>    
+        </div>
+    </main>
+
+
+    <!-- ------------FOOTER------------- -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="footer-cta pt-5 pb-5">
+                <div class="row">
+                    <div class="row-contact">
+                        <div class="col-xl-4 col-md-4 mb-30">
+                            <div class="single-cta">
+                                <i class="far fa-envelope-open"></i>
+                                <div class="cta-text">
+                                    <h4>Mail us</h4>
+                                    <span id="mail"><a
+                                            href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-content pt-5 pb-5">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 mb-50">
+                        <div class="footer-widget">
+                            <div class="footer-logo">
+                                <a href="../../Back-End/PHP/userHome.php"><img
+                                        src="{{ url_for('static', filename='images/Logo3.png') }}" class="img-fluid"
+                                        alt="logo"></a>
+                            </div>
+                            <div class="footer-text">
+                                <p>Our system provides real-time crowd management, enabling event organizers to track
+                                    attendees and streamline operations efficiently.</p>
+                            </div>
+                            <div class="footer-social-icon">
+                                <span>Follow us</span>
+                                <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
+                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
+                                <a href="mailto:Raqeeb.Project@gmail.com"><i
+                                        class="fab fa-google-plus-g google-bg"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
+                        <div class="footer-widget">
+                            <div class="footer-widget-heading">
+                                <h3>Useful Links</h3>
+                            </div>
+                            <ul>
+                                <li><a href="#AddEvent">Add Event</a></li>
+                                <li><a href="#Cameras">Cameras</a></li>
+                                <li><a href="#listOfEvents">List Of Events</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
+                        <div class="footer-widget">
+                            <div class="footer-widget-heading">
+                                <h3>Subscribe</h3>
+                            </div>
+                            <div class="footer-text mb-25">
+                                <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
+                            </div>
+                            <div class="subscribe-form">
+                                <form action="#">
+                                    <input type="text" placeholder="Email Address">
+                                    <button><i class="fab fa-telegram-plane"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+                        <div class="copyright-text">
+                            <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

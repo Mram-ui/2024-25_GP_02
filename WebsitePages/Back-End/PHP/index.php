@@ -87,29 +87,21 @@
                 <div id="Service" class="row-Services">
                     <div class="course-col">
                         <img class="Simg" src="../../images/seo.gif" alt="Real-time">
-                        <!-- <h3>Real-time Crowd Monitoring</h3>
-        <p>AI-powered insights on attendee numbers and movements.</p> -->
                         <h3>Automated Crowd Monitoring</h2>
                             <p>Real-time tracking and counting of visitors using advanced computer vision.</p>
                     </div>
                     <div class="course-col">
                         <img class="Simg" src="../../images/analytics.gif" alt="Data Analytics">
-                        <!-- <h3>Alerts and Notifications</h3>
-        <p>Immediate alerts for overcrowding <br> and safety risks.</p> -->
                         <h3>Data-Driven Insights</h2>
                             <p>Analyze visitor behavior, movement patterns, and peak times for better event planning.</p>
                     </div>
                     <div class="course-col">
                         <img class="Simg" src="../../images/timer.gif" alt="Alerts">
-                        <!-- <h3>Data Analytics</h3>
-        <p>Detailed analytics on crowd behavior and event performance.</p> -->
                         <h3>Instant Alerts</h2>
                             <p>Receive real-time notifications on crowd density to ensure a safer and more organized event.</p>
                     </div>
                     <div class="course-col">
                         <img class="Simg" src="../../images/dashboard.gif" alt="Dashboard & Reports">
-                        <!-- <h3>Data Analytics</h3>
-        <p>Detailed analytics on crowd behavior and event performance.</p> -->
                         <h3>User-Friendly Dashboard & Reports</h2>
                             <p>Visualize trends, make informed decisions, and receive post-event summaries to improve future events.</p>
                     </div>
