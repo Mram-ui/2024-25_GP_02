@@ -1,5 +1,5 @@
-    <?php
-    session_start();
+<?php
+    include '../../Back-End/PHP/session.php';
     // DB connection
     $servername = "localhost";
     $username = "root";
@@ -107,21 +107,27 @@
             }
 
             .Cards {
-                display: flex; 
+                display: flex;
                 margin-left: 10%; 
             }
 
             .card {
-                width: 13%;
+                display: flex;
+                width: 15%;
+                height: 5%;
                 border-radius: 20px;
-                margin-bottom: 5%;
-                padding: 30px 30px;
+                margin-bottom: 1%;
+                padding: 20px 30px;
                 box-sizing: border-box;
                 position: relative; 
                 overflow: hidden; 
                 margin: 1%;
                 background-color: #1e52a5; 
                 transition: all 0.88s cubic-bezier(0.23, 1, 0.32, 1);
+                white-space: nowrap;
+                align-items: center;
+                font-weight: Bold;
+
             }
 
             .card:hover {
@@ -129,7 +135,9 @@
                     0rem 24px 24px rgba(10, 60, 255, 0.09),
                     0rem 55px 33px rgba(10, 60, 255, 0.05),
                     0rem 97px 39px rgba(10, 60, 255, 0.01), 0rem 152px 43px rgba(10, 60, 255, 0);
-                scale: 1.05;
+                scale: 1.02;
+                background-color: #003f91;
+
             }
 
             .card::before {
@@ -170,7 +178,10 @@
 
             .Plus {
                 z-index: 100;
-                width: 100%;
+                width: 175%;
+                margin-left: -70%;
+                align-items: center;
+                margin-top: 10%;
             }
 
             .text {
@@ -183,7 +194,8 @@
             }
 
 	    #AddEvent {
-                margin-left: -0.5%;
+                color: white;
+                margin-left: 8%;
             }
 
             .Addcamera {
@@ -193,7 +205,7 @@
             .listOfEvents h4 {
                 font-family: Poppins;
                 margin-left: 1%;
-                margin-top: 7%;
+                margin-top: 3%;
                 font-size: 130%;
                 color: #112f5e;
                 margin-left: 11%; 
@@ -722,8 +734,86 @@
             visibility: visible;
             opacity: 1;
             }
+            
+            .NoCameraF {
+                margin-top: 3%;
+                text-align: center;
+                font-family: Poppins;
+            }
+            
+            a .EventD{
+                text-decoration: none;
+            }
+            
+            .EventD::after {
+                content: "";
+                width: 0%;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
 
-                /* ---- End USER style */
+            .EventD:hover::after {
+                width: 100%;
+            }
+
+            .EventD:hover {
+                color: #4a56ff;
+            }
+            
+             
+         
+            ul li {
+                text-align: left;
+                margin-left: -135%;
+                list-style: none;
+                display: inline-block;
+                padding: 8px 12px;
+                position: relative;
+                color: black;
+                font-weight: lighter;
+            }
+
+            ul li a {
+                color: #504f4f;
+                text-decoration: none;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            ul li::after {
+                content: "";
+                width: 0;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
+
+            ul li:hover::after {
+                width: 100%;
+            }
+
+            ul li a:hover {
+                color: #4a56ff;
+            }
+
+            ul li.active a {
+                color: #4a56ff;
+            }
+
+            ul li.active::after {
+                width: 100%;
+            }
+
+
+            /* ---- End  style */
 
         </style> 
         <script>
@@ -743,10 +833,25 @@
             <div class="logo">
                 <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
             </div>
+             <ul>
+                <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
+                <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
+            </ul>
+            <script>
+                const currentPath = window.location.pathname;
+                const menuItems = document.querySelectorAll('ul li');
+                menuItems.forEach((item) => {
+                    const link = item.querySelector('a');
+                    if (link.href.includes(currentPath)) {
+                        item.classList.add('active');
+                    }
+                });
+            </script>
+
             <nav>
                 <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
-                <!-- <label class="popup"> <input type="checkbox" /> <div tabindex="0" class="burger">
-                    <a href="accountDetails.php">
+                <label class="popup"> <input type="checkbox" /> <div tabindex="0" class="burger">
+                    <a href="../../Back-End/PHP/accountDetails.php">
                         <svg
                             viewBox="0 0 24 24"
                             fill="white"
@@ -758,17 +863,19 @@
                             ></path>
                         </svg>
                     </a>
-                </label>  -->
+                </label> 
             </nav>
-        </header>   
+            </nav>
+        </header>  
+        
 	<main>
             <div class="mainContainer">
                 <div class="text">
-                    <h4 id="AddEvent">Add Camera</h4>
                 </div>
                 <div class="Cards">
                     <div class="card">
                         <a href="../../Back-End/PHP/addCamera.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
+                        <h4 id="AddEvent">ADD CAMERA</h4>
                     </div>
                 </div>
                 <div id="listOfEvents" class="listOfEvents">
@@ -790,7 +897,7 @@
                             <div class="EventsDetalisDes">
                                 <p class="EventNameD"><?= htmlspecialchars($row['CameraName']); ?></p>
                                 <div class="eventLinks" style="text-align: right;"> <!-- Added inline style for text alignment -->
-                                    <a href="../../Back-End/PHP/viewEditCameras.php?cameraId=<?= $row['CameraID']; ?>">
+                                    <a href="../../Back-End/PHP/viewEditCameras.php?cameraId=<?= $row['CameraID']; ?>" style="text-decoration: none;">
                                         <p class="EventD">View Details</p>
                                     </a>                    
                                 </div>
@@ -800,11 +907,11 @@
                             <?php endif; ?>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p>No cameras found.</p>
+                        <p class="NoCameraF">No cameras have been added yet.</p>
                     <?php endif; ?>
                 </div>
             </div>
-        </main>
+        </main> 
        <!-- ------------FOOTER------------- -->
         <footer class="footer-section">
             <div class="container">
