@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    include '../../Back-End/PHP/session.php';
     
     // Database connection
     $servername = "localhost";
@@ -130,26 +130,34 @@
 
     <form id='addcam' class="form" method="POST" action="../../Back-End/PHP/addCamera.php">
         <label id='lable' for="cameraName">Camera Name:</label>
-        <input name="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraName']); ?>" required>
+        <input name="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraName']); ?>" required readonly>
 
         <label id='lable' for="cameraIP">Camera IP Address:</label>
-        <input name="cameraIP" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraIPAddress']); ?>" required>
+        <input name="cameraIP" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraIPAddress']); ?>" required readonly>
 
         <label id='lable' for="portNo">Port Number:</label>
-        <input name="portNo" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['PortNo']); ?>" required>
+        <input name="portNo" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['PortNo']); ?>" required readonly>
 
         <label id='lable' for="stream">Streaming Channel:</label>
-        <input name="stream" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['StreamingChannel']); ?>" required>
+        <input name="stream" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['StreamingChannel']); ?>" required readonly>
 
         <label id='lable' for="cameraUsername">Camera Username:</label>
-        <input name="cameraUsername" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraUsername']); ?>" required>
+        <input name="cameraUsername" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraUsername']); ?>" required readonly>
 
         <label id='lable' for="cameraPassword">Camera Password:</label>
-        <input name="cameraPassword" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraPassword']); ?>" required>
+        <input name="cameraPassword" class="form__input" type="text" value="* * * * * * * * * *" required readonly>
     </form>
 
     <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Camera</button>
 </div>
+    <script>
+         function enableEditing() {
+        const inputs = document.querySelectorAll('.form__input');
+        inputs.forEach(input => {
+            input.removeAttribute('readonly');
+        });
+    }
+    </script>
 
 </body>
 </html>
