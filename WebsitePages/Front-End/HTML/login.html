@@ -39,7 +39,9 @@
           <h2 class="form_title title">LOG IN</h2>
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
           <input name="spassword" class="form__input" type="password" placeholder="Password" required><a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
-          <button class="form__button button submit">LOG IN</button>
+          <a href="../../Back-End/PHP/login.php?CompanyID=<?= $companyID; ?>">
+            <button class="form__button button submit">LOG IN</button>
+          </a>        
         </form>
       </div>
       <div class="switch" id="switch-cnt">
