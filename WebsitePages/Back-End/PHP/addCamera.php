@@ -1,3 +1,4 @@
+<?php include '../../Back-End/PHP/session.php'; ?>
 <html lang="es" dir="ltr">
 
 <head>
@@ -53,6 +54,9 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
+    // Assuming CompanyID is stored in the session after user login
+    $CompanyID = $_SESSION['CompanyID']; // Change this according to how you store it in the session
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Get the form data
         $cameraName = $_POST['cameraName'];
@@ -63,11 +67,10 @@
         $cameraPassword = $_POST['cameraPassword'];
 
         // Hash the camera password
-        $hashedPassword = password_hash($cameraPassword, PASSWORD_DEFAULT);
 
         // Prepare and bind the statement
-        $stmt = $conn->prepare("INSERT INTO camera (CameraName, CameraIPAddress, PortNo, StreamingChannel, CameraUsername, CameraPassword) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssisss", $cameraName, $cameraIP, $portNo, $stream, $cameraUsername, $hashedPassword);
+        $stmt = $conn->prepare("INSERT INTO camera (CameraName, CameraIPAddress, PortNo, StreamingChannel, CameraUsername, CameraPassword, CompanyID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssisssi", $cameraName, $cameraIP, $portNo, $stream, $cameraUsername, $cameraPassword, $CompanyID);
 
         // Execute the statement
         if ($stmt->execute()) {
