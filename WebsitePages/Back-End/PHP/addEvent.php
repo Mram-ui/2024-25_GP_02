@@ -1,3 +1,4 @@
+<?php include '../../Back-End/PHP/session.php'; ?>
 <html lang="es" dir="ltr">
 
 <head>
@@ -96,8 +97,25 @@
         </form>
     </div>
 
-    <?php 
-    // DB connection and transaction for adding event and hall(s)
+<?php 
+    include '../../Back-End/PHP/session.php';
+    // DB connection
+    $servername = "localhost"; 
+    $username = "root";
+    $password = "";
+    $dbname = "raqeebdb";
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Assuming CompanyID is stored in the session after user login
+    $CompanyID = $_SESSION['CompanyID']; // Change this according to how you store it in the session
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Get the form data
         $eventName = $_POST['eventName'];
@@ -113,13 +131,13 @@
 
         // Validate date and time
         $today = date('Y-m-d');
-        //Start and End Dates
-//        if ($eventStartDate < $today || $eventEndDate < $today) {
-//            echo "<script>alert('Start date and end date cannot be in the past!');</script>";
-//            exit;
-//        }
-      
-        if ( $eventEndDate < $today) {
+        // Start and End Dates
+        if ($eventStartDate < $today || $eventEndDate < $today) {
+            echo "<script>alert('Start date and end date cannot be in the past!');</script>";
+            exit;
+        }
+
+        if ($eventEndDate < $today) {
             echo "<script>alert('End date cannot be in the past!');</script>";
             exit;
         }
@@ -128,16 +146,13 @@
             exit;
         }
 
-        // Create connection
-        $conn = new mysqli($servername, $username, $password, $dbname);
-
         // Start a transaction
         $conn->begin_transaction();
 
         try {
             // Insert into Events table
-            $stmt = $conn->prepare("INSERT INTO events (EventName, EventLocation, EventStartDate, EventEndDate, EventStartTime, EventEndTime) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("ssssss", $eventName, $eventLocation, $eventStartDate, $eventEndDate, $eventStartTime, $eventEndTime);
+            $stmt = $conn->prepare("INSERT INTO events (EventName, EventLocation, EventStartDate, EventEndDate, EventStartTime, EventEndTime, CompanyID) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("ssssssi", $eventName, $eventLocation, $eventStartDate, $eventEndDate, $eventStartTime, $eventEndTime, $CompanyID);
 
             // Execute Events insertion
             if (!$stmt->execute()) {
@@ -176,7 +191,8 @@
         $stmt->close();
         $conn->close();
     }
-    ?>
+?>
+
 
     <script>
     function validateDates() {
