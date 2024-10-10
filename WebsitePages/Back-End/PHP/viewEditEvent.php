@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    include '../../Back-End/PHP/session.php';
 
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
@@ -81,7 +81,8 @@ while ($hallRow = $hallResult->fetch_assoc()) {
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-
+    
+    
     <style>
         .EditBtn {
             width: 90px;
@@ -216,7 +217,10 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         .headerTitle {
             margin-top: 3%;
         }
-    
+        
+      
+      
+       
         
     </style>
      <script>
@@ -304,11 +308,11 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         const startDate = new Date(document.querySelector('input[name="startDate"]').value);
         const endDate = new Date(document.querySelector('input[name="endDate"]').value);
         
-        // Validate: Start and End Date cannot be in the past
-//        if (startDate < today) {
-//            alert("Start Date cannot be in the past!");
-//            return false;  // Prevent form submission
-//        }
+         Validate: Start and End Date cannot be in the past
+        if (startDate < today) {
+            alert("Start Date cannot be in the past!");
+            return false;  // Prevent form submission
+        }
 
         if (endDate < today) {
             alert("End Date cannot be in the past!");
