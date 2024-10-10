@@ -1,6 +1,40 @@
-<?php 
+<?php
+//NEW CODE:
+    // DB connection
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "raqeebdb";
+
     session_start();
+    if (!isset($_SESSION['CompanyID'])) {
+        // Redirect to login if not logged in
+        header("Location: login.php");
+        exit;
+    }
+
+    $companyID = $_SESSION['CompanyID'];
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Fetch events from the database for the specific company
+    $sql = "SELECT EventID, EventName, EventStartDate, EventEndDate 
+            FROM events 
+            WHERE CompanyID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $companyID); 
+    $stmt->execute();
+    $result = $stmt->get_result();
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -91,22 +125,28 @@
                 overflow: auto; 
             }
 
-            .Cards {
-                display: flex; 
+           .Cards {
+                display: flex;
                 margin-left: 10%; 
             }
 
             .card {
-                width: 13%;
+                display: flex;
+                width: 14.5%;
+                height: 5%;
                 border-radius: 20px;
-                margin-bottom: 5%;
-                padding: 30px 30px;
+                margin-bottom: 1%;
+                padding: 20px 30px;
                 box-sizing: border-box;
                 position: relative; 
                 overflow: hidden; 
                 margin: 1%;
                 background-color: #1e52a5; 
                 transition: all 0.88s cubic-bezier(0.23, 1, 0.32, 1);
+                white-space: nowrap;
+                align-items: center;
+                font-weight: Bold;
+
             }
 
             .card:hover {
@@ -114,7 +154,9 @@
                     0rem 24px 24px rgba(10, 60, 255, 0.09),
                     0rem 55px 33px rgba(10, 60, 255, 0.05),
                     0rem 97px 39px rgba(10, 60, 255, 0.01), 0rem 152px 43px rgba(10, 60, 255, 0);
-                scale: 1.05;
+                scale: 1.02;
+                background-color: #003f91;
+
             }
 
             .card::before {
@@ -155,7 +197,17 @@
 
             .Plus {
                 z-index: 100;
-                width: 100%;
+                width: 96%;
+                margin-left: -5%;
+                align-items: center;
+                margin-top: 10%;
+                padding: 0%;
+            }
+            
+            #AddEvent {
+                color: white;
+                margin-left: 8%;
+                padding: 0%;
             }
 
             .text {
@@ -174,7 +226,7 @@
             .listOfEvents h4 {
                 font-family: Poppins;
                 margin-left: 1%;
-                margin-top: 7%;
+                margin-top: 3%;
                 font-size: 130%;
                 color: #112f5e;
                 margin-left: 11%; 
@@ -259,8 +311,6 @@
                 width: 100%;
             }
 
-
-           
             .cardContainerEvents {
                 width: 80%;
                 border-radius: 20px;
@@ -437,6 +487,10 @@
                 border-bottom-right-radius: 300px;
                 box-shadow: 3px 3px 0px 3px #e8e8e8;
             } 
+            
+          
+            
+
 
 
 
@@ -788,6 +842,7 @@
             transform: translateX(
                 calc(var(--burger-diameter) * -1 - var(--burger-line-width))
             );
+            
             }
 
             .popup input:checked ~ nav {
@@ -795,6 +850,86 @@
             visibility: visible;
             opacity: 1;
             }
+            
+            .NoEvents {
+                margin-top: 3%;
+                text-align: center;
+                font-family: Poppins;
+            }
+             a .EventD{
+                text-decoration: none;
+            }
+            
+            .EventD::after {
+                content: "";
+                width: 0%;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
+
+            .EventD:hover::after {
+                width: 100%;
+            }
+
+            .EventD:hover {
+                color: #4a56ff;
+            }
+            
+         
+           ul li {
+                text-align: left;
+                margin-left: -135%;
+                list-style: none;
+                display: inline-block;
+                padding: 8px 12px;
+                position: relative;
+                color: black;
+                font-weight: lighter;
+            }
+
+            ul li a {
+                color: #504f4f;
+                text-decoration: none;
+                font-family: 'Poppins', sans-serif;
+            }
+
+            ul li::after {
+                content: "";
+                width: 0;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
+
+            ul li:hover::after {
+                width: 100%;
+            }
+
+            ul li a:hover {
+                color: #4a56ff;
+            }
+
+            ul li.active a {
+                color: #4a56ff;
+            }
+
+            ul li.active::after {
+                width: 100%;
+            }
+
+            
+
+
+            
 
                 /* ---- End USER style */
 
@@ -816,7 +951,25 @@
             <div class="logo">
                 <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
             </div>
+            <ul>
+                <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
+                <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
+            </ul>
+            <script>
+                const currentPath = window.location.pathname;
+
+                const menuItems = document.querySelectorAll('ul li');
+
+                menuItems.forEach((item) => {
+                    const link = item.querySelector('a');
+
+                    if (link.href.includes(currentPath)) {
+                        item.classList.add('active');
+                    }
+                });
+            </script>
             <nav>
+            
                 <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
                 <label class="popup"> <input type="checkbox" /> <div tabindex="0" class="burger">
                     <a href="../../Back-End/PHP/accountDetails.php">
@@ -834,19 +987,20 @@
                 </label> 
             </nav>
         </header>
+        
             <main>
                 <div class="mainContainer">
                     <div class="text">
-                        <h4 id="AddEvent">Add Event</h4>
-                        <h4 id="Cameras" class="Addcamera">Cameras</h4>
+<!--                        <h4 id="Cameras" class="Addcamera">Cameras</h4>-->
                     </div>
                     <div class="Cards">
                         <div class="card">
                             <a href="addEvent.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
+                            <h4 id="AddEvent">ADD EVENT</h4>
                         </div>
-                        <div class="card">
-                            <a href="cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
-                        </div>
+<!--                        <div class="card">
+                            <a href="../../Back-End/PHP/cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
+                        </div>-->
                     </div>
                     <div id="listOfEvents" class="listOfEvents">
                         <h4>Events</h4>
@@ -928,54 +1082,66 @@
                         </div>
                         <hr class="BreakLine">
 
-                        <div class="PE">
-                            <?php foreach ($pastEvents as $index => $event): ?>
-                                <div class="EventsDetalisDes">
-                                    <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
-                                    <div class="eventLinks">
-                                        <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>">
-                                            <p class="EventD">View Details</p>
-                                        </a>
-                                        <a href="#" class="EventD"><p>View Report</p></a>
+                       <div class="PE">
+                            <?php if (empty($pastEvents)): ?>
+                                <p class="NoEvents">No past events available.</p>
+                            <?php else: ?>
+                                <?php foreach ($pastEvents as $index => $event): ?>
+                                    <div class="EventsDetalisDes">
+                                        <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                                        <div class="eventLinks">
+                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                                <p class="EventD">View Details</p>
+                                            </a>
+                                            <a href="#" class="EventD" style="text-decoration: none;"><p>View Report</p></a>
+                                        </div>
                                     </div>
-                                </div>
-                                <?php if ($index !== count($pastEvents) - 1):?>
-                                    <hr class="BreakLine">
-                                <?php endif; ?>
-                            <?php endforeach; ?>
+                                    <?php if ($index !== count($pastEvents) - 1): ?>
+                                        <hr class="BreakLine">
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
 
                         <div class="CE">
-                            <?php foreach ($currentEvents as $index => $event): ?>
-                                <div class="EventsDetalisDes">
-                                    <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
-                                    <div class="eventLinks">
-                                        <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>">
-                                            <p class="EventD">View Details</p>
-                                        </a>
-                                        <a href="../../Back-End/PHP/dashboard.php?eventId=<?= $event['id']; ?>">
-                                            <p class="EventD">View Dashboard</p>
-                                        </a>
+                            <?php if (empty($currentEvents)): ?>
+                                <p class="NoEvents">No current events available.</p>
+                            <?php else: ?>
+                                <?php foreach ($currentEvents as $index => $event): ?>
+                                    <div class="EventsDetalisDes">
+                                        <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                                        <div class="eventLinks">
+                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                                <p class="EventD">View Details</p>
+                                            </a>
+                                            <a href="../../Back-End/PHP/dashboard.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                                <p class="EventD">View Dashboard</p>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                                <?php if ($index !== count($currentEvents) - 1): ?>
-                                    <hr class="BreakLine">
-                                <?php endif; ?>
-                            <?php endforeach; ?>
+                                    <?php if ($index !== count($currentEvents) - 1): ?>
+                                        <hr class="BreakLine">
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
 
                         <div class="UE">
-                            <?php foreach ($upcomingEvents as $index => $event): ?>
-                                <div class="EventsDetalisDes">
-                                    <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
-                                    <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>">
-                                        <p class="EventD">View Details</p>
-                                    </a>
-                                </div>
-                                <?php if ($index !== count($upcomingEvents) - 1): ?>
-                                    <hr class="BreakLine">
-                                <?php endif; ?>
-                            <?php endforeach; ?>
+                            <?php if (empty($upcomingEvents)): ?>
+                                <p class="NoEvents">No upcoming events available.</p>
+                            <?php else: ?>
+                                <?php foreach ($upcomingEvents as $index => $event): ?>
+                                    <div class="EventsDetalisDes">
+                                        <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                                        <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                            <p class="EventD">View Details</p>
+                                        </a>
+                                    </div>
+                                    <?php if ($index !== count($upcomingEvents) - 1): ?>
+                                        <hr class="BreakLine">
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1068,7 +1234,7 @@
                                 <div class="footer-widget-heading">
                                     <h3>Useful Links</h3>
                                 </div>
-                                <ul>
+                                <ul class="usfelLinks">
                                     <li><a href="#AddEvent">Add Event</a></li>
                                     <li><a href="#Cameras">Cameras</a></li>
                                     <li><a href="#listOfEvents">List Of Events</a></li>
@@ -1159,6 +1325,7 @@
                 checkRadioButton('PE');
             });
         </script>
+
     </body>
 </html>
  
