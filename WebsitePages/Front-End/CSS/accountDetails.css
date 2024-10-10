@@ -235,37 +235,83 @@ body {
     display: flex;
     justify-content: flex-end;
     margin-top: 10%;
-    margin-right: 40px;
 }
 
-button{
-    min-width: 90px;
-    width: 140%;
+.reset{
+    width: 150px;
     height: 40px;
-    border-radius: 15px;
-    margin-top: 5%;
+    margin-left: -20%; 
+    border-radius: 10px;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
     letter-spacing: 1.15px;
     background-color: #004aad;
     color: #f9f9f9;
-    /* box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9; */
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
     border: none;
     outline: none;
-    transition: 0.5s;
-    text-align: center;
+    align-self: flex-end;
+    transition: 0.5s;   
 }
-.button{
-    margin-left: 13%;
-
-}
-
-button:hover {  
+.reset:hover{
     box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
     transform: scale(0.985);
     transition: 0.25s;
-    background-color: #013b87;
+    background-color: #003f91;
+
 }
 
 
+.logout {
+    width: 130px;
+    height: 40px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1.15px;
+    background-color: #FFD6D6;
+    color: #F94141;
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+    border: none;
+    outline: none;
+    align-self: flex-end;
+    transition: 0.5s;   
+}
+
+      
+.logout:hover {
+    box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
+    transform: scale(0.985);
+    transition: 0.25s;
+    background-color: #FFBDBD;
+}
+
+
+#EditBtn {
+    width: 80px;
+    height: 40px;
+    margin-left: -20%; 
+    margin-bottom: -4%;
+    margin-top: -4%;
+    margin-right: 8%;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1.15px;
+    background-color: #004aad;
+    color: #f9f9f9;
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+    border: none;
+    outline: none;
+    align-self: flex-end;
+    transition: 0.5s;  
+}
+
+
+#EditBtn:hover {
+    box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
+    transform: scale(0.985);
+    transition: 0.25s;
+    background-color: #003f91;
+}
 
