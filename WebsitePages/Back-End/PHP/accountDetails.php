@@ -65,7 +65,7 @@
       if (isset($_POST['Logout'])) {
           // Logout process
           session_destroy();
-          echo "<script>window.location.href='../../Front-End/HTML/login.html';</script>";
+          echo "<script>window.location.href='../../Back-End/PHP/index.php';</script>";
           exit();
       }
 
