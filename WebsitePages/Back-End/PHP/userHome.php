@@ -1,11 +1,11 @@
 <?php
+     include '../../Back-End/PHP/session.php';
      // DB connection
     $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "raqeebdb";
 
-    session_start();
     if (!isset($_SESSION['CompanyID'])) {
         // Redirect to login if not logged in
         header("Location: login.php");
