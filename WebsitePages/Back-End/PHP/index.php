@@ -113,7 +113,8 @@
 
             <div id="contact-us">
                 <div class="container a-container" id="a-container">
-                    <form class="form" id="a-form" action="../../Back-End/PHP/signup.php" method="POST">
+                    <!-- u need to reActivate it when hosted on the web -->
+                    <form class="form" id="a-form" action="b0a7d8effe4beb48f2b0dfe6f7d90d9f" method="POST">
                         <h2 class="form_title title">Contact Us</h2>
                         <h4 style="text-align:center">Get in touch</h4>
                         <input name="cname" class="form__input" type="text" placeholder="Company Name" required>

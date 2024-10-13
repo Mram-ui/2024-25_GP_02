@@ -7,7 +7,7 @@
     // Database connection
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = "root";
     $dbname = "raqeebdb";
 
     // Create connection

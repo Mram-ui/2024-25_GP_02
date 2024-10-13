@@ -1,4 +1,7 @@
-<?php include '../../Back-End/PHP/session.php'; ?>
+<?php
+    include '../../Back-End/PHP/session.php';
+    $companyID = $_SESSION['CompanyID'];
+?>
 <html lang="es" dir="ltr">
 
 <head>
@@ -57,11 +60,13 @@
 
                     <!-- Camera Dropdown populated from database -->
                     <select name="hallCamera" required>
+                    <option value="" disabled selected style="display: none;">Select your camera</option>
+
                         <?php
                         // DB connection
                         $servername = "localhost"; 
                         $username = "root";
-                        $password = "";
+                        $password = "root";
                         $dbname = "raqeebdb";
 
                         // Create connection
@@ -73,7 +78,7 @@
                         }
 
                         // Fetch cameras from the database
-                        $result = $conn->query("SELECT CameraID, CameraName FROM camera");
+                        $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
 
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
@@ -86,7 +91,7 @@
                     </select> <br>
 
                     <label for="hallThreshold">Hall Max Capacity:</label><br>
-                    <input name="hallThreshold" class="form__input" type="number" placeholder="##" min="0" required>
+                    <input name="hallThreshold" class="form__input" type="number" placeholder="00" min="0" required>
                 </div>
                 <div class="card">
                     <a href="#"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>

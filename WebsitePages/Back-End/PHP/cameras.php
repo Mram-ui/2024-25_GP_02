@@ -3,7 +3,7 @@
     // DB connection
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = "root";
     $dbname = "raqeebdb";
 
     // Create connection
@@ -14,9 +14,21 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Fetch cameras from the database
-    $sql = "SELECT CameraID, CameraName FROM camera";
-    $result = $conn->query($sql);
+    $companyID = $_SESSION['CompanyID'];
+
+    // // Fetch cameras from the database
+    // $sql = "SELECT CameraID, CameraName FROM camera";
+    // $result = $conn->query($sql);
+
+        // Fetch events from the database for the specific company
+    $sql = "SELECT CameraID, CameraName 
+            FROM camera 
+            WHERE CompanyID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $companyID); 
+    $stmt->execute();
+    $result = $stmt->get_result();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -829,28 +841,43 @@
         </script>
     </head>  
     <body>
-        <header class="header">
-            <div class="logo">
-                <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
-            </div>
-             <ul>
-                <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
-                <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
-            </ul>
-            <script>
-                const currentPath = window.location.pathname;
-                const menuItems = document.querySelectorAll('ul li');
-                menuItems.forEach((item) => {
-                    const link = item.querySelector('a');
-                    if (link.href.includes(currentPath)) {
-                        item.classList.add('active');
-                    }
-                });
-            </script>
+    <header class="header">
+        <div class="logo">
+            <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
+        </div>
+        <ul>
+            <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
+            <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
+        </ul>
+        <script>
+            const currentPath = window.location.pathname;
 
-            <nav>
-                <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
-                <label class="popup"> <input type="checkbox" /> <div tabindex="0" class="burger">
+            const menuItems = document.querySelectorAll('ul li');
+
+            menuItems.forEach((item) => {
+                const link = item.querySelector('a');
+
+                if (link.href.includes(currentPath)) {
+                    item.classList.add('active');
+                }
+            });
+        </script>
+        <nav>
+            <?php
+            $query = 'SELECT Logo FROM company WHERE CompanyID=' . $companyID;
+            $row = mysqli_fetch_assoc(mysqli_query($conn, $query));
+            $logo = $row['Logo'];
+
+            // $sql = "SELECT Logo FROM company WHERE CompanyID=' . $CompanyID";
+            // $result = $conn->query($sql);
+
+            ?>
+
+            <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
+            <label class="popup"> <input type="checkbox" />
+            <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/<?php echo $logo ?>" style="width: 60px; height:60px; border-radius: 50%;" ></a>
+
+                <!-- <div tabindex="0" class="burger">
                     <a href="../../Back-End/PHP/accountDetails.php">
                         <svg
                             viewBox="0 0 24 24"
@@ -859,14 +886,13 @@
                             width="20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
-                                d="M12 2c2.757 0 5 2.243 5 5.001 0 2.756-2.243 5-5 5s-5-2.244-5-5c0-2.758 2.243-5.001 5-5.001zm0-2c-3.866 0-7 3.134-7 7.001 0 3.865 3.134 7 7 7s7-3.135 7-7c0-3.867-3.134-7.001-7-7.001zm6.369 13.353c-.497.498-1.057.931-1.658 1.302 2.872 1.874 4.378 5.083 4.972 7.346h-19.387c.572-2.29 2.058-5.503 4.973-7.358-.603-.374-1.162-.811-1.658-1.312-4.258 3.072-5.611 8.506-5.611 10.669h24c0-2.142-1.44-7.557-5.631-10.647z"
-                            ></path>
+                                d="M12 2c2.757 0 5 2.243 5 5.001 0 2.756-2.243 5-5 5s-5-2.244-5-5c0-2.758 2.243-5.001 5-5.001zm0-2c-3.866 0-7 3.134-7 7.001 0 3.865 3.134 7 7 7s7-3.135 7-7c0-3.867-3.134-7.001-7-7.001zm6.369 13.353c-.497.498-1.057.931-1.658 1.302 2.872 1.874 4.378 5.083 4.972 7.346h-19.387c.572-2.29 2.058-5.503 4.973-7.358-.603-.374-1.162-.811-1.658-1.312-4.258 3.072-5.611 8.506-5.611 10.669h24c0-2.142-1.44-7.557-5.631-10.647z"></path>
                         </svg>
                     </a>
-                </label> 
-            </nav>
-            </nav>
-        </header>  
+                </div> -->
+            </label>
+        </nav>
+    </header>
         
 	<main>
             <div class="mainContainer">
@@ -875,7 +901,7 @@
                 <div class="Cards">
                     <div class="card">
                         <a href="../../Back-End/PHP/addCamera.php"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
-                        <h4 id="AddEvent">ADD CAMERA</h4>
+                        <a href="../../Back-End/PHP/addCamera.php" style="text-decoration: none;"><h4 id="AddEvent">ADD CAMERA</h4></a>
                     </div>
                 </div>
                 <div id="listOfEvents" class="listOfEvents">

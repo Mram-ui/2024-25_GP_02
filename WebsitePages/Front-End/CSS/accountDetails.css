@@ -25,8 +25,8 @@ body {
 .main {
     position: relative;
     width: 45%;
-    min-width: fit-content;
-    min-height: fit-content;
+    min-height: 493px;
+    max-width: 580px;
     height: 78%;
     padding: 30px 40px;
     background-color: #ecf0f3;
@@ -62,7 +62,6 @@ body {
     cursor: pointer;
 }
 .form__input {
-    width: 500px;
     height: 40px;
     margin: 4px 0;
     padding-left: 25px;

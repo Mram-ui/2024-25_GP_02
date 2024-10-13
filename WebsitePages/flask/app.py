@@ -1,10 +1,31 @@
 from datetime import datetime, timedelta
-
-from flask import Flask, render_template, Response, jsonify
+from flask import Flask, render_template, Response, jsonify, send_from_directory, request
 import mysql.connector
 import cv2
+import os
 
 app = Flask(__name__)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGES_DIR = os.path.join(BASE_DIR, '../images')
+FRONTEND_DIR = os.path.join(BASE_DIR, '../Front-End')
+BACKEND_DIR = os.path.join(BASE_DIR, '../Back-End')
+
+# Route to serve images from the external directory
+@app.route('/images/<path:filename>')
+def serve_images(filename):
+    return send_from_directory(IMAGES_DIR, filename)
+
+# Route to serve frontend files
+@app.route('/Front-End/<path:filename>')
+def serve_frontend(filename):
+    return send_from_directory(FRONTEND_DIR, filename)
+
+# Route to serve backend files
+@app.route('/Back-End/<path:filename>')
+def serve_backend(filename):
+    return send_from_directory(BACKEND_DIR, filename)
+
 
 # Configure MySQL connection
 app.config['MYSQL_HOST'] = 'localhost'
@@ -27,9 +48,12 @@ def get_db_connection():
 def home():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+    # Get the eventId parameter from the URL
+    event_id = request.args.get('eventID')
+
 
     # Retrieve camera information
-    cursor.execute('SELECT HallName, CameraID FROM hall WHERE EventID=1')
+    cursor.execute(f'SELECT HallName, CameraID FROM hall WHERE EventID={event_id}')
     camera_data = cursor.fetchall()
 
     detailed_camera_data = []
@@ -37,7 +61,7 @@ def home():
     for camera in camera_data:
         camera_id = camera['CameraID']
         # Retrieve all information for each CameraID
-        cursor.execute(f'SELECT * FROM camera WHERE CameraID="{camera_id}"')
+        cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
         camera_info = cursor.fetchall()
 
         for info in camera_info:
@@ -46,23 +70,43 @@ def home():
                 'HallName': camera['HallName'],
                 'CameraID': camera_id,
                 'rtsp_link': rtsp_link,
+                'eventID' : event_id,
             })
+
+        # Retrieve event information
+    cursor.execute(f'SELECT * FROM events WHERE EventID={event_id}')
+    eventsData = cursor.fetchall()
+    eventDataArr = []
+
+    for eventData in eventsData:
+        eventDataArr.append({ 
+                'EventName' : eventData['EventName'],
+                'EventStartTime' : eventData['EventStartTime'],
+                'EventEndTime' : eventData['EventEndTime'],
+                'EventStartDate' : eventData['EventStartDate'],
+                'EventEndDate' : eventData['EventEndDate'],
+                'EventLocation' : eventData['EventLocation'],
+        })
+
 
     cursor.close()
     connection.close()
 
     # Pass the camera data to the template
-    return render_template('dashboard.html', cameras=detailed_camera_data)
+    return render_template('dashboard.html', cameras=detailed_camera_data, eventData=eventDataArr)
 
 
 @app.route('/get_static_data', methods=['GET'])
 def get_data():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+    # Get the eventId parameter from the URL
+    event_id = request.args.get('eventID')
 
     # Retrieve event information:
-    cursor.execute('SELECT * FROM events WHERE EventID=1')
+    cursor.execute(f'SELECT * FROM events WHERE EventID={event_id}')
     event_data = cursor.fetchall()
+
 
     # Convert datetime and timedelta to string for JSON serialization
     for row in event_data:
@@ -71,7 +115,7 @@ def get_data():
                 row[key] = str(value)  # Convert to string
 
     # Retrieve camera information
-    cursor.execute('SELECT HallID, HallName, CameraID FROM hall WHERE EventID=1')
+    cursor.execute(f'SELECT HallID, HallName, CameraID FROM hall WHERE EventID={event_id}')
     camera_data = cursor.fetchall()
 
     # Prepare a list to hold all camera details
@@ -83,7 +127,7 @@ def get_data():
     for camera in camera_data:
         camera_id = camera['CameraID']
         # Retrieve all information for each CameraID
-        cursor.execute(f'SELECT * FROM camera WHERE CameraID="{camera_id}"')
+        cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
         camera_info = cursor.fetchall()
 
         # Append the hall name and corresponding camera info to the detailed list
@@ -132,7 +176,7 @@ def video_feed(camera_id):
     cursor = connection.cursor(dictionary=True)
     
     # Retrieve RTSP link for the given camera_id
-    cursor.execute(f'SELECT * FROM camera WHERE CameraID="{camera_id}"')
+    cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
     camera_info = cursor.fetchone()
     rtsp_link = f"rtsp://{camera_info['CameraUsername']}:{camera_info['CameraPassword']}@{camera_info['CameraIPAddress']}:{camera_info['PortNo']}/{camera_info['StreamingChannel']}"
 

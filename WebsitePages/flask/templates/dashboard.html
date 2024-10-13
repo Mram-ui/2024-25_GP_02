@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> -->
+    <link rel="stylesheet" href="/Front-End/CSS/dashboard.css">
+
     <!--  Fonts Link  -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,37 +21,38 @@
 
 
     <script>
-        function fetchStaticData() {
-            fetch('/get_static_data')
-                .then(response => response.json())
-                .then(data => {
-                    let eventInfo = data.event[0];  // Assuming one company with CompanyID=1
-                    document.getElementById('EventName').innerText = eventInfo['EventName'];
-                    document.getElementById('EventLocation').innerText = eventInfo['EventLocation'];
-                    //date
-                    let startDate = eventInfo['EventStartDate'].split(' ');
-                    let endDate = eventInfo['EventEndDate'].split(' ');
-                    let formattedDate = `${startDate[1]} ${startDate[2]} ${startDate[3]} - ${endDate[1]} ${endDate[2]} ${endDate[3]}`;  // Extract hour and minute
-                    document.getElementById('EventDate').innerText = formattedDate;
+        // function fetchStaticData() {
+        //     fetch('/get_static_data')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             let eventInfo = data.event[0];  // Assuming one company with CompanyID=1
+        //             document.getElementById('EventName').innerText = eventInfo['EventName'];
+        //             document.getElementById('EventLocation').innerText = eventInfo['EventLocation'];
+        //             //date
+        //             let startDate = eventInfo['EventStartDate'].split(' ');
+        //             let endDate = eventInfo['EventEndDate'].split(' ');
+        //             let formattedDate = `${startDate[1]} ${startDate[2]} ${startDate[3]} - ${endDate[1]} ${endDate[2]} ${endDate[3]}`;  // Extract hour and minute
+        //             document.getElementById('EventDate').innerText = formattedDate;
 
 
-                    //time
-                    // Format the start time to show only hours and minutes
-                    let startTime = eventInfo['EventStartTime'].split(':');
-                    let endTime = eventInfo['EventEndTime'].split(':');
-                    let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
-                    document.getElementById('EventTime').innerText = formattedTime;
+        //             //time
+        //             // Format the start time to show only hours and minutes
+        //             let startTime = eventInfo['EventStartTime'].split(':');
+        //             let endTime = eventInfo['EventEndTime'].split(':');
+        //             let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
+        //             document.getElementById('EventTime').innerText = formattedTime;
 
+        //             // Retrieve camera information data
+        //             let cameraInfo = data.cameras[0];  // Corrected array initialization
+        //             document.getElementById('numberOfHalls').innerText = cameraInfo.numOfHalls;
+        //             document.getElementById('infoHallName').innerText = cameraInfo.HallName;
 
-                    // Retrieve camera information data
-                    let cameraInfo = data.cameras[0];  // Corrected array initialization
-                    document.getElementById('infoStat').innerText = cameraInfo.numOfHalls;
-                    document.getElementById('infoHallName').innerText = cameraInfo.HallName;
+        //             console.log(cameraInfo.HallName, formattedTime, formattedDate, cameraInfo.eventID);
+        //         });
+        // }
 
-                });
-        }
-
-        window.onload = fetchStaticData;  // Fetch static data when page loads
+        // window.onload = fetchStaticData;  // Fetch static data when page loads
+        // console.log();
     </script>
 
 </head>
@@ -57,55 +60,76 @@
 <body>
     <header class="header">
         <div class="logo">
-            <a href="../../Back-End/PHP/userHome.php"><img src="{{ url_for('static', filename='images/Logo2.png') }}"
+            <a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php"><img src="/images/Logo2.png"
                     alt="Company Logo"></a>
         </div>
     </header>
 
     <main>
-        <div class="eventInformation">
-            <h3><span id="EventName">EventName</span></h3>
-            <p><strong>Event Date:</strong> <span id="EventDate"></span></p>
-            <p><strong>Event Time:</strong> <span id="EventTime"></span></p>
-            <p><strong>Event Location:</strong> <span id="EventLocation"></span></p>
-        </div>
-
-        <div class="infoBoxes">
-
-            {% for camera in cameras %}
-            <div class="infoBox">
-                <p>Current Visitors</p>
-                <h3><span id="">No Data</span></h3>
-                <p style="font-weight: bold;">{{ camera.HallName }}</p>
+        <div class="allEventInformation">
+            <!-- <div class="eventInformation">
+                <h3><span id="EventName">EventName</span></h3>
+                <p><strong>Event Date:</strong> <span id="EventDate"></span></p>
+                <p><strong>Event Time:</strong> <span id="EventTime"></span></p>
+                <p><strong>Event Location:</strong> <span id="EventLocation"></span></p>
             </div>
-            {% endfor %}
+            
+            <div class="infoBoxes">
+                <div class="infoBox">
+                    <p>Number of Halls</p>
+                    <h3><span id="numberOfHalls"></span></h3>
+                    <p style="font-weight: bold;"><span id="infoHallName"></span></p>
+                </div>
+                <div class="infoBox">
+                    <p>Total of visitors</p>
+                    <h2><span>No Data</span></h2>
+                </div> -->
 
-            <div class="infoBox">
+            <div class="eventInformation">
+                {% for event in eventData %}
+                    <!-- <h3><span id="EventName">EventName</span></h3>
+                    <p><strong>Event Date:</strong> <span id="EventDate"></span></p>
+                    <p><strong>Event Time:</strong> <span id="EventTime"></span></p>
+                    <p><strong>Event Location:</strong> <span id="EventLocation"></span></p> -->
+                    <h3><span id="EventName"> {{ event.HallName }}</span></h3>
+                    <p><strong>Event Date:</strong> {{ event.EventStartDate }} - {{ event.EventEndDate }}</span></p>
+                    <p><strong>Event Time:</strong> {{ event.EventStartTime }} - {{ event.EventEndTime }}</span></p>
+                    <p><strong>Event Location:</strong> {{ event.EventLocation }}</span></p>
+                {% endfor %}
+            </div>
+
+
+
+            <div class="eventInformation">
                 <p>Number of Halls</p>
-                <h3><span id="infoStat"></span></h3>
-                <p style="font-weight: bold;"><span id="infoHallName"></span></p>
+                <h3 id="numberOfHalls"></h3>
             </div>
-            <div class="infoBox">
+            <div id="totalOfVisitors" class="eventInformation">
                 <p>Total of visitors</p>
-                <h2><span id="">No Data</span></h2>
+                <h2 style="margin-bottom: 45%;">No Data</h2>
             </div>
 
 
         </div>
-
+        </div>
 
 
         <!-- Loop through the cameras list passed from Flask -->
         <div class="camera">
             <h3><span class="dot"></span> Live Stream</h3>
             <div id="cameraFeeds">
-                    {% for camera in cameras %}
-                <div id="cameraFeed">
+                {% for camera in cameras %}
+                <div class="cameraFeed">
                     <h4 style="margin: 0; margin-bottom: 2.5%;">{{ camera.HallName }}</h4>
-                    <img src="{{ url_for('video_feed', camera_id=camera.CameraID) }}" width="600">
+                    <p>Current Visitors: No Data</p>
+                    <img src="{{ url_for('video_feed', camera_id=camera.CameraID) }}" width="300"
+                        alt="No camera connection">
                 </div>
+                <script>
+                    console.log('{{ camera.HallName }}', '{{ camera.eventID }}');
+                </script>
                 {% endfor %}
-            </div>    
+            </div>
         </div>
     </main>
 
@@ -134,8 +158,7 @@
                     <div class="col-xl-4 col-lg-4 mb-50">
                         <div class="footer-widget">
                             <div class="footer-logo">
-                                <a href="../../Back-End/PHP/userHome.php"><img
-                                        src="{{ url_for('static', filename='images/Logo3.png') }}" class="img-fluid"
+                                <a href="../../Back-End/PHP/userHome.php"><img src="/images/Logo3.png" class="img-fluid"
                                         alt="logo"></a>
                             </div>
                             <div class="footer-text">
@@ -157,7 +180,7 @@
                                 <h3>Useful Links</h3>
                             </div>
                             <ul>
-                                <li><a href="#AddEvent">Add Event</a></li>
+                                <li><a href="/Back-End/PHP/addEvent.php">Add Event</a></li>
                                 <li><a href="#Cameras">Cameras</a></li>
                                 <li><a href="#listOfEvents">List Of Events</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
