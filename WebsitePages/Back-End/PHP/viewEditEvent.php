@@ -40,9 +40,13 @@
         echo "<script>alert('Event not found');</script>";
         exit; // Stop further processing if no event is found
     }
-
-    // Prepare SQL query to fetch hall data
-    $hallQuery = $conn->prepare("SELECT HallName, HallThreshold FROM hall WHERE EventID = ?");
+    
+    $hallQuery = $conn->prepare("
+        SELECT hall.HallName, hall.HallThreshold, hall.CameraID, camera.CameraName
+        FROM hall
+        LEFT JOIN camera ON hall.CameraID = camera.CameraID
+        WHERE hall.EventID = ?
+    ");
     $hallQuery->bind_param("i", $eventID);
     $hallQuery->execute();
     $hallResult = $hallQuery->get_result();
@@ -51,26 +55,10 @@
     while ($hallRow = $hallResult->fetch_assoc()) {
         $halls[] = $hallRow;
     }
-    
-    
-$hallQuery = $conn->prepare("
-    SELECT hall.HallName, hall.HallThreshold, hall.CameraID, camera.CameraName
-    FROM hall
-    LEFT JOIN camera ON hall.CameraID = camera.CameraID
-    WHERE hall.EventID = ?
-");
-$hallQuery->bind_param("i", $eventID);
-$hallQuery->execute();
-$hallResult = $hallQuery->get_result();
 
-$halls = [];
-while ($hallRow = $hallResult->fetch_assoc()) {
-    $halls[] = $hallRow;
-}
-
-    // Close the database connection
-    $conn->close();
-?>
+        // Close the database connection
+        $conn->close();
+ ?>
 <html lang="es" dir="ltr">
 
 <head>
@@ -113,6 +101,7 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         .DeleteBtn {
             width: 150px;
             height: 40px;
+            margin-top: 3.5%;
             margin-right: 5%;
             margin-bottom: 5%;
             border-radius: 10px;
@@ -188,8 +177,8 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         }
 
         #hall {
-            margin-top: 0%;
-            margin-bottom: 0%;
+            margin-top: 30%;
+            margin-bottom: 30%;
             display: block; 
         }
         
@@ -200,6 +189,8 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         #label {
             text-align: left;
             font-weight: normal;
+            white-space: nowrap; 
+
         }
         .form__input {
             box-sizing: border-box;
@@ -217,6 +208,52 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         .headerTitle {
             margin-top: 3%;
         }
+        
+        .firefox fieldset {
+            padding-left: 150%;
+            padding-right: 60%;
+            margin-right: 0%;
+            margin-left: -30%;        
+        }
+        
+        .firefox fieldset legend {
+            color: #013b87;
+            margin-left: -200%;
+        }
+        
+        #HMAX {
+            white-space: nowrap; 
+        }
+        
+        
+        .AllHalls {
+            display: flex;
+        }
+        
+        .hall {
+            width: 930%;
+            margin: 0;
+            margin-left: -1000%;
+        }
+
+        .firefox .hall {
+            width: 202%;
+            margin: 0;
+            margin-left: -233%;
+        }
+        
+        legend {
+            color: #013b87;
+            margin-left: -700%;
+        }
+        
+        fieldset {
+            padding-left: 160%;
+            padding-right: 141%;
+            margin-right: 0%;
+            margin-left: -40%;        
+        }
+        
         
       
       
@@ -274,18 +311,26 @@ while ($hallRow = $hallResult->fetch_assoc()) {
                     <input name="endTime" class="form__input time" type="time" value="<?php echo htmlspecialchars($eventData['EventEndTime']); ?>" required readonly> 
                 </div>
             </div>
-
             <div class="AllHalls">
-                <?php foreach ($halls as $hall): ?>
-                    <div id="hall" class="hall" style="margin-left: -30%">
-                        <label for="hallName">Hall Name:</label><br>
+                <?php 
+                    $hallNumber = 1;
+                    foreach ($halls as $hall):
+                ?>
+                <fieldset>
+                <legend>Hall  <?php echo $hallNumber; ?> : </legend>
+                    <div id="hall" class="hall">
+                        <label id="HMAX" for="hallName">Hall Name:</label><br>
                         <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
                         <label for="cameraName">Camera:</label><br>
                         <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['CameraName']); ?>" required readonly><br>
-                        <label for="hallThreshold">Hall Max Capacity:</label><br>
+                        <label id="HMAX" for="hallThreshold">Hall Max Capacity:</label><br>
                         <input id="HInput" name="hallThreshold" class="form__input" type="number" placeholder="##" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
                     </div>
-                <?php endforeach; ?>
+                </fieldset>
+                <?php 
+                    $hallNumber++;
+                    endforeach;
+                ?>
             </div>
             <br>
         </form>
@@ -328,5 +373,12 @@ while ($hallRow = $hallResult->fetch_assoc()) {
         return true;
     }
     </script>
+    <script>
+        // Detect if the browser is Firefox
+        if (navigator.userAgent.indexOf("Firefox") !== -1) {
+            document.body.classList.add("firefox");
+        }
+    </script>
+
 </body>
 </html>
