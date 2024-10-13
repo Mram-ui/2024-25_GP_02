@@ -3,7 +3,7 @@
     // DB connection
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
     // Create connection
@@ -125,8 +125,8 @@
 
             .card {
                 display: flex;
-                width: 15%;
-                height: 5%;
+                width: 14.5%;
+                height: 2%;
                 border-radius: 20px;
                 margin-bottom: 1%;
                 padding: 20px 30px;
@@ -190,8 +190,8 @@
 
             .Plus {
                 z-index: 100;
-                width: 175%;
-                margin-left: -70%;
+                width: 120%;
+                margin-left: -40%;
                 align-items: center;
                 margin-top: 10%;
             }
@@ -508,23 +508,26 @@
             transition: 0.25s;
             }
 
-            .facebook-bg{
-            background: #3B5998;
+           
+            
+            .linkedin-bg {
+                background: #0e76a8;
             }
-            .twitter-bg{
-            background: #55ACEE;
-            }
-            .google-bg{
-            background: #ff8000;
+           
+
+            .twitter-bg {
+                background: #55ACEE;
             }
 
-            .facebook-bg:hover {
-                background: #314b84;
+
+            .linkedin-bg:hover {
+                background: #0c6590;
                 width: 42px;
                 height: 42px;
                 transition: 0.25s;
                 line-height: 40px;
             }
+
             .twitter-bg:hover {
                 background: #418fcb;
                 width: 42px;
@@ -532,14 +535,7 @@
                 transition: 0.25s;
                 line-height: 40px;
             }
-            .google-bg:hover {
-                background: #bb5f03;
-                width: 42px;
-                height: 42px;
-                transition: 0.25s;
-                line-height: 40px;
-            }
-
+           
 
             .footer-widget-heading h3 {
             color: #fff;
@@ -779,7 +775,7 @@
             
              
          
-            ul li {
+            .headerlinks li {
                 text-align: left;
                 margin-left: -135%;
                 list-style: none;
@@ -790,13 +786,13 @@
                 font-weight: lighter;
             }
 
-            ul li a {
+            .headerlinks li a {
                 color: #504f4f;
                 text-decoration: none;
                 font-family: 'Poppins', sans-serif;
             }
 
-            ul li::after {
+            .headerlinks li::after {
                 content: "";
                 width: 0;
                 height: 2px;
@@ -808,19 +804,19 @@
                 transition: 0.2s;
             }
 
-            ul li:hover::after {
+            .headerlinks li:hover::after {
                 width: 100%;
             }
 
-            ul li a:hover {
+            .headerlinks li a:hover {
                 color: #4a56ff;
             }
 
-            ul li.active a {
-                color: #4a56ff;
+            .headerlinks li.active a {
+                color: #3B5998;
             }
 
-            ul li.active::after {
+            .headerlinks li.active::after {
                 width: 100%;
             }
 
@@ -845,7 +841,7 @@
         <div class="logo">
             <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
         </div>
-        <ul>
+        <ul class="headerlinks">
             <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
             <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
         </ul>
@@ -969,9 +965,9 @@
                                 </div>
                                 <div class="footer-social-icon">
                                     <span>Follow us</span>
-                                    <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                     <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                    <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
+<!--                                    <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>-->
                                 </div>
                             </div>
                         </div>
@@ -991,7 +987,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
+<!--                        <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
                             <div class="footer-widget">
                                 <div class="footer-widget-heading">
                                     <h3>Subscribe</h3>
@@ -1006,7 +1002,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
