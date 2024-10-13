@@ -22,6 +22,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <title>Home</title>
+    <style>
+        .linkedin-bg {
+            background: #0e76a8;
+        }
+        .linkedin-bg:hover {
+            background: #0c6590;
+            width: 42px;
+            height: 42px;
+            transition: 0.25s;
+            line-height: 40px;
+        }
+    </style>
     <script>
         var navLinks = document.getElementById("navLinks");
 
@@ -175,9 +187,9 @@ function onload() {
                             </div>
                             <div class="footer-social-icon">
                                 <span>Follow us</span>
-                                <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
+                                <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                 <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
+<!--                                <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>-->
                             </div>
                         </div>
                     </div>
@@ -198,7 +210,7 @@ function onload() {
                             </ul>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
+<!--                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
                         <div class="footer-widget">
                             <div class="footer-widget-heading">
                                 <h3>Subscribe</h3>
@@ -212,7 +224,7 @@ function onload() {
                                     <button><i class="fab fa-telegram-plane"></i></button>
                                 </form>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
