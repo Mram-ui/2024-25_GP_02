@@ -201,8 +201,8 @@
 
             .Plus {
                 z-index: 100;
-                width: 96%;
-                margin-left: -5%;
+                width: 90%;
+                margin-left: -12%;
                 align-items: center;
                 margin-top: 10%;
                 padding: 0%;
@@ -503,7 +503,7 @@
 
 
             /* ---- Footer Style ---- */
-            ul {
+            .usfelLinks ul {
                 margin: 0px;
                 padding: 0px;
             }
@@ -627,20 +627,19 @@
                 transition: 0.25s;
             }
 
-            .facebook-bg {
-                background: #3B5998;
+            .linkedin-bg {
+                background: #0e76a8;
             }
+           
 
             .twitter-bg {
                 background: #55ACEE;
             }
 
-            .google-bg {
-                background: #ff8000;
-            }
+        
 
-            .facebook-bg:hover {
-                background: #314b84;
+            .linkedin-bg:hover {
+                background: #0c6590;
                 width: 42px;
                 height: 42px;
                 transition: 0.25s;
@@ -913,7 +912,7 @@
             }
 
 
-            ul li {
+            .headerlinks li {
                 text-align: left;
                 margin-left: -135%;
                 list-style: none;
@@ -924,13 +923,13 @@
                 font-weight: lighter;
             }
 
-            ul li a {
+            .headerlinks li a {
                 color: #504f4f;
                 text-decoration: none;
                 font-family: 'Poppins', sans-serif;
             }
 
-            ul li::after {
+            .headerlinks li::after {
                 content: "";
                 width: 0;
                 height: 2px;
@@ -942,19 +941,19 @@
                 transition: 0.2s;
             }
 
-            ul li:hover::after {
+            .headerlinks li:hover::after {
                 width: 100%;
             }
 
-            ul li a:hover {
+            .headerlinks li a:hover {
                 color: #4a56ff;
             }
 
-            ul li.active a {
+            .headerlinks li.active a {
                 color: #4a56ff;
             }
 
-            ul li.active::after {
+            .headerlinks li.active::after {
                 width: 100%;
             }
 
@@ -982,7 +981,7 @@
             <div class="logo">
                 <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
             </div>
-            <ul>
+            <ul class="headerlinks">
                 <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
                 <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
             </ul>
@@ -1273,9 +1272,8 @@
                                 </div>
                                 <div class="footer-social-icon">
                                     <span>Follow us</span>
-                                    <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
+                                    <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                     <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                    <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -1286,7 +1284,6 @@
                                 </div>
                                 <ul class="usfelLinks">
                                     <li><a href="#AddEvent">Add Event</a></li>
-                                    <li><a href="#Cameras">Cameras</a></li>
                                     <li><a href="#listOfEvents">List Of Events</a></li>
                                     <li><a href="#" style="color: #151414;">Contact</a></li>
                                     <li><a href="#" style="color: #151414;">Contact</a></li>
@@ -1296,7 +1293,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
+<!--                        <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
                             <div class="footer-widget">
                                 <div class="footer-widget-heading">
                                     <h3>Subscribe</h3>
@@ -1311,7 +1308,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
