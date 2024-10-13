@@ -1,5 +1,5 @@
 <?php
-     include '../../Back-End/PHP/session.php';
+    include '../../Back-End/PHP/session.php';
      // DB connection
     $servername = "localhost";
     $username = "root";
@@ -135,7 +135,7 @@
 
             .card {
                 display: flex;
-                width: 14.5%;
+                width: 13.5%;
                 height: 5%;
                 border-radius: 20px;
                 margin-bottom: 1%;
@@ -201,7 +201,7 @@
 
             .Plus {
                 z-index: 100;
-                width: 90%;
+                width: 100%;
                 margin-left: -12%;
                 align-items: center;
                 margin-top: 10%;
