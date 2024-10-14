@@ -80,113 +80,123 @@
             }
 
 
-            /* ---- Footer Style ---- */
-            ul {
-                margin: 0px;
-                padding: 0px;
-            }
+        /* ---- Footer Style ---- */
+        .usfelLinks ul {
+            margin: 0px;
+            padding: 0px;
+        }
 
 
-            .row-contact
-            {
-                align-items: center;
-                align-content: center;
-                display: flex;
-            }
+        .row-contact {
+            align-items: center;
+            align-content: center;
+            display: flex;
+        }
 
-            .row {
-                display: flex;
-                margin-left: 10%;
-                margin-right: 10%;
-            }
+        .row {
+            display: flex;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
 
-            .footer-section {
+        .footer-section {
             background: #151414;
             position: relative;
-            }
-            .footer-cta {
+        }
+
+        .footer-cta {
             border-bottom: 1px solid #373636;
             margin-top: 5%;
             margin-bottom: 2%;
             display: flex;
             margin-left: 10%;
             margin-right: 10%;
-            }
+        }
 
-            .single-cta i {
+        .single-cta i {
             color: #1e52a5;
             font-size: 30px;
             margin-bottom: 15%;
-            }
+        }
 
 
-            .cta-text {
+        .cta-text {
             padding-left: 15px;
             display: inline-block;
-            }
-            .cta-text h4 {
+        }
+
+        .cta-text h4 {
             color: #fff;
             font-size: 20px;
             font-weight: 600;
-            }
+        }
 
-            .cta-text span {
+        .cta-text span {
             color: #757575;
             font-size: 15px;
-            }
+        }
 
-            #mail a {
-                color: #757575;
-                transition: 0.25s;
-                text-decoration: none;
-            }
+        #mail a {
+            color: #757575;
+            transition: 0.25s;
+            text-decoration: none;
+        }
 
-            #mail a:hover {
-                color: #3B5998;
-                transition: 0.25s;
-            }
+        #mail a:hover {
+            color: #3B5998;
+            transition: 0.25s;
+        }
 
 
-            .footer-content {
+        .footer-content {
             position: relative;
             z-index: 2;
-            }
-            .footer-pattern img {
+        }
+
+        .footer-pattern img {
             position: absolute;
             top: 0;
             left: 0;
             height: 330px;
             background-size: cover;
             background-position: 100% 100%;
-            }
-            .footer-logo {
+        }
+
+        .footer-logo {
             margin-bottom: 0px;
-            }
-            .footer-logo img {
-                max-width: 300px;
-            }
-            .footer-text p {
+        }
+
+        .footer-logo img {
+            max-width: 300px;
+        }
+
+        .footer-text p {
             margin-bottom: 10px;
             font-size: 14px;
             color: #7e7e7e;
             line-height: 28px;
             font-family: Poppins;
-            margin-right: 35%;
-            }
-            .footer-social-icon span {
+            margin-right: 90%;
+            white-space: nowrap;
+
+        }
+
+        .footer-social-icon span {
             color: #fff;
             display: block;
             font-size: 25px;
             font-weight: 700;
             margin-top: 5%;
             margin-bottom: 5px;
-            }
-            .footer-social-icon a {
+        }
+
+        .footer-social-icon a {
             color: #fff;
             font-size: 16px;
             margin-right: 15px;
-            }
-            .footer-social-icon i {
+        }
+
+        .footer-social-icon i {
             height: 40px;
             width: 40px;
             text-align: center;
@@ -195,49 +205,53 @@
             margin-top: 1%;
             margin-bottom: 3%;
             transition: 0.25s;
-            }
+        }
 
-            .facebook-bg{
-            background: #3B5998;
-            }
-            .twitter-bg{
-            background: #55ACEE;
-            }
-            .google-bg{
-            background: #ff8000;
-            }
-
-            .facebook-bg:hover {
-                background: #314b84;
-                width: 42px;
-                height: 42px;
-                transition: 0.25s;
-                line-height: 40px;
-            }
-            .twitter-bg:hover {
-                background: #418fcb;
-                width: 42px;
-                height: 42px;
-                transition: 0.25s;
-                line-height: 40px;
-            }
-            .google-bg:hover {
-                background: #bb5f03;
-                width: 42px;
-                height: 42px;
-                transition: 0.25s;
-                line-height: 40px;
-            }
+        .linkedin-bg {
+            background: #0e76a8;
+        }
 
 
-            .footer-widget-heading h3 {
+        .twitter-bg {
+            background: #000000;
+        }
+
+
+
+        .linkedin-bg:hover {
+            background: #0c6590;
+            width: 42px;
+            height: 42px;
+            transition: 0.25s;
+            line-height: 40px;
+        }
+
+        .twitter-bg:hover {
+            background: #504f4f;
+            width: 42px;
+            height: 42px;
+            transition: 0.25s;
+            line-height: 40px;
+        }
+
+        .google-bg:hover {
+            background: #bb5f03;
+            width: 42px;
+            height: 42px;
+            transition: 0.25s;
+            line-height: 40px;
+        }
+
+
+        .footer-widget-heading h3 {
             color: #fff;
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 40px;
             position: relative;
-            }
-            .footer-widget-heading h3::before {
+        }
+
+        .footer-widget-heading h3::before {
             content: "";
             position: absolute;
             left: 0;
@@ -245,78 +259,90 @@
             height: 2px;
             width: 50px;
             background: #3B5998;
-            }
-            .footer-widget ul li {
+        }
+
+        .footer-widget ul li {
             display: inline-block;
             width: 50%;
             margin-bottom: 12px;
             transition: 0.25s;
             text-decoration: none;
-            }
-            .footer-widget ul li a:hover{
+        }
+
+        .footer-widget ul li a:hover {
             color: #3B5998;
             transition: 0.25s;
-            }
-            .footer-widget ul li a {
+        }
+
+        .footer-widget ul li a {
             color: #878787;
             text-transform: capitalize;
-            }
-            .subscribe-form {
+        }
+
+        .subscribe-form {
             position: relative;
             overflow: hidden;
-            }
-            .subscribe-form input {
+        }
+
+        .subscribe-form input {
             width: 100%;
             padding: 14px 28px;
             background: #2E2E2E;
             border: 1px solid #2E2E2E;
             color: #fff;
-            }
-            .subscribe-form button {
-                position: absolute;
-                right: 0;
-                background: #3B5998;
-                padding: 13px 20px;
-                border: 1px solid #3B5998;
-                top: 0;    
-                transition: 0.25s;
-            }
+        }
 
-            .subscribe-form button:hover {
-                background: #264078;
-                border: 1px solid #264078;
-                transition: 0.25s;
-            }
+        .subscribe-form button {
+            position: absolute;
+            right: 0;
+            background: #3B5998;
+            padding: 13px 20px;
+            border: 1px solid #3B5998;
+            top: 0;
+            transition: 0.25s;
+        }
 
-            .subscribe-form button i {
+        .subscribe-form button:hover {
+            background: #264078;
+            border: 1px solid #264078;
+            transition: 0.25s;
+        }
+
+        .subscribe-form button i {
             color: #fff;
             font-size: 22px;
             transform: rotate(-6deg);
-            }
-            .copyright-area{
+        }
+
+        .copyright-area {
             background: #202020;
             padding: 25px 0;
-            }
-            .copyright-text p {
+        }
+
+        .copyright-text p {
             margin: 0;
             font-size: 14px;
             color: #878787;
-            
-            }
-            /* .copyright-text p a{
-            color: #3B5998;
-            } */
-            .footer-menu li {
+
+        }
+
+        /* .copyright-text p a{
+                color: #3B5998;
+                } */
+        .footer-menu li {
             display: inline-block;
             margin-left: 20px;
-            }
-            .footer-menu li:hover a{
+        }
+
+        .footer-menu li:hover a {
             color: #3B5998;
-            }
-            .footer-menu li a {
+        }
+
+        .footer-menu li a {
             font-size: 14px;
             color: #878787;
-            }
+        }
+
         /* --------------- FOOTER ------------------ */
            
             body {
@@ -355,82 +381,81 @@
 
             </div>
         </main>
-        <!-- ------------FOOTER------------- -->
-        <footer class="footer-section">
-        <div class="container">
-            <!-- <div class="footer-cta pt-5 pb-5">
-                    <div class="row">
-                        <div class="row-contact">
-                            <div class="col-xl-4 col-md-4 mb-30">
-                                <div class="single-cta">
-                                    <i class="far fa-envelope-open"></i>
-                                    <div class="cta-text">
-                                        <h4>Mail us</h4>
-                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-            <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
-                <div class="row">
-                    <div class="col-xl-4 col-lg-4 mb-50">
-                        <div class="footer-widget">
-                            <div class="footer-logo">
-                                <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
-                            </div>
-                            <div class="footer-text">
-                                <p>Our system provides real-time crowd management, enabling event organizers to track
-                                    attendees and streamline operations efficiently.</p>
-                            </div>
-                            <div class="footer-social-icon">
-                            <span>Follow us</span>
-                                <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
-                                <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
+<!-- ------------FOOTER------------- -->
+       <footer class="footer-section">
+           <div class="container">
+               <!-- <div class="footer-cta pt-5 pb-5">
+                       <div class="row">
+                           <div class="row-contact">
+                               <div class="col-xl-4 col-md-4 mb-30">
+                                   <div class="single-cta">
+                                       <i class="far fa-envelope-open"></i>
+                                       <div class="cta-text">
+                                           <h4>Mail us</h4>
+                                           <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div> -->
+               <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
+                   <div class="row">
+                       <div class="col-xl-4 col-lg-4 mb-50">
+                           <div class="footer-widget">
+                               <div class="footer-logo">
+                                   <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
+                               </div>
+                               <div class="footer-text">
+                                   <p>Our system provides real-time crowd management, enabling event <br>organizers to track attendees and streamline operations efficiently.</p>
+                               </div>
+                               <div class="footer-social-icon">
+                               <span>Follow us</span>
+                                   <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                   <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
+                                   <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                   <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
 
-                                <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
-                        <div class="footer-widget">
-                            <div class="footer-widget-heading">
-                                <h3>Useful Links</h3>
-                            </div>
-                            <ul class="usfelLinks">
-                                <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
-                                <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
-                                <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li> -->
+                                   <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
+                               </div>
+                           </div>
+                       </div>
+                       <div class="col-xl-4 col-lg-4 col-md-6 mb-30" style="margin-left:30%;">
+                           <div class="footer-widget">
+                               <div class="footer-widget-heading">
+                                   <h3>Useful Links</h3>
+                               </div>
+                               <ul class="usfelLinks">
+                                   <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
+                                   <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
+                                   <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
+                                   <li><a href="#" style="color: #151414;">Contact</a></li>
+                                   <li><a href="#" style="color: #151414;">Contact</a></li>
+                                   <li><a href="#" style="color: #151414;">Contact</a></li> -->
 
-                            </ul>
-                        </div>
-                        <div class="cta-text" style="padding: 0; ">
-                                        <h4 style="margin-top: 43%; ">Mail us</h4>
-                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                    </div>
+                               </ul>
+                           </div>
+                           <div class="cta-text" style="padding: 0; ">
+                                           <h4 style="margin-top: 43%; ">Mail us</h4>
+                                           <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                       </div>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copyright-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 text-center text-lg-left">
-                        <div class="copyright-text">
-                            <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+                       </div>
+                   </div>
+               </div>
+           </div>
+           <div class="copyright-area">
+               <div class="container">
+                   <div class="row">
+                       <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+                           <div class="copyright-text">
+                               <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </footer>
     </body>
 </html>
  
