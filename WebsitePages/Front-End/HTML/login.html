@@ -5,45 +5,50 @@
     <meta charset="utf-8">
     <title>Log In</title>
 
-    <link rel="stylesheet" type="text/css" href="../CSS/login.css"><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../CSS/login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
-  
-    <header class="header" style="background-color: #ecf0f3;">
-     <!-- <div class="logo">
-          <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
-      </div>
-      <nav>
-        <ul>
-          <li><a href="../../Back-End/PHP/index.php/#AboutUs">About Us</a></li>
-          <li><a href="../../Back-End/PHP/index.php/#contact">Contact Us</a></li>
-        </ul>
-      </nav> -->
-  </header> 
+
+    <header class="header" style="background-color: #ecf0f3;"></header> 
 
     <div class="main">
       <div class="container a-container" id="a-container">
-        <form enctype="multipart/form-data" class="form" id="a-form"  action="../../Back-End/PHP/signup.php" method="POST">
-          <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
+        <form enctype="multipart/form-data" class="form" id="a-form" action="../../Back-End/PHP/signup.php" method="POST" onsubmit="return validateSignUpForm();">
+          <img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;">
           <h2 class="form_title title">Create Account</h2>
+
+          <!-- Company Name -->
           <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
-          <input name="email" class="form__input" type="email" placeholder="Email" required>
-          <input name="password" class="form__input" type="password" placeholder="Password" required> <br>
-          <label name="logo" id="label" style="color: #a0a5a8; font-size:13px;"> Company logo: <br>  <input type="file" name="logo" id="logo" accept="image/*"> </label>
+          <span id="cname-error" class="error-message"></span>
+
+          <!-- Email -->
+          <input name="email" class="form__input" type="email" id="email" placeholder="Email" required>
+          <span id="email-error" class="error-message"></span>
+
+          <!-- Password -->
+          <input name="password" class="form__input" type="password" id="password" placeholder="Password" required>
+          <span id="password-error" class="error-message"></span>
+
+          <!-- Logo Upload (Preserved Style) -->
+          <label name="logo" id="label" style="color: #a0a5a8; font-size:13px;"> Company logo: <br>  
+          <input type="file" name="logo" id="logo" accept="image/*" required> </label>
+          <span id="logo-error" class="error-message"></span> <br><br>
           <input type="submit" name="submit" class="form__button button submit" id="button" value="SIGN UP">
         </form>
       </div>
+
       <div class="container b-container" id="b-container">
         <form class="form" id="b-form" method="POST" action="../../Back-End/PHP/login.php">
           <img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;">
           <h2 class="form_title title">LOG IN</h2>
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
-          <input name="spassword" class="form__input" type="password" placeholder="Password" required><a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
-          <a href="../../Back-End/PHP/login.php?CompanyID=<?= $companyID; ?>">
-            <button class="form__button button submit">LOG IN</button>
-          </a>        
+          <input name="spassword" class="form__input" type="password" placeholder="Password" required>
+          <a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
+          <button class="form__button button submit">LOG IN</button>
         </form>
       </div>
+
       <div class="switch" id="switch-cnt">
         <div class="switch__circle"></div>
         <div class="switch__circle switch__circle--t"></div>
@@ -54,11 +59,62 @@
         </div>
         <div class="switch__container is-hidden" id="switch-c2">
           <h2 class="switch__title title side">Don't have an account?</h2>
-          <p class="switch__description description">Click sign up to create a new account with us! </p>
+          <p class="switch__description description">Click sign up to create a new account with us!</p>
           <button class="switch__button button switch-btn">SIGN UP</button>
         </div>
       </div>
     </div>
+
+    <script>
+      // JavaScript validation function for the sign-up form
+      function validateSignUpForm() {
+        let isValid = true;
+        let errorMessage = ""; // To store the error messages
+
+        // Get the form fields
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const logo = document.getElementById("logo");
+
+        // Validate email format
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email.value)) {
+          errorMessage += "Please enter a valid email address.\n";
+          isValid = false;
+        }
+
+        // Validate password is not empty
+        if (password.value.trim() === "") {
+          errorMessage += "Password is required.\n";
+          isValid = false;
+        }
+
+        // Ensure the logo is uploaded
+        if (!logo.value) {
+          errorMessage += "Please upload a company logo.\n";
+          isValid = false;
+        }
+
+        // If there are any errors, show an alert with the error message(s)
+        if (!isValid) {
+          alert(errorMessage);
+        }
+
+        // Prevent form submission if invalid
+        return isValid;
+      }
+    </script>
+
+
+    <style>
+      .error-message {
+        color: red;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+      }
+    </style>
+
     <script src="../JavaScript/login.js"></script>
   </body>
 </html>
