@@ -1,6 +1,7 @@
 <?php
     include '../../Back-End/PHP/session.php';
     $companyID = $_SESSION['CompanyID'];
+
 ?>
 <html lang="es" dir="ltr">
 
@@ -66,7 +67,7 @@
                         // DB connection
                         $servername = "localhost"; 
                         $username = "root";
-                        $password = "root";
+                        $password = "";
                         $dbname = "raqeebdb";
 
                         // Create connection
@@ -92,9 +93,6 @@
 
                     <label for="hallThreshold">Hall Max Capacity:</label><br>
                     <input name="hallThreshold" class="form__input" type="number" placeholder="00" min="0" required>
-                </div>
-                <div class="card">
-                    <a href="#"><img class="Plus" src="../../images/plus.png" alt="Plus"></a>
                 </div>
             </div>
             <br>
@@ -137,12 +135,12 @@
         // Validate date and time
         $today = date('Y-m-d');
         // Start and End Dates
-        if ($eventStartDate < $today || $eventEndDate < $today) {
-            echo "<script>alert('Start date and end date cannot be in the past!');</script>";
+        if ($eventStartDate <= $today) {
+            echo "<script>alert('Start date cannot be in the past!');</script>";
             exit;
         }
 
-        if ($eventEndDate < $today) {
+        if ($eventEndDate <= $today) {
             echo "<script>alert('End date cannot be in the past!');</script>";
             exit;
         }
