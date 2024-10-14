@@ -179,17 +179,17 @@ function onload() {
                     <div class="col-xl-4 col-lg-4 mb-50">
                         <div class="footer-widget">
                             <div class="footer-logo">
-                                <a href="../../Front-End/HTML/login.html"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
+                                <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                             </div>
                             <div class="footer-text">
                                 <p>Our system provides real-time crowd management, enabling event organizers to track
                                     attendees and streamline operations efficiently.</p>
                             </div>
                             <div class="footer-social-icon">
-                                <span>Contact us</span>
+                            <span>Follow us</span>
                                 <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                 <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a>
+                                <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
                             </div>
                         </div>
                     </div>
@@ -199,15 +199,20 @@ function onload() {
                                 <h3>Useful Links</h3>
                             </div>
                             <ul class="usfelLinks">
-                                <li><a href="#AddEvent">Add Event</a></li>
-                                <li><a href="#listOfEvents">List Of Events</a></li>
+                                <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
+                                <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
+                                <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li> -->
 
                             </ul>
                         </div>
+                        <div class="cta-text" style="padding: 0; ">
+                                        <h4 style="margin-top: 43%; ">Mail us</h4>
+                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    </div>
+
                     </div>
                 </div>
             </div>
