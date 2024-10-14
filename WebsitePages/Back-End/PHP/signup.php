@@ -8,7 +8,7 @@ error_reporting(E_ALL); // Remember to remove in production
 // DB connection
 $servername = "localhost"; 
 $username = "root";
-$password = "";
+$password = "root";
 $dbname = "raqeebdb";
   
 // Create connection

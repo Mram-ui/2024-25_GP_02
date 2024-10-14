@@ -31,7 +31,7 @@
         //     fetch('/get_static_data')
         //         .then(response => response.json())
         //         .then(data => {
-        //             let eventInfo = data.event[0];  // Assuming one company with CompanyID=1
+        //             let eventInfo = data.event[0];
         //             document.getElementById('EventName').innerText = eventInfo['EventName'];
         //             document.getElementById('EventLocation').innerText = eventInfo['EventLocation'];
         //             //date
@@ -49,7 +49,7 @@
         //             document.getElementById('EventTime').innerText = formattedTime;
 
         //             // Retrieve camera information data
-        //             let cameraInfo = data.cameras[0];  // Corrected array initialization
+        //             let cameraInfo = data.cameras[0];
         //             document.getElementById('numberOfHalls').innerText = cameraInfo.numOfHalls;
         //             document.getElementById('infoHallName').innerText = cameraInfo.HallName;
 
@@ -57,7 +57,7 @@
         //         });
         // }
 
-        // window.onload = fetchStaticData;  // Fetch static data when page loads
+        // window.onload = fetchStaticData;
         // console.log();
     </script>
 
@@ -73,34 +73,39 @@
 
     <main>
         <div class="allEventInformation">
-            <!-- <div class="eventInformation">
-                <h3><span id="EventName">EventName</span></h3>
-                <p><strong>Event Date:</strong> <span id="EventDate"></span></p>
-                <p><strong>Event Time:</strong> <span id="EventTime"></span></p>
-                <p><strong>Event Location:</strong> <span id="EventLocation"></span></p>
-            </div>
-            
-            <div class="infoBoxes">
-                <div class="infoBox">
-                    <p>Number of Halls</p>
-                    <h3><span id="numberOfHalls"></span></h3>
-                    <p style="font-weight: bold;"><span id="infoHallName"></span></p>
-                </div>
-                <div class="infoBox">
-                    <p>Total of visitors</p>
-                    <h2><span>No Data</span></h2>
-                </div> -->
-
             <div class="eventInformation">
                 {% for event in eventData %}
-                    <!-- <h3><span id="EventName">EventName</span></h3>
-                    <p><strong>Event Date:</strong> <span id="EventDate"></span></p>
-                    <p><strong>Event Time:</strong> <span id="EventTime"></span></p>
-                    <p><strong>Event Location:</strong> <span id="EventLocation"></span></p> -->
-                    <h3><span id="EventName"> {{ event.HallName }}</span></h3>
-                    <p><strong>Event Date:</strong> {{ event.EventStartDate }} - {{ event.EventEndDate }}</span></p>
-                    <p><strong>Event Time:</strong> {{ event.EventStartTime }} - {{ event.EventEndTime }}</span></p>
-                    <p><strong>Event Location:</strong> {{ event.EventLocation }}</span></p>
+                <h3><span id="EventName" style="margin-left: 2%; ">{{ event.EventName }}</span></h3>
+                <p style="white-space: nowrap;"><strong>Event Date:</strong><span id="EventDate"
+                        style="margin-left: 2%;"></span></p>
+                <p><strong>Event Time: </strong><span id="EventTime" style="margin-left: 2%;"></span></p>
+                <p id="EventLocation"><strong>Event Location: </strong> <span style="margin-left: 2%;">{{
+                        event.EventLocation }}</span></p>
+
+                <script>
+                    //date
+                    sDate = '{{ event.EventStartDate }}';
+                    eDate = '{{ event.EventEndDate }}';
+                    // console.log(date);
+                    let startDate = sDate.split('-');
+                    let endDate = eDate.split('-');
+                    let formattedDate = `${startDate[2]}-${startDate[1]}-${startDate[0]} / ${endDate[2]}-${endDate[1]}-${endDate[0]}`;  // Extract hour and minute
+                    document.getElementById('EventDate').innerText = formattedDate;
+                    // console.log(formattedDate);
+
+
+                    //time
+                    sTime = '{{ event.EventStartTime }}';
+                    eTime = '{{ event.EventEndTime }}';
+                    // Format the start time to show only hours and minutes
+                    let startTime = '{{ event.EventStartTime }}'.split(':');
+                    let endTime = '{{ event.EventEndTime }}'.split(':');
+                    let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
+                    document.getElementById('EventTime').innerText = formattedTime;
+                    // console.log(formattedTime);
+
+                </script>
+
                 {% endfor %}
             </div>
 
@@ -108,14 +113,17 @@
 
             <div class="eventInformation">
                 <p>Number of Halls</p>
-                <h3 id="numberOfHalls"></h3>
+                <h3 id="numberOfHalls" style="font-size: xx-large;"></h3>
             </div>
             <div id="totalOfVisitors" class="eventInformation">
                 <p>Total of visitors</p>
                 <h2 style="margin-bottom: 45%;">No Data</h2>
             </div>
-
-
+            <script>
+                let numberOfHalls = '{{ numOfHalls }}';
+                console.log(numberOfHalls);
+                document.getElementById('numberOfHalls').innerText = numberOfHalls;
+            </script>
         </div>
         </div>
 
@@ -126,14 +134,18 @@
             <div id="cameraFeeds">
                 {% for camera in cameras %}
                 <div class="cameraFeed">
-                    <h4 style="margin: 0; margin-bottom: 2.5%;">{{ camera.HallName }}</h4>
-                    <p>Current Visitors: No Data</p>
-                    <img src="{{ url_for('video_feed', camera_id=camera.CameraID) }}" width="300"
-                        alt="No camera connection">
+                    <h3 style="margin: 0; margin-bottom: 2%;">{{ camera.HallName }}</h3>
+                    <p style="margin: 0; margin-bottom: 6%;">Current Visitors: No Data</p>
+                    <img class="cameraFeedImg" src="{{ url_for('video_feed', camera_id=camera.CameraID) }}"
+                        alt="No camera connection" style="margin: 1%;">
+
+                    <!-- <p id="cameraFeedImg">Waiting for camera connection...</p> -->
+
                 </div>
                 <script>
-                    console.log('{{ camera.HallName }}', '{{ camera.eventID }}');
+                    // console.log('{{ camera.HallName }}', '{{ camera.eventID }}');
                 </script>
+
                 {% endfor %}
             </div>
         </div>
@@ -166,8 +178,7 @@
                                 <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                             </div>
                             <div class="footer-text">
-                                <p>Our system provides real-time crowd management, enabling event organizers to track
-                                    attendees and streamline operations efficiently.</p>
+                                <p>Our system provides real-time crowd management, enabling event <br>organizers to track attendees and streamline operations efficiently.</p>
                             </div>
                             <div class="footer-social-icon">
                             <span>Follow us</span>
@@ -180,7 +191,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
+                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30" style="margin-left:30%;">
                         <div class="footer-widget">
                             <div class="footer-widget-heading">
                                 <h3>Useful Links</h3>
@@ -196,7 +207,7 @@
                             </ul>
                         </div>
                         <div class="cta-text" style="padding: 0; ">
-                                        <h4 style="margin-top: 30%; margin-bottom:0px ">Mail us</h4>
+                                        <h4 style="margin-top: 19%; ">Mail us</h4>
                                         <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
                                     </div>
 

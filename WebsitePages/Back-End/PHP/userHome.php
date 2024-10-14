@@ -4,7 +4,7 @@
      // DB connection
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = "root";
     $dbname = "raqeebdb";
 
     if (!isset($_SESSION['CompanyID'])) {
@@ -1075,20 +1075,6 @@
                     <hr class="BreakLinePCU">
                     
                    <?php
-                        // DB connection
-                        $servername = "localhost";
-                        $username = "root";
-                        $password = "";
-                        $dbname = "raqeebdb";
-
-                        // Create connection
-                        $conn = new mysqli($servername, $username, $password, $dbname);
-
-                        // Check connection
-                        if ($conn->connect_error) {
-                            die("Connection failed: " . $conn->connect_error);
-                        }
-
                         // Fetch events from the database
                         $sql = "SELECT EventID, EventName, EventStartDate, EventEndDate 
                                 FROM events 
@@ -1161,11 +1147,13 @@
                             <?php if (empty($currentEvents)): ?>
                                 <p class="NoEvents">No current events available.</p>
                             <?php else: ?>
-                                <?php foreach ($currentEvents as $index => $event): ?>
+                                <?php foreach ($currentEvents as $index => $event): 
+                                    $eventID = $event['id'];
+                                    ?>
                                     <div class="EventsDetalisDes">
                                         <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
                                         <div class="eventLinks">
-                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $eventID ?>" style="text-decoration: none;">
                                                 <p class="EventD">View Details</p>
                                             </a>
                                             <a href="http://localhost:5000/?eventID=<?= $eventID; ?>" style="text-decoration: none;">

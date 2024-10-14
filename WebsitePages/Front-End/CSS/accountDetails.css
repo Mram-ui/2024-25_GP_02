@@ -25,8 +25,8 @@ body {
 .main {
     position: relative;
     width: 45%;
-    min-width: fit-content;
-    min-height: fit-content;
+    /* min-width: fit-content;
+    min-height: fit-content; */
     height: 78%;
     padding: 30px 40px;
     background-color: #ecf0f3;

@@ -45,6 +45,55 @@ def get_db_connection():
 
 
 @app.route('/')
+# def home():
+#     connection = get_db_connection()
+#     cursor = connection.cursor(dictionary=True)
+#     # Get the eventId parameter from the URL
+#     event_id = request.args.get('eventID')
+
+
+#     # Retrieve camera information
+#     cursor.execute(f'SELECT HallName, CameraID FROM hall WHERE EventID={event_id}')
+#     camera_data = cursor.fetchall()
+
+#     detailed_camera_data = []
+
+#     for camera in camera_data:
+#         camera_id = camera['CameraID']
+#         # Retrieve all information for each CameraID
+#         cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
+#         camera_info = cursor.fetchall()
+
+#         for info in camera_info:
+#             rtsp_link = f"rtsp://{info['CameraUsername']}:{info['CameraPassword']}@{info['CameraIPAddress']}:{info['PortNo']}/{info['StreamingChannel']}"
+#             detailed_camera_data.append({
+#                 'HallName': camera['HallName'],
+#                 'CameraID': camera_id,
+#                 'rtsp_link': rtsp_link,
+#                 'eventID' : event_id,
+#             })
+
+#         # Retrieve event information
+#     cursor.execute(f'SELECT * FROM events WHERE EventID={event_id}')
+#     eventsData = cursor.fetchall()
+#     eventDataArr = []
+
+#     for eventData in eventsData:
+#         eventDataArr.append({ 
+#                 'EventName' : eventData['EventName'],
+#                 'EventStartTime' : eventData['EventStartTime'],
+#                 'EventEndTime' : eventData['EventEndTime'],
+#                 'EventStartDate' : eventData['EventStartDate'],
+#                 'EventEndDate' : eventData['EventEndDate'],
+#                 'EventLocation' : eventData['EventLocation'],
+#         })
+
+
+#     cursor.close()
+#     connection.close()
+
+#     # Pass the camera data to the template
+#     return render_template('dashboard.html', cameras=detailed_camera_data, eventData=eventDataArr)
 def home():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
@@ -89,20 +138,6 @@ def home():
         })
 
 
-    cursor.close()
-    connection.close()
-
-    # Pass the camera data to the template
-    return render_template('dashboard.html', cameras=detailed_camera_data, eventData=eventDataArr)
-
-
-@app.route('/get_static_data', methods=['GET'])
-def get_data():
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    # Get the eventId parameter from the URL
-    event_id = request.args.get('eventID')
-
     # Retrieve event information:
     cursor.execute(f'SELECT * FROM events WHERE EventID={event_id}')
     event_data = cursor.fetchall()
@@ -143,16 +178,75 @@ def get_data():
                  'CameraPassword': info['CameraPassword'],
                  'cameraName': info['cameraName'],
                  'rtsp_link' : rtsp_link,
-                 'numOfHalls' : numOfHalls,
             })
+
 
     cursor.close()
     connection.close()
 
-    return jsonify({
-        'event': event_data,
-        'cameras': detailed_camera_data
-    })
+    # Pass the camera data to the template
+    return render_template('dashboard.html', cameras=detailed_camera_data, eventData=eventDataArr, numOfHalls=numOfHalls)
+
+
+# @app.route('/get_static_data', methods=['GET'])
+# def get_data():
+#     connection = get_db_connection()
+#     cursor = connection.cursor(dictionary=True)
+#     # Get the eventId parameter from the URL
+#     event_id = request.args.get('eventID')
+
+#     # Retrieve event information:
+#     cursor.execute(f'SELECT * FROM events WHERE EventID={event_id}')
+#     event_data = cursor.fetchall()
+
+
+#     # Convert datetime and timedelta to string for JSON serialization
+#     for row in event_data:
+#         for key, value in row.items():
+#             if isinstance(value, (datetime, timedelta)):
+#                 row[key] = str(value)  # Convert to string
+
+#     # Retrieve camera information
+#     cursor.execute(f'SELECT HallID, HallName, CameraID FROM hall WHERE EventID={event_id}')
+#     camera_data = cursor.fetchall()
+
+#     # Prepare a list to hold all camera details
+#     detailed_camera_data = []
+
+    
+#     numOfHalls = len(camera_data) #count the number of halls
+
+#     for camera in camera_data:
+#         camera_id = camera['CameraID']
+#         # Retrieve all information for each CameraID
+#         cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
+#         camera_info = cursor.fetchall()
+
+#         # Append the hall name and corresponding camera info to the detailed list
+#         for info in camera_info:
+#             rtsp_link = f"rtsp://{info['CameraUsername']}:{info['CameraPassword']}@{info['CameraIPAddress']}:{info['PortNo']}/{info['StreamingChannel']}"
+#             detailed_camera_data.append({
+#                  'HallName': camera['HallName'],
+#                  'CameraID': camera_id,
+#                  'CameraIPAddress': info['CameraIPAddress'],
+#                  'PortNo': info['PortNo'],
+#                  'StreamingChannel': info['StreamingChannel'],
+#                  'CameraUsername': info['CameraUsername'],
+#                  'CameraPassword': info['CameraPassword'],
+#                  'cameraName': info['cameraName'],
+#                  'rtsp_link' : rtsp_link,
+#                  'numOfHalls' : numOfHalls,
+#             })
+
+#     cursor.close()
+#     connection.close()
+
+#     # return jsonify({
+#     #     'event': event_data,
+#     #     'cameras': detailed_camera_data
+#     # })
+#     return render_template('dashboard.html', cameras=detailed_camera_data, event=event_data)
+
 
 
 def generate_frames(rtsp_link):

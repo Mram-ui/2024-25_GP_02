@@ -319,7 +319,7 @@
                 <i id="fa1" class="fa-solid fa-xmark" onclick="hideMenu()"></i>
                 <ul>
                     <li><a class="Hname" style="text-decoration:none" href="#AboutUs" accesskey="s">About Us</a></li>
-                    <li><a class="Hname" style="text-decoration:none" href="#Service" accesskey="s">Service</a></li>
+                    <li><a class="Hname" style="text-decoration:none" href="#aaaallServices" accesskey="s">Solutions</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#contact-us" accesskey="y">Contact</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="../../Front-End/HTML/login.html" accesskey="s">SignUp</a></li>
                 </ul>
@@ -334,7 +334,7 @@
             <p>a cutting-edge crowd management system designed to <br> revolutionize the way indoor events are organized
                 and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
                 the attendees.</p>
-            <a class="btn" href="#Service">Our Solutions</a>
+            <a class="btn" href="#aaaallServices">Our Solutions</a>
         </div>
     </header>
 

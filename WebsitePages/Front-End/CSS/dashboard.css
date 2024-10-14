@@ -213,9 +213,9 @@ main h2{
 .camera{
     background-color: white;
     border-radius: 15px;
-    padding: 0 3%;
+    padding: 1% 6%;
     /* min-width: 1200px; */
-
+padding-bottom: 3%;
 }
 
 #cameraFeeds {
@@ -225,7 +225,7 @@ main h2{
     border-radius: 15px;
     display: flex;
     flex-wrap: wrap; /* Allow items to wrap to the next line if necessary */
-    justify-content: flex-start; /* Align items to the start */
+    justify-content: space-around; /* Align items to the start */
     margin-bottom: 2%;
 }
 
@@ -233,13 +233,15 @@ main h2{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(33% - 20px); /* Set width to 33% and account for margins */
-    margin: 2%; /* Add margin around each camera feed box */
+    width: calc(33% - 20px);
+    margin-right: 4%;
+    margin-left: 4%;
+    margin-bottom: 2%;
 }
-.cameraFeed h4 {
-    text-align: center; /* Center the text */
-    margin: 0; /* Remove default margin */
-    margin-bottom: 2.5%; /* Space below the heading */
+.cameraFeed h3 {
+    text-align: center;
+    margin: 0; 
+    margin-bottom: 2.5%; 
 }
 
 
@@ -259,12 +261,26 @@ main h2{
 
 }
 
+.cameraFeedImg{
+    border: rgba(10, 60, 255, 0.4) 1px solid;
+    min-width: 250px;
+    min-height: 200px;
+    margin: 5%;
+}
+
+
 
 .cameraFeed img {
-    width: 100%; /* Make the image take the full width of its container */
-    height: auto; /* Maintain aspect ratio */
+    width: 120%;
+    height: auto; 
     border-radius: 5px;
 }
+
+#cameraFeedImg{
+    
+}
+
+
 
 
 /* ---- Footer Style ---- */
@@ -316,6 +332,7 @@ ul {
     color: #fff;
     font-size: 20px;
     font-weight: 600;
+    margin-bottom: 9%;
 }
 
 .cta-text span {
@@ -338,6 +355,7 @@ ul {
 .footer-content {
     position: relative;
     z-index: 2;
+    margin-bottom: 1%;
 }
 
 .footer-pattern img {
@@ -364,6 +382,7 @@ ul {
     line-height: 28px;
     font-family: Poppins;
     margin-right: 35%;
+    white-space:nowrap;
 }
 
 .footer-social-icon span {
