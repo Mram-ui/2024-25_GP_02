@@ -4,7 +4,7 @@ session_start();
 // DB connection
 $servername = "localhost"; 
 $username = "root";
-$password = "root";
+$password = "";
 $dbname = "raqeebdb";
   
 // Create connection
