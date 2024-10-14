@@ -65,9 +65,9 @@
                 <i id="fa1" class="fa-solid fa-xmark" onclick="hideMenu()"></i>
                 <ul>
                     <li><a class="Hname" style="text-decoration:none" href="#AboutUs" accesskey="s">About Us</a></li>
-                    <li><a class="Hname" style="text-decoration:none" href="#Service" accesskey="s">Service</a></li>
+                    <li><a class="Hname" style="text-decoration:none" href="#aaaallServices" accesskey="s">Solutions</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#contact-us" accesskey="y">Contact</a></li>
-                    <li><a class="Hname" style="text-decoration:none" href="../../Front-End/HTML/login.html" accesskey="s">SignUp</a></li>
+                    <li><a class="Hname" style="text-decoration:none" href="../../Front-End/HTML/login.html" accesskey="s">Sign Up</a></li>
                 </ul>
             </nav>
             <i id="fa2" class="fa-solid fa-bars" onclick="showMenu()"></i>
@@ -80,7 +80,7 @@
             <p>a cutting-edge crowd management system designed to <br> revolutionize the way indoor events are organized
                 and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
                 the attendees.</p>
-            <a class="btn" href="#Service">Our Solutions</a>
+            <a class="btn" href="#aaaallServices ">Our Solutions</a>
         </div>
     </header>
 
@@ -159,37 +159,37 @@ function onload() {
     <!-- ------------FOOTER------------- -->
     <footer class="footer-section">
         <div class="container">
-            <div class="footer-cta pt-5 pb-5">
-                <div class="row">
-                    <div class="row-contact">
-                        <div class="col-xl-4 col-md-4 mb-30">
-                            <div class="single-cta">
-                                <i class="far fa-envelope-open"></i>
-                                <div class="cta-text">
-                                    <h4>Mail us</h4>
-                                    <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+            <!-- <div class="footer-cta pt-5 pb-5">
+                    <div class="row">
+                        <div class="row-contact">
+                            <div class="col-xl-4 col-md-4 mb-30">
+                                <div class="single-cta">
+                                    <i class="far fa-envelope-open"></i>
+                                    <div class="cta-text">
+                                        <h4>Mail us</h4>
+                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="footer-content pt-5 pb-5">
+                </div> -->
+            <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 mb-50">
                         <div class="footer-widget">
                             <div class="footer-logo">
-                                <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
+                                <a href="../../Front-End/HTML/login.html"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                             </div>
                             <div class="footer-text">
                                 <p>Our system provides real-time crowd management, enabling event organizers to track
                                     attendees and streamline operations efficiently.</p>
                             </div>
                             <div class="footer-social-icon">
-                                <span>Follow us</span>
+                                <span>Contact us</span>
                                 <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                 <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-<!--                                <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>-->
+                                <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a>
                             </div>
                         </div>
                     </div>
@@ -198,10 +198,9 @@ function onload() {
                             <div class="footer-widget-heading">
                                 <h3>Useful Links</h3>
                             </div>
-                            <ul>
-                                <li><a href="#AboutUs">About</a></li>
-                                <li><a href="#Service">Services</a></li>
-                                <li><a href="#contact-us">Contact</a></li>
+                            <ul class="usfelLinks">
+                                <li><a href="#AddEvent">Add Event</a></li>
+                                <li><a href="#listOfEvents">List Of Events</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
@@ -209,22 +208,6 @@ function onload() {
 
                             </ul>
                         </div>
-                    </div>
-<!--                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
-                        <div class="footer-widget">
-                            <div class="footer-widget-heading">
-                                <h3>Subscribe</h3>
-                            </div>
-                            <div class="footer-text mb-25">
-                                <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
-                            </div>
-                            <div class="subscribe-form">
-                                <form action="#">
-                                    <input type="text" placeholder="Email Address">
-                                    <button><i class="fab fa-telegram-plane"></i></button>
-                                </form>
-                            </div>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -234,20 +217,9 @@ function onload() {
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 text-center text-lg-left">
                         <div class="copyright-text">
-                            <p>Copyright &copy; 2024 Raqeeb. All Right Reserved </p>
+                            <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
                         </div>
                     </div>
-                    <!-- <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
-                            <div class="footer-menu">
-                                <ul>
-                                    <li><a href="#">Home</a></li>
-                                    <li><a href="#">Terms</a></li>
-                                    <li><a href="#">Privacy</a></li>
-                                    <li><a href="#">Policy</a></li>
-                                    <li><a href="#">Contact</a></li>
-                                </ul>
-                            </div>
-                        </div> -->
                 </div>
             </div>
         </div>

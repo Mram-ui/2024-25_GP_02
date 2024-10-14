@@ -34,7 +34,7 @@ body {
     border-radius: 12px;
     overflow: hidden;
     align-self: center;
-    margin-bottom: 5%;
+    margin-bottom: 5%;    
 }
 @media (max-width: 1200px) {
     .main {
