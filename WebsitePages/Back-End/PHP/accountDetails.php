@@ -154,7 +154,7 @@
     // DB connection
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
     // Create connection
@@ -198,23 +198,9 @@
                     $logo = $row['Logo']; // Keep the old logo if upload fails
                 }
             }
-
-            // Update the database
-            $stmt = $connection->prepare("UPDATE company SET CompanyName = ?, Email = ?, Logo = ? WHERE CompanyID = ?");
-            $stmt->bind_param("sssi", $companyName, $email, $logo, $CompanyID);
-
-            // Execute the statement
-            if ($stmt->execute()) {
-                echo "<script>alert('Profile edited successfully!');</script>";
-            } else {
-                echo "<script>alert('Failed to edit: " . $stmt->error . "');</script>";
-            }
-
             // Close the statement
             $stmt->close();
-        } else {
-            echo '<script>alert("File is NOT set.");</script>';
-        }
+        } 
     }
     ?>
 
@@ -238,11 +224,11 @@
 
             <div class="buttonss">
                 <div class="button">
-                    <button class="reset" name='submit' id="resetPassword" value='0'>Reset Password</button>
+                    <button class="reset" name='submit' id="resetPassword" value='0' onclick="alert('Reset Password feature is not available yet.');">Reset Password</button>
                 </div>
 
                 <div class="button">
-                    <button class="logout" id="LogoutBtn" onclick="confirmLogout(event)">Log-Out</button>
+                    <button class="logout" id="LogoutBtn" onclick="confirmLogout(event)">Logout</button>
                 </div>
             </div>
         </form>
@@ -252,7 +238,7 @@
         <div id="logoutModal">
             <p>Are you sure you want to log out?</p>
             <div class="modal-buttons">
-                <button class="logoutC" onclick="logoutConfirmed()">Log-Out</button>
+                <button class="logoutC" onclick="logoutConfirmed()">Logout</button>
                 <button class="cancelC" onclick="cancelLogout()">Cancel</button>
             </div>
         </div>
