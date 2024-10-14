@@ -392,20 +392,18 @@ ul {
     transition: 0.25s;
 }
 
-.facebook-bg {
-    background: #3B5998;
+.linkedin-bg {
+    background: #0e76a8;
 }
+
 
 .twitter-bg {
-    background: #55ACEE;
+    background: #000000;
 }
 
-.google-bg {
-    background: #ff8000;
-}
 
-.facebook-bg:hover {
-    background: #314b84;
+.linkedin-bg:hover {
+    background: #0c6590;
     width: 42px;
     height: 42px;
     transition: 0.25s;
@@ -413,15 +411,7 @@ ul {
 }
 
 .twitter-bg:hover {
-    background: #418fcb;
-    width: 42px;
-    height: 42px;
-    transition: 0.25s;
-    line-height: 40px;
-}
-
-.google-bg:hover {
-    background: #bb5f03;
+    background: #504f4f;
     width: 42px;
     height: 42px;
     transition: 0.25s;

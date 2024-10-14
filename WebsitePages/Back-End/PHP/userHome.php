@@ -634,7 +634,7 @@ $flaskUrl = "http://localhost:####";
 
 
         .twitter-bg {
-            background: #55ACEE;
+            background: #000000;
         }
 
 
@@ -648,7 +648,7 @@ $flaskUrl = "http://localhost:####";
         }
 
         .twitter-bg:hover {
-            background: #418fcb;
+            background: #504f4f;
             width: 42px;
             height: 42px;
             transition: 0.25s;
@@ -1278,8 +1278,11 @@ $flaskUrl = "http://localhost:####";
                             </div>
                             <div class="footer-social-icon">
                             <span>Follow us</span>
-                                <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
+                                <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
+                                <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
+
                                 <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
                             </div>
                         </div>

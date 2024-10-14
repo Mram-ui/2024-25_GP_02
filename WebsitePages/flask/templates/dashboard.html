@@ -8,6 +8,12 @@
     <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> -->
     <link rel="stylesheet" href="/Front-End/CSS/dashboard.css">
 
+    <!--  Icons logo  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
     <!--  Fonts Link  -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,40 +143,40 @@
     <!-- ------------FOOTER------------- -->
     <footer class="footer-section">
         <div class="container">
-            <div class="footer-cta pt-5 pb-5">
-                <div class="row">
-                    <div class="row-contact">
-                        <div class="col-xl-4 col-md-4 mb-30">
-                            <div class="single-cta">
-                                <i class="far fa-envelope-open"></i>
-                                <div class="cta-text">
-                                    <h4>Mail us</h4>
-                                    <span id="mail"><a
-                                            href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+            <!-- <div class="footer-cta pt-5 pb-5">
+                    <div class="row">
+                        <div class="row-contact">
+                            <div class="col-xl-4 col-md-4 mb-30">
+                                <div class="single-cta">
+                                    <i class="far fa-envelope-open"></i>
+                                    <div class="cta-text">
+                                        <h4>Mail us</h4>
+                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="footer-content pt-5 pb-5">
+                </div> -->
+            <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
                 <div class="row">
                     <div class="col-xl-4 col-lg-4 mb-50">
                         <div class="footer-widget">
                             <div class="footer-logo">
-                                <a href="../../Back-End/PHP/userHome.php"><img src="/images/Logo3.png" class="img-fluid"
-                                        alt="logo"></a>
+                                <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                             </div>
                             <div class="footer-text">
                                 <p>Our system provides real-time crowd management, enabling event organizers to track
                                     attendees and streamline operations efficiently.</p>
                             </div>
                             <div class="footer-social-icon">
-                                <span>Follow us</span>
-                                <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
-                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                <a href="mailto:Raqeeb.Project@gmail.com"><i
-                                        class="fab fa-google-plus-g google-bg"></i></a>
+                            <span>Follow us</span>
+                                <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
+                                <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
+
+                                <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
                             </div>
                         </div>
                     </div>
@@ -179,33 +185,21 @@
                             <div class="footer-widget-heading">
                                 <h3>Useful Links</h3>
                             </div>
-                            <ul>
-                                <li><a href="/Back-End/PHP/addEvent.php">Add Event</a></li>
-                                <li><a href="#Cameras">Cameras</a></li>
-                                <li><a href="#listOfEvents">List Of Events</a></li>
+                            <ul class="usfelLinks">
+                                <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
+                                <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
+                                <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
                                 <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li>
-                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li> -->
 
                             </ul>
                         </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
-                        <div class="footer-widget">
-                            <div class="footer-widget-heading">
-                                <h3>Subscribe</h3>
-                            </div>
-                            <div class="footer-text mb-25">
-                                <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
-                            </div>
-                            <div class="subscribe-form">
-                                <form action="#">
-                                    <input type="text" placeholder="Email Address">
-                                    <button><i class="fab fa-telegram-plane"></i></button>
-                                </form>
-                            </div>
-                        </div>
+                        <div class="cta-text" style="padding: 0; ">
+                                        <h4 style="margin-top: 30%; margin-bottom:0px ">Mail us</h4>
+                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    </div>
+
                     </div>
                 </div>
             </div>

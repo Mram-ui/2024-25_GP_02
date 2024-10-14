@@ -357,8 +357,8 @@
         </main>
         <!-- ------------FOOTER------------- -->
         <footer class="footer-section">
-            <div class="container">
-                <div class="footer-cta pt-5 pb-5">
+        <div class="container">
+            <!-- <div class="footer-cta pt-5 pb-5">
                     <div class="row">
                         <div class="row-contact">
                             <div class="col-xl-4 col-md-4 mb-30">
@@ -372,85 +372,65 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="footer-content pt-5 pb-5">
-                    <div class="row">
-                        <div class="col-xl-4 col-lg-4 mb-50">
-                            <div class="footer-widget">
-                                <div class="footer-logo">
-                                    <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
-                                </div>
-                                <div class="footer-text">
-                                    <p>Our system provides real-time crowd management, enabling event organizers to track
-                                        attendees and streamline operations efficiently.</p>
-                                </div>
-                                <div class="footer-social-icon">
-                                    <span>Follow us</span>
-                                    <a href="#"><i class="fab fa-facebook-f facebook-bg"></i></a>
-                                    <a href="#"><i class="fab fa-twitter twitter-bg"></i></a>
-                                    <a href="mailto:Raqeeb.Project@gmail.com"><i class="fab fa-google-plus-g google-bg"></i></a>
-                                </div>
+                </div> -->
+            <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 mb-50">
+                        <div class="footer-widget">
+                            <div class="footer-logo">
+                                <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
                             </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
-                            <div class="footer-widget">
-                                <div class="footer-widget-heading">
-                                    <h3>Useful Links</h3>
-                                </div>
-                                <ul>
-                                    <li><a href="#AddEvent">Add Event</a></li>
-                                    <li><a href="#Cameras">Cameras</a></li>
-                                    <li><a href="#listOfEvents">List Of Events</a></li>
-                                    <li><a href="#" style="color: #151414;">Contact</a></li>
-                                    <li><a href="#" style="color: #151414;">Contact</a></li>
-                                    <li><a href="#" style="color: #151414;">Contact</a></li>
-                                    <li><a href="#" style="color: #151414;">Contact</a></li>
+                            <div class="footer-text">
+                                <p>Our system provides real-time crowd management, enabling event organizers to track
+                                    attendees and streamline operations efficiently.</p>
+                            </div>
+                            <div class="footer-social-icon">
+                            <span>Follow us</span>
+                                <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
+                                <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
 
-                                </ul>
+                                <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
                             </div>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 mb-50">
-                            <div class="footer-widget">
-                                <div class="footer-widget-heading">
-                                    <h3>Subscribe</h3>
-                                </div>
-                                <div class="footer-text mb-25">
-                                    <p>Don’t miss to subscribe to our new feeds, kindly fill the form below.</p>
-                                </div>
-                                <div class="subscribe-form">
-                                    <form action="#">
-                                        <input type="text" placeholder="Email Address">
-                                        <button><i class="fab fa-telegram-plane"></i></button>
-                                    </form>
-                                </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30">
+                        <div class="footer-widget">
+                            <div class="footer-widget-heading">
+                                <h3>Useful Links</h3>
                             </div>
+                            <ul class="usfelLinks">
+                                <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
+                                <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
+                                <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li>
+                                <li><a href="#" style="color: #151414;">Contact</a></li> -->
+
+                            </ul>
+                        </div>
+                        <div class="cta-text" style="padding: 0; ">
+                                        <h4 style="margin-top: 43%; ">Mail us</h4>
+                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+                        <div class="copyright-text">
+                            <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="copyright-area">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 text-center text-lg-left">
-                            <div class="copyright-text">
-                                <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
-                            </div>
-                        </div>
-                        <!-- <div class="col-xl-6 col-lg-6 d-none d-lg-block text-right">
-                                <div class="footer-menu">
-                                    <ul>
-                                        <li><a href="#">Home</a></li>
-                                        <li><a href="#">Terms</a></li>
-                                        <li><a href="#">Privacy</a></li>
-                                        <li><a href="#">Policy</a></li>
-                                        <li><a href="#">Contact</a></li>
-                                    </ul>
-                                </div>
-                            </div> -->
-                    </div>
-                </div>
-            </div>
-        </footer>
+        </div>
+    </footer>
     </body>
 </html>
  
