@@ -317,7 +317,7 @@
                     foreach ($halls as $hall):
                 ?>
                 <fieldset>
-                <legend>Hall  <?php echo $hallNumber; ?> : </legend>
+                <legend>Hall  <?php echo $hallNumber; ?> </legend>
                     <div id="hall" class="hall">
                         <label id="HMAX" for="hallName">Hall Name:</label><br>
                         <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
