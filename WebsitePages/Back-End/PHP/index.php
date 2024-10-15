@@ -454,18 +454,15 @@ function onload() {
                                <div class="footer-widget-heading">
                                    <h3>Useful Links</h3>
                                </div>
-                               <ul class="usfelLinks">
-                                   <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
-                                   <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
-                                   <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li> -->
+                               <ul>
+                                    <li><a href="#AboutUs">About</a></li>
+                                    <li><a href="#Service">Services</a></li>
+                                    <li><a href="#contact-us">Contact</a></li>
 
-                               </ul>
+                                </ul>
                            </div>
                            <div class="cta-text" style="padding: 0; ">
-                                           <h4 style="margin-top: 43%; ">Mail us</h4>
+                                           <h4 style="margin-top: 25%; ">Mail us</h4>
                                            <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
                                        </div>
 
