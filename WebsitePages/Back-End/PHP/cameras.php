@@ -1009,8 +1009,8 @@
                                    <h3>Useful Links</h3>
                                </div>
                                <ul class="usfelLinks">
-                                   <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
-                                   <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
+                                   <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addcamera.php">Add Camera</a></li>
+                                   <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Cameras</a></li>
                                    <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
                                    <li><a href="#" style="color: #151414;">Contact</a></li>
                                    <li><a href="#" style="color: #151414;">Contact</a></li>
