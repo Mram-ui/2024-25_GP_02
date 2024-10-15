@@ -221,6 +221,18 @@
             margin-left: -200%;
         }
         
+         .safari-browser fieldset {
+            padding-left: 150%;
+            padding-right: 60%;
+            margin-right: 0%;
+            margin-left: -30%;        
+        }
+        
+        .safari-browser fieldset legend {
+            color: #013b87;
+            margin-left: -200%;
+        }
+        
         #HMAX {
             white-space: nowrap; 
         }
@@ -241,6 +253,13 @@
             margin: 0;
             margin-left: -233%;
         }
+        
+        .safari-browser .hall {
+            width: 202%;
+            margin: 0;
+            margin-left: -233%;
+        }
+        
         
         legend {
             color: #013b87;
@@ -317,14 +336,14 @@
                     foreach ($halls as $hall):
                 ?>
                 <fieldset>
-                <legend>Hall  <?php echo $hallNumber; ?> </legend>
+                <legend>Hall  <?php echo $hallNumber; ?></legend>
                     <div id="hall" class="hall">
                         <label id="HMAX" for="hallName">Hall Name:</label><br>
                         <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
                         <label for="cameraName">Camera:</label><br>
                         <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['CameraName']); ?>" required readonly><br>
                         <label id="HMAX" for="hallThreshold">Hall Max Capacity:</label><br>
-                        <input id="HInput" name="hallThreshold" class="form__input" type="number" placeholder="##" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
+                        <input id="HInput" name="hallThreshold" class="form__input" type="number" placeholder="ex:100" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
                     </div>
                 </fieldset>
                 <?php 
@@ -378,6 +397,17 @@
         if (navigator.userAgent.indexOf("Firefox") !== -1) {
             document.body.classList.add("firefox");
         }
+        
+        // Function to detect Safari browser
+        function isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        }
+
+        // Apply a specific class for Safari if detected
+        if (isSafari()) {
+            document.body.classList.add('safari-browser');
+        }
+
     </script>
 
 </body>
