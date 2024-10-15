@@ -1133,7 +1133,7 @@
                                             <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
                                                 <p class="EventD">View Details</p>
                                             </a>
-                                            <a href="#" class="EventD" style="text-decoration: none;"><p>View Report</p></a>
+                                            <a href="#" class="EventD" style="text-decoration: none;" onclick="alert('View report feature is not available yet.');"><p>View Report</p></a>
                                         </div>
                                     </div>
                                     <?php if ($index !== count($pastEvents) - 1): ?>
