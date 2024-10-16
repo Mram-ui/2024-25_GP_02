@@ -148,11 +148,11 @@
 
                 if ($eventStartDate == $today) {
                     if ($eventStartTime <= $now) {
-                        echo "<script>alert('The start time for today cannot be in the past!');</script>";
+                        echo "<script>alert('For events scheduled today, the start time cannot be in the past! Please choose a valid time for today's event.');</script>";
                         exit;
                     }
                 } elseif ($eventStartDate < $today) {
-                    echo "<script>alert('Start date cannot be in the past!');</script>";
+                    echo "<script>alert('The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.');</script>";
                     exit;
                 }
 
@@ -183,14 +183,14 @@
 
                     $conn->commit();
 
-                    echo "<script>alert('New event and hall(s) added successfully!');</script>";
+                    echo "<script>alert('New event added successfully!');</script>";
 
                     echo "<script>window.location.href = 'userHome.php';</script>";
                     exit;
 
                 } catch (Exception $e) {
                     $conn->rollback();
-                    echo "<script>alert('Failed to add event and hall(s): " . $e->getMessage() . "');</script>";
+                    echo "<script>alert('Failed to add event: " . $e->getMessage() . ". Please check the event details and try again.');</script>";
                 }
 
                 $stmt->close();
@@ -208,7 +208,7 @@
             const endDate = new Date(document.querySelector('input[name="endDate"]').value);
 
             if (startDate.setHours(0, 0, 0, 0) < now.setHours(0, 0, 0, 0)) {
-                alert("Start Date cannot be in the past!");
+                alert("The event cannot start in the past! Please select a future start date and time.");
                 return false;  
 
             if (startDate.setHours(0, 0, 0, 0) === now.setHours(0, 0, 0, 0)) {
@@ -217,13 +217,13 @@
                 selectedStartTime.setHours(startHours, startMinutes, 0, 0);
 
                 if (selectedStartTime <= now) {
-                    alert("Start time for today's event must be in the future!");
+                    alert("For events scheduled today, the start time cannot be in the past! Please choose a valid time for today's event.");
                     return false; 
                 }
             }
 
             if (startDate >= endDate) {
-                alert("Start Date must be before End Date!");
+                alert("The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.");
                 return false;  
             }
 
