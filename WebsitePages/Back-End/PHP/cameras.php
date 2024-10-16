@@ -1,26 +1,18 @@
 <?php
     include '../../Back-End/PHP/session.php';
-    // DB connection
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
-    // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
     $companyID = $_SESSION['CompanyID'];
 
-    // // Fetch cameras from the database
-    // $sql = "SELECT CameraID, CameraName FROM camera";
-    // $result = $conn->query($sql);
-
-        // Fetch events from the database for the specific company
     $sql = "SELECT CameraID, CameraName 
             FROM camera 
             WHERE CompanyID = ?";
@@ -91,16 +83,6 @@
                 height: 60px; 
                 width: auto;  
             }
-
-            /* .header nav img {
-                width: 10%;
-                margin-left: 85%;
-                transition: 0.5s;
-            }
-
-            .header nav img:hover {
-                width: 10.2%;
-            } */
 
             /* ---- end new header style */
 
@@ -803,8 +785,6 @@
                 color: #4a56ff;
             }
             
-             
-         
             .headerlinks li {
                 text-align: left;
                 margin-left: -135%;
@@ -850,7 +830,6 @@
                 width: 100%;
             }
 
-
             /* ---- End  style */
 
         </style> 
@@ -867,58 +846,40 @@
         </script>
     </head>  
     <body>
-    <header class="header">
-        <div class="logo">
-            <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
-        </div>
-        <ul class="headerlinks">
-            <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
-            <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
-        </ul>
-        <script>
-            const currentPath = window.location.pathname;
+        <header class="header">
+            <div class="logo">
+                <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
+            </div>
+            <ul class="headerlinks">
+                <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
+                <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
+            </ul>
+            <script>
+                const currentPath = window.location.pathname;
 
-            const menuItems = document.querySelectorAll('ul li');
+                const menuItems = document.querySelectorAll('ul li');
 
-            menuItems.forEach((item) => {
-                const link = item.querySelector('a');
+                menuItems.forEach((item) => {
+                    const link = item.querySelector('a');
 
-                if (link.href.includes(currentPath)) {
-                    item.classList.add('active');
-                }
-            });
-        </script>
-        <nav>
-            <?php
-            $query = 'SELECT Logo FROM company WHERE CompanyID=' . $companyID;
-            $row = mysqli_fetch_assoc(mysqli_query($conn, $query));
-            $logo = $row['Logo'];
+                    if (link.href.includes(currentPath)) {
+                        item.classList.add('active');
+                    }
+                });
+            </script>
+            <nav>
+                <?php
+                $query = 'SELECT Logo FROM company WHERE CompanyID=' . $companyID;
+                $row = mysqli_fetch_assoc(mysqli_query($conn, $query));
+                $logo = $row['Logo'];
+                ?>
 
-            // $sql = "SELECT Logo FROM company WHERE CompanyID=' . $CompanyID";
-            // $result = $conn->query($sql);
-
-            ?>
-
-            <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
-            <label class="popup"> <input type="checkbox" />
-            <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/<?php echo $logo ?>" style="width: 60px; height:60px; border-radius: 50%;" ></a>
-
-                <!-- <div tabindex="0" class="burger">
-                    <a href="../../Back-End/PHP/accountDetails.php">
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="white"
-                            height="20"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M12 2c2.757 0 5 2.243 5 5.001 0 2.756-2.243 5-5 5s-5-2.244-5-5c0-2.758 2.243-5.001 5-5.001zm0-2c-3.866 0-7 3.134-7 7.001 0 3.865 3.134 7 7 7s7-3.135 7-7c0-3.867-3.134-7.001-7-7.001zm6.369 13.353c-.497.498-1.057.931-1.658 1.302 2.872 1.874 4.378 5.083 4.972 7.346h-19.387c.572-2.29 2.058-5.503 4.973-7.358-.603-.374-1.162-.811-1.658-1.312-4.258 3.072-5.611 8.506-5.611 10.669h24c0-2.142-1.44-7.557-5.631-10.647z"></path>
-                        </svg>
-                    </a>
-                </div> -->
-            </label>
-        </nav>
-    </header>
+                <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
+                <label class="popup"> <input type="checkbox" />
+                    <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/<?php echo $logo ?>" style="width: 60px; height:60px; border-radius: 50%;" ></a>
+                </label>
+            </nav>
+        </header>
         
 	<main>
             <div class="mainContainer">
@@ -948,7 +909,7 @@
                         ?>
                             <div class="EventsDetalisDes">
                                 <p class="EventNameD"><?= htmlspecialchars($row['CameraName']); ?></p>
-                                <div class="eventLinks" style="text-align: right;"> <!-- Added inline style for text alignment -->
+                                <div class="eventLinks" style="text-align: right;">
                                     <a href="../../Back-End/PHP/viewEditCameras.php?cameraId=<?= $row['CameraID']; ?>" style="text-decoration: none;">
                                         <p class="EventD">View Details</p>
                                     </a>                    
@@ -967,21 +928,6 @@
       <!-- ------------FOOTER------------- -->
        <footer class="footer-section">
            <div class="container">
-               <!-- <div class="footer-cta pt-5 pb-5">
-                       <div class="row">
-                           <div class="row-contact">
-                               <div class="col-xl-4 col-md-4 mb-30">
-                                   <div class="single-cta">
-                                       <i class="far fa-envelope-open"></i>
-                                       <div class="cta-text">
-                                           <h4>Mail us</h4>
-                                           <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                   </div> -->
                <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
                    <div class="row">
                        <div class="col-xl-4 col-lg-4 mb-50">
@@ -994,12 +940,8 @@
                                </div>
                                <div class="footer-social-icon">
                                <span>Follow us</span>
-                                   <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                   <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
                                    <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                    <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
-
-                                   <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
                                </div>
                            </div>
                        </div>
@@ -1010,19 +952,13 @@
                                </div>
                                <ul class="usfelLinks">
                                    <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addcamera.php">Add Camera</a></li>
-                                   <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Cameras</a></li>
-                                   <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li> -->
-
+                                   <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Cameras</a></li>                              
                                </ul>
                            </div>
                            <div class="cta-text" style="padding: 0; ">
-                                           <h4 style="margin-top: 43%; ">Mail us</h4>
-                                           <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                       </div>
-
+                                <h4 style="margin-top: 43%; ">Mail us</h4>
+                                <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                            </div>
                        </div>
                    </div>
                </div>
