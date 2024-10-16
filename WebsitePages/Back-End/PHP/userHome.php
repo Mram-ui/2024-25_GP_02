@@ -1,14 +1,11 @@
-
 <?php
     include '../../Back-End/PHP/session.php';
-     // DB connection
     $servername = "localhost";
     $username = "root";
     $password = "root";
     $dbname = "raqeebdb";
 
     if (!isset($_SESSION['CompanyID'])) {
-        // Redirect to login if not logged in
         header("Location: login.php");
         exit;
     }
@@ -17,12 +14,10 @@
 
     $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Fetch events from the database for the specific company
     $sql = "SELECT EventID, EventName, EventStartDate, EventEndDate 
             FROM events 
             WHERE CompanyID = ?";
@@ -33,10 +28,6 @@
     
     $flaskUrl = "http://localhost:####";
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -497,12 +488,6 @@
                 box-shadow: 3px 3px 0px 3px #e8e8e8;
             }
 
-
-
-
-
-
-
  
         /* ---- Footer Style ---- */
         .usfelLinks ul {
@@ -960,13 +945,11 @@
             .headerlinks li.active::after {
                 width: 100%;
             }
-
-
-
-
-
-
-            /* ---- End USER style */
+            
+            .EventNameAndDate {
+                display: column;
+            }
+            /* ---- End style */
         </style> 
         <script>
             var navLinks = document.getElementById("navLinks");
@@ -1007,35 +990,16 @@
                     $query = 'SELECT Logo FROM company WHERE CompanyID=' . $companyID;
                     $row = mysqli_fetch_assoc(mysqli_query($conn, $query));
                     $logo = $row['Logo'];
-                    // $sql = "SELECT Logo FROM company WHERE CompanyID=' . $CompanyID";
-                    // $result = $conn->query($sql);
                 ?>
 
-                <!-- <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/user.png" alt="userCompany"></a> -->
                 <label class="popup"> <input type="checkbox" />
                     <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/<?php echo $logo ?>" style="width: 60px; height:60px; border-radius: 50%;"></a>
-
-                    <!-- <div tabindex="0" class="burger">
-                        <a href="../../Back-End/PHP/accountDetails.php">
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="white"
-                                height="20"
-                                width="20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12 2c2.757 0 5 2.243 5 5.001 0 2.756-2.243 5-5 5s-5-2.244-5-5c0-2.758 2.243-5.001 5-5.001zm0-2c-3.866 0-7 3.134-7 7.001 0 3.865 3.134 7 7 7s7-3.135 7-7c0-3.867-3.134-7.001-7-7.001zm6.369 13.353c-.497.498-1.057.931-1.658 1.302 2.872 1.874 4.378 5.083 4.972 7.346h-19.387c.572-2.29 2.058-5.503 4.973-7.358-.603-.374-1.162-.811-1.658-1.312-4.258 3.072-5.611 8.506-5.611 10.669h24c0-2.142-1.44-7.557-5.631-10.647z"></path>
-                            </svg>
-                        </a>
-                    </div> -->
                 </label>
             </nav>
         </header>
 
             <main>
                 <div class="mainContainer">
-                    <div class="text"></div>
-<!--                        <h4 id="Cameras" class="Addcamera">Cameras</h4>-->
                     <div class="Cards">
                         <a href="addEvent.php">
                             <div class="card">
@@ -1045,18 +1009,10 @@
                                 </a>
                             </div>
                         </a>
-<!--                        <div class="card">
-                            <a href="../../Back-End/PHP/cameras.php"><img class="camera" src="../../images/Camera.png" alt="camera"></a>
-                        </div>-->
                     </div>
                     <div id="listOfEvents" class="listOfEvents">
                         <h4>Events</h4>
                     </div>
-                    <!-- <div class="listOfEventsPCA">
-                        <p class="PastEvents">Past Events</p>
-                        <p class="CurrentEvents">Current Events</p>
-                        <p class="UpcomingEvents">Upcoming Events</p>
-                    </div> -->
                     <div class="radio-inputs">
                         <label class="radio" id="PastEvent">
                           <input type="radio" name="radio" checked="" />
@@ -1074,44 +1030,60 @@
                       </div>                  
                     <hr class="BreakLinePCU">
                     
-                   <?php
-                        // Fetch events from the database
-                        $sql = "SELECT EventID, EventName, EventStartDate, EventEndDate 
+                    <?php
+                        date_default_timezone_set('Asia/Riyadh');
+                        $sql = "SELECT EventID, EventName, EventStartDate, EventStartTime, EventEndDate, EventEndTime 
                                 FROM events 
                                 WHERE CompanyID = ?"; 
-                        
+
                         $stmt = $conn->prepare($sql);
                         $stmt->bind_param("i", $companyID);  
                         $stmt->execute();
                         $result = $stmt->get_result();
-    
-                        $today = new DateTime();
+
+                        $now = new DateTime();
+                        //FOR TESTING ONLY: 
+                        //echo "Current Time: " . $now->format('Y-m-d H:i:s') . "<br>";
 
                         $pastEvents = [];
                         $currentEvents = [];
                         $upcomingEvents = [];
 
-                         if ($result->num_rows > 0) {
+                        if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                 $eventId = $row['EventID'];
                                 $eventName = $row['EventName'];
-                                $startDate = new DateTime($row['EventStartDate']);
-                                $endDate = new DateTime($row['EventEndDate']);
 
-                                // Classify event based on the date
-                                if ($endDate < $today) {
-                                    // Event is in the past
-                                    $pastEvents[] = ['id' => $eventId, 'name' => $eventName];
-                                } elseif ($startDate <= $today && $endDate >= $today) {
+                                $startDate = new DateTime($row['EventStartDate'] . ' ' . $row['EventStartTime']);
+                                $endDate = new DateTime($row['EventEndDate'] . ' ' . $row['EventEndTime']);
+
+                                if ($endDate >= $now && $startDate <= $now) {
                                     // Event is currently happening
-                                    $currentEvents[] = ['id' => $eventId, 'name' => $eventName];
-                                } elseif ($startDate > $today) {
-                                    // Event is in the future
-                                    $upcomingEvents[] = ['id' => $eventId, 'name' => $eventName];
+                                    $currentEvents[] = [
+                                        'id' => $eventId,
+                                        'name' => $eventName,
+                                        'start_date' => $startDate,
+                                        'end_date' => $endDate
+                                    ];
+                                } elseif ($endDate < $now) {
+                                    // Event has already ended
+                                    $pastEvents[] = [
+                                        'id' => $eventId,
+                                        'name' => $eventName,
+                                        'start_date' => $startDate,
+                                        'end_date' => $endDate
+                                    ];
+                                } elseif ($startDate > $now) {
+                                    // Event is upcoming
+                                    $upcomingEvents[] = [
+                                        'id' => $eventId,
+                                        'name' => $eventName,
+                                        'start_date' => $startDate,
+                                        'end_date' => $endDate
+                                    ];
                                 }
                             }
                         }
-
                         $stmt->close();
                         $conn->close();
                     ?>
@@ -1122,73 +1094,89 @@
                         </div>
                         <hr class="BreakLine">
 
+                        <!-- Past Events -->
                        <div class="PE">
-                            <?php if (empty($pastEvents)): ?>
-                                <p class="NoEvents">No past events available.</p>
-                            <?php else: ?>
-                                <?php foreach ($pastEvents as $index => $event): ?>
-                                    <div class="EventsDetalisDes">
-                                        <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
+                           <?php if (empty($pastEvents)): ?>
+                               <p class="NoEvents">No past events available.</p>
+                           <?php else: ?>
+                               <?php foreach ($pastEvents as $index => $event): ?>
+                                   <div class="EventsDetalisDes">
+                                       <div class="EventNameAndDate">
+                                           <p class="EventNameD"><b><?= htmlspecialchars($event['name']); ?></b></p>
+                                           <p class="EventDatesD"><?= htmlspecialchars($event['start_date']->format('d-m-y')) ?> to <?= htmlspecialchars($event['end_date']->format('d-m-y')) ?></p>
+                                           <!--FOR TESTING:
+                                           <p class="EventDatesD"><?= htmlspecialchars($event['start_date']->format('H:i')) ?> to <?= htmlspecialchars($event['end_date']->format('H:i')) ?></p>--> 
+                                       </div>
                                         <div class="eventLinks">
-                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
-                                                <p class="EventD">View Details</p>
-                                            </a>
-                                            <a href="#" class="EventD" style="text-decoration: none;" onclick="alert('View report feature is not available yet.');"><p>View Report</p></a>
-                                        </div>
-                                    </div>
-                                    <?php if ($index !== count($pastEvents) - 1): ?>
-                                        <hr class="BreakLine">
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
+                                           <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                               <p class="EventD">View Details</p>
+                                           </a>
+                                           <a href="#" class="EventD" style="text-decoration: none;" onclick="alert('View report feature is not available yet.');"><p>View Report</p></a>
+                                       </div>
+                                   </div>
+                                   <?php if ($index !== count($pastEvents) - 1): ?>
+                                       <hr class="BreakLine">
+                                   <?php endif; ?>
+                               <?php endforeach; ?>
+                           <?php endif; ?>
+                       </div>
 
-                        <div class="CE">
-                            <?php if (empty($currentEvents)): ?>
-                                <p class="NoEvents">No current events available.</p>
-                            <?php else: ?>
-                                <?php foreach ($currentEvents as $index => $event): 
-                                    $eventID = $event['id'];
-                                    ?>
-                                    <div class="EventsDetalisDes">
-                                        <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
-                                        <div class="eventLinks">
-                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $eventID ?>" style="text-decoration: none;">
-                                                <p class="EventD">View Details</p>
-                                            </a>
-                                            <a href="http://localhost:5000/?eventID=<?= $eventID; ?>" style="text-decoration: none;">
-                                                <p class="EventD">View Dashboard</p>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <?php if ($index !== count($currentEvents) - 1): ?>
-                                        <hr class="BreakLine">
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
+                       <!-- Current Events -->
+                       <div class="CE">
+                           <?php if (empty($currentEvents)): ?>
+                               <p class="NoEvents">No current events available.</p>
+                           <?php else: ?>
+                               <?php foreach ($currentEvents as $index => $event): ?>
+                                   <div class="EventsDetalisDes">
+                                       <div class="EventNameAndDate">
+                                           <p class="EventNameD"><b><?= htmlspecialchars($event['name']); ?></b></p>
+                                           <p class="EventDatesD"><?= htmlspecialchars($event['start_date']->format('d-m-y')) ?> to <?= htmlspecialchars($event['end_date']->format('d-m-y')) ?></p>
+                                           <!--FOR TESTING:
+                                           <p class="EventDatesD"><?= htmlspecialchars($event['start_date']->format('H:i')) ?> to <?= htmlspecialchars($event['end_date']->format('H:i')) ?></p>-->                                  
+                                       </div>
+                                       <div class="eventLinks">
+                                           <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                               <p class="EventD">View Details</p>
+                                           </a>
+                                           <a href="http://localhost:5000/?eventID=<?= $event['id']; ?>" style="text-decoration: none;">
+                                               <p class="EventD">View Dashboard</p>
+                                           </a>
+                                       </div>
+                                   </div>
+                                   <?php if ($index !== count($currentEvents) - 1): ?>
+                                       <hr class="BreakLine">
+                                   <?php endif; ?>
+                               <?php endforeach; ?>
+                           <?php endif; ?>
+                       </div>
 
-                        <div class="UE">
-                            <?php if (empty($upcomingEvents)): ?>
-                                <p class="NoEvents">No upcoming events available.</p>
-                            <?php else: ?>
-                                <?php foreach ($upcomingEvents as $index => $event): ?>
-                                    <div class="EventsDetalisDes">
-                                        <p class="EventNameD"><?= htmlspecialchars($event['name']); ?></p>
-                                        <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
-                                            <p class="EventD">View Details</p>
-                                        </a>
-                                    </div>
-                                    <?php if ($index !== count($upcomingEvents) - 1): ?>
-                                        <hr class="BreakLine">
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </div>
+                       <!-- Upcoming Events -->
+                       <div class="UE">
+                           <?php if (empty($upcomingEvents)): ?>
+                               <p class="NoEvents">No upcoming events available.</p>
+                           <?php else: ?>
+                               <?php foreach ($upcomingEvents as $index => $event): ?>
+                                   <div class="EventsDetalisDes">
+                                       <div class="EventNameAndDate">
+                                           <p class="EventNameD"><b><?= htmlspecialchars($event['name']); ?></b></p>
+                                           <p class="EventDatesD"><?= htmlspecialchars($event['start_date']->format('d-m-y')) ?> to <?= htmlspecialchars($event['end_date']->format('d-m-y')) ?></p>
+                                           <!--FOR TESTING:
+                                           <p class="EventDatesD"><?= htmlspecialchars($event['start_date']->format('H:i')) ?> to <?= htmlspecialchars($event['end_date']->format('H:i')) ?></p>-->
+                                        </div>
+                                       <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
+                                           <p class="EventD">View Details</p>
+                                       </a>
+                                   </div>
+                                   <?php if ($index !== count($upcomingEvents) - 1): ?>
+                                       <hr class="BreakLine">
+                                   <?php endif; ?>
+                               <?php endforeach; ?>
+                           <?php endif; ?>
+                       </div>
                     </div>
                 </div>
         </main>
-        <script>
+       <script>
             document.getElementById('addEventForm').addEventListener('submit', function(e) {
                 e.preventDefault();
 
@@ -1221,36 +1209,22 @@
                     section = document.querySelector('.UE');
                 }
 
-                const eventBlock = `
+                const eventBlock = 
                     <div class="EventsDetalisDes">
                         <p class="EventNameD">${event.EventName}</p>
                         <a href="#"><img class="edit" src="../../images/edit.png"></a>
                         <a href="#"><p class="EventD">ViewDetails</p></a>
                     </div>
                     <hr class="BreakLine">
-                `;
+                ;
 
                 section.insertAdjacentHTML('beforeend', eventBlock);
             }
         </script>
-    <!-- ------------FOOTER------------- -->
+
+        <!-- ------------FOOTER------------- -->
        <footer class="footer-section">
            <div class="container">
-               <!-- <div class="footer-cta pt-5 pb-5">
-                       <div class="row">
-                           <div class="row-contact">
-                               <div class="col-xl-4 col-md-4 mb-30">
-                                   <div class="single-cta">
-                                       <i class="far fa-envelope-open"></i>
-                                       <div class="cta-text">
-                                           <h4>Mail us</h4>
-                                           <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
-                       </div>
-                   </div> -->
                <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
                    <div class="row">
                        <div class="col-xl-4 col-lg-4 mb-50">
@@ -1263,12 +1237,8 @@
                                </div>
                                <div class="footer-social-icon">
                                <span>Follow us</span>
-                                   <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                   <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
                                    <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
                                    <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
-
-                                   <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
                                </div>
                            </div>
                        </div>
@@ -1280,18 +1250,12 @@
                                <ul class="usfelLinks">
                                    <li style="white-space: nowrap;"><a href="../../Back-End/PHP/addEvent.php">Add Event</a></li>
                                    <li style="white-space: nowrap;"><a href="#listOfEvents">List Of Events</a></li>
-                                   <!-- <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li>
-                                   <li><a href="#" style="color: #151414;">Contact</a></li> -->
-
                                </ul>
                            </div>
                            <div class="cta-text" style="padding: 0; ">
-                                           <h4 style="margin-top: 43%; ">Mail us</h4>
-                                           <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                       </div>
-
+                                <h4 style="margin-top: 43%; ">Mail us</h4>
+                                <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                            </div>
                        </div>
                    </div>
                </div>
@@ -1311,12 +1275,10 @@
        <script>
            // Function to show the correct event list based on radio input selection
            function showEvents(eventType) {
-               // Hide all event types initially
                document.querySelector('.PE').style.display = 'none';
                document.querySelector('.CE').style.display = 'none';
                document.querySelector('.UE').style.display = 'none';
 
-               // Display the correct event type based on the ID passed
                document.querySelector('.' + eventType).style.display = 'block';
            }
 
@@ -1345,7 +1307,5 @@
                checkRadioButton('PE');
            });
        </script>
-
    </body>
-
-   </html>
+</html>
