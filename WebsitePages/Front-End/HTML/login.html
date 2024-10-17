@@ -14,9 +14,21 @@
             margin-right: 22%;
         }  
         
+        #EmailExsit {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        
         .Clogo {
             white-space: nowrap;
         }
+        
+        #PassEmailError {
+            color: red;
+            font-size: 0.9em;
+            margin-right: 8%;
+        }  
         
     </style>
   </head>
@@ -27,7 +39,7 @@
     <div class="main">
       <div class="container a-container" id="a-container">
         <form enctype="multipart/form-data" class="form" id="a-form" action="../../Back-End/PHP/signup.php" method="POST" onsubmit="return validateSignUpForm();">
-          <img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;">
+          <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
           <h2 class="form_title title">Create Account</h2>
 
           <!-- Company Name -->
@@ -36,6 +48,7 @@
           <!-- Email -->
           <input name="email" class="form__input" type="email" id="email" placeholder="Email" required>
           <div class="errorMessage" id="EmailNotValid"></div>
+          <div class="errorMessage" id="EmailExsit"></div>
 
           <!-- Password -->
           <input name="password" class="form__input" type="password" id="password" placeholder="Password" required>
@@ -50,10 +63,11 @@
 
       <div class="container b-container" id="b-container">
         <form class="form" id="b-form" method="POST" action="../../Back-End/PHP/login.php">
-          <img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;">
+          <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
           <h2 class="form_title title">LOG IN</h2>
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
           <input name="spassword" class="form__input" type="password" placeholder="Password" required>
+          <div class="error-message" id="PassEmailError"></div>
           <a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
           <button class="form__button button submit">LOG IN</button>
         </form>
@@ -64,7 +78,7 @@
         <div class="switch__circle switch__circle--t"></div>
         <div class="switch__container" id="switch-c1">
           <h2 class="switch__title title side">Already have an account?</h2>
-          <p class="switch__description description">Click sign in to enter your account</p>
+          <p class="switch__description description">Click log in to enter your account</p>
           <button class="switch__button button switch-btn">LOG IN</button>
         </div>
         <div class="switch__container is-hidden" id="switch-c2">
@@ -96,6 +110,19 @@
 
         return isValid;
       }
+      
+       window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        
+        if (error === 'invalid_credentialsLOG') {
+          document.getElementById('PassEmailError').innerText = 'Email or password incorrect! Please try again.';
+        }
+        
+        if (error === 'invalid_credentialsUP') {
+          document.getElementById('EmailExsit').innerText = 'This email is already being used! Please log in instead.';
+        }
+      };
     </script>
     <script src="../JavaScript/login.js"></script>
   </body>
