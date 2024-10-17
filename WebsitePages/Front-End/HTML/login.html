@@ -30,6 +30,13 @@
             margin-right: 8%;
         }  
         
+        #PasswrodNotValid {
+             color: red;
+            font-size: 0.9em;
+            margin-right: 8%;
+
+        }
+        
     </style>
   </head>
   <body>
@@ -52,6 +59,7 @@
 
           <!-- Password -->
           <input name="password" class="form__input" type="password" id="password" placeholder="Password" required>
+          <div class="errorMessage" id="PasswrodNotValid"></div>
 
           <!-- Logo Upload (Preserved Style) -->
           <label class="Clogo" name="logo" id="label" style="width:63.5%; color: grey; font-size:13px;"> Company logo: <br>  
@@ -91,25 +99,44 @@
 
     <script>
       function validateSignUpForm() {
-        let isValid = true;
-        let errorMessage = "";
+    let isValid = true;
+    let emailErrorMessage = "";
+    let passwordErrorMessage = "";
 
-        const email = document.getElementById("email");
-        const password = document.getElementById("password");
-        const logo = document.getElementById("logo");
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+    const logo = document.getElementById("logo");
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email.value)) {
-          errorMessage = "Please enter a valid email address!\n";
-          isValid = false;
-        }
-        
-        if (!isValid) {
-           document.getElementById('EmailNotValid').innerText = errorMessage;
-        }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email.value)) {
+        emailErrorMessage = "Please enter a valid email address!\n";
+        isValid = false;
+    }
 
-        return isValid;
-      }
+    const passwordValue = password.value;
+    if (passwordValue.length < 8) {
+        passwordErrorMessage += "Password must be at least 8 characters long!\n";
+        isValid = false;
+    }
+    
+//    if (!/[A-Z]/.test(passwordValue)) {
+//        passwordErrorMessage += "Password must contain at least one uppercase letter.\n";
+//        isValid = false;
+//    }
+//    if (!/[a-z]/.test(passwordValue)) {
+//        passwordErrorMessage += "Password must contain at least one lowercase letter.\n";
+//        isValid = false;
+//    }
+//    if (!/\d/.test(passwordValue)) {
+//        passwordErrorMessage += "Password must contain at least one number.\n";
+//        isValid = false;
+//    }
+
+    document.getElementById('EmailNotValid').innerText = emailErrorMessage;
+    document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
+
+    return isValid;
+}
       
        window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
