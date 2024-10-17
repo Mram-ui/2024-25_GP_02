@@ -12,7 +12,6 @@
         <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/boxes.css">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-
     </head>
     <style>
         .addCameraLink{
@@ -36,46 +35,45 @@
             <h2 class="title">Add Event</h2>
             <form id="addEvent" class="form" method="POST" action="../../Back-End/PHP/addEvent.php" onsubmit="return validateDates()">
                 <label for="eventName">Event Name:</label> 
-                <input name="eventName" class="form__input" type="text" placeholder="Name" required> <br>
+                <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo isset($_POST['eventName']) ? htmlspecialchars($_POST['eventName']) : ''; ?>" required> <br>
 
                 <label for="eventLocation">Event Location:</label> 
-                <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" required> <br>
+                <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo isset($_POST['eventLocation']) ? htmlspecialchars($_POST['eventLocation']) : ''; ?>" required> <br>
 
                 <div id="times">
                     <div class="timeBlocks">
                         <label for="startDate">Start Date:</label>  
-                        <input name="startDate" class="form__input time" type="date" required> 
+                        <input name="startDate" class="form__input time" type="date" value="<?php echo isset($_POST['startDate']) ? $_POST['startDate'] : ''; ?>" required> 
                     </div>
                     <div class="timeBlocks"> 
                         <label for="startTime">Start Time:</label> 
-                        <input name="startTime" class="form__input time" type="time" required> 
+                        <input name="startTime" class="form__input time" type="time" value="<?php echo isset($_POST['startTime']) ? $_POST['startTime'] : ''; ?>" required> 
                     </div> 
                     <br>
                     <div class="timeBlocks">
                         <label for="endDate">End Date:</label>  
-                        <input name="endDate" class="form__input time" type="date" required> 
+                        <input name="endDate" class="form__input time" type="date" value="<?php echo isset($_POST['endDate']) ? $_POST['endDate'] : ''; ?>" required> 
                     </div>
                     <div class="timeBlocks"> 
                         <label for="endTime">End Time:</label>  
-                        <input name="endTime" class="form__input time" type="time" required> 
+                        <input name="endTime" class="form__input time" type="time" value="<?php echo isset($_POST['endTime']) ? $_POST['endTime'] : ''; ?>" required> 
                     </div>
                 </div>
 
                 <div class="AllHalls">
                     <div id="hall" class="hall">
                         <label for="hallName">Hall Name:</label><br>
-                        <input name="hallName" class="form__input" type="text" placeholder="Main hall" required><br>
+                        <input name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo isset($_POST['hallName']) ? htmlspecialchars($_POST['hallName']) : ''; ?>" required><br>
 
                         <label for="hallCamera">Hall Camera:</label><br>
 
                         <!-- Camera Dropdown populated from database -->
                         <select name="hallCamera" required>
-                        <option value="" disabled selected style="display: none;">Select your camera</option>
-
-                        <?php
+                            <option value="" disabled selected style="display: none;">Select your camera</option>
+                            <?php
                             $servername = "localhost"; 
                             $username = "root";
-                            $password = "root";
+                            $password = "";
                             $dbname = "raqeebdb";
 
                             $conn = new mysqli($servername, $username, $password, $dbname);
@@ -84,46 +82,106 @@
                                 die("Connection failed: " . $conn->connect_error);
                             }
 
+                            $companyID = $_SESSION['CompanyID'];
+
                             $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
 
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<option value='{$row['CameraID']}'>{$row['CameraName']}</option>";
+                                    $selected = isset($_POST['hallCamera']) && $_POST['hallCamera'] == $row['CameraID'] ? 'selected' : '';
+                                    echo "<option value='{$row['CameraID']}' $selected>{$row['CameraName']}</option>";
                                 }
                             }
 
                             $conn->close();
-                        ?>
+                            ?>
                         </select> <br>
                         <p class="addCameraLink">
                             <a href="addCamera.php">Don't have a camera?</a>
                         </p>
 
                         <label for="hallThreshold">Hall Max Capacity:</label><br>
-                        <input name="hallThreshold" class="form__input" type="number" placeholder="00" min="0" required>
+                        <input name="hallThreshold" class="form__input" type="number" placeholder="00" min="0" value="<?php echo isset($_POST['hallThreshold']) ? $_POST['hallThreshold'] : ''; ?>" required>
                     </div>
                 </div>
                 <br>
                 <button class="form__button button submit">ADD EVENT</button>
             </form>
         </div>
+        
+        <script>
+            function isLocalStorageSupported() {
+                try {
+                    const testKey = '__test__';
+                    localStorage.setItem(testKey, testKey);
+                    localStorage.removeItem(testKey);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
 
-        <?php 
+            document.addEventListener('DOMContentLoaded', () => {
+                const form = document.getElementById('addEvent');
+
+                function saveFormData() {
+                    if (!isLocalStorageSupported()) return;
+
+                    const formData = {
+                        eventName: form.elements.eventName.value,
+                        eventLocation: form.elements.eventLocation.value,
+                        startDate: form.elements.startDate.value,
+                        startTime: form.elements.startTime.value,
+                        endDate: form.elements.endDate.value,
+                        endTime: form.elements.endTime.value,
+                        hallName: form.elements.hallName.value,
+                        hallCamera: form.elements.hallCamera.value,
+                        hallThreshold: form.elements.hallThreshold.value
+                    };
+
+                    localStorage.setItem('formData', JSON.stringify(formData));
+                }
+
+                function loadFormData() {
+                    if (!isLocalStorageSupported()) return;
+
+                    const savedFormData = localStorage.getItem('formData');
+                    if (savedFormData) {
+                        const formData = JSON.parse(savedFormData);
+                        form.elements.eventName.value = formData.eventName;
+                        form.elements.eventLocation.value = formData.eventLocation;
+                        form.elements.startDate.value = formData.startDate;
+                        form.elements.startTime.value = formData.startTime;
+                        form.elements.endDate.value = formData.endDate;
+                        form.elements.endTime.value = formData.endTime;
+                        form.elements.hallName.value = formData.hallName;
+                        form.elements.hallCamera.value = formData.hallCamera;
+                        form.elements.hallThreshold.value = formData.hallThreshold;
+                    }
+                }
+
+                loadFormData();
+
+                window.addEventListener('beforeunload', saveFormData);
+
+                form.addEventListener('submit', () => {
+                    console.log("Form submitted. Clearing localStorage after submission.");
+                    localStorage.removeItem('formData');
+                });
+            });
+        </script>
+        
+        <?php
             include '../../Back-End/PHP/session.php';
 
             date_default_timezone_set('Asia/Riyadh');
 
-            $servername = "localhost"; 
+            $servername = "localhost";
             $username = "root";
-            $password = "root";
+            $password = "";
             $dbname = "raqeebdb";
 
             $conn = new mysqli($servername, $username, $password, $dbname);
-
-            //For TESTING:
-    //        $now = date('H:i');
-    //        echo 'The time is '.$now;
-
 
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
@@ -135,10 +193,9 @@
                 $eventName = $_POST['eventName'];
                 $eventLocation = $_POST['eventLocation'];
                 $eventStartDate = $_POST['startDate'];
-                $eventEndDate = $_POST['endDate'];     
-                $eventStartTime = $_POST['startTime']; 
-                $eventEndTime = $_POST['endTime'];     
-
+                $eventEndDate = $_POST['endDate'];
+                $eventStartTime = $_POST['startTime'];
+                $eventEndTime = $_POST['endTime'];
                 $hallName = $_POST['hallName'];
                 $hallThreshold = $_POST['hallThreshold'];
                 $hallCamera = $_POST['hallCamera'];
@@ -146,21 +203,25 @@
                 $today = date('Y-m-d');
                 $now = date('H:i');
 
+                $validationPassed = true;
+
                 if ($eventStartDate == $today) {
                     if ($eventStartTime <= $now) {
-                        echo "<script>alert('For events scheduled today, the start time cannot be in the past! Please choose a valid time for today's event.');</script>";
+                        echo "<script>alert('For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.');</script>";
+                        $validationPassed = false;
                         exit;
                     }
                 } elseif ($eventStartDate < $today) {
-                    echo "<script>alert('The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.');</script>";
+                    echo "<script>alert('The event cannot start in the past! Please select a future start date and time.');</script>";
+                    $validationPassed = false;
                     exit;
                 }
 
                 if ($eventStartDate > $eventEndDate || ($eventStartDate == $eventEndDate && $eventStartTime >= $eventEndTime)) {
-                    echo "<script>alert('Start date and time cannot be after the end date and time!');</script>";
+                    echo "<script>alert('The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.');</script>";
+                    $validationPassed = false;
                     exit;
                 }
-
 
                 $conn->begin_transaction();
 
@@ -183,10 +244,13 @@
 
                     $conn->commit();
 
-                    echo "<script>alert('New event added successfully!');</script>";
-
-                    echo "<script>window.location.href = 'userHome.php';</script>";
+                   echo "<script>
+                        alert('New event added successfully!');
+                        localStorage.removeItem('formData');
+                        window.location.href = 'userHome.php';
+                    </script>";
                     exit;
+
 
                 } catch (Exception $e) {
                     $conn->rollback();
@@ -197,39 +261,5 @@
                 $conn->close();
             }
         ?>
-
-
-        <script>
-           function validateDates() {
-            const now = new Date();
-
-            const startDate = new Date(document.querySelector('input[name="startDate"]').value);
-            const startTime = document.querySelector('input[name="startTime"]').value;
-            const endDate = new Date(document.querySelector('input[name="endDate"]').value);
-
-            if (startDate.setHours(0, 0, 0, 0) < now.setHours(0, 0, 0, 0)) {
-                alert("The event cannot start in the past! Please select a future start date and time.");
-                return false;  
-
-            if (startDate.setHours(0, 0, 0, 0) === now.setHours(0, 0, 0, 0)) {
-                const [startHours, startMinutes] = startTime.split(':');
-                const selectedStartTime = new Date();
-                selectedStartTime.setHours(startHours, startMinutes, 0, 0);
-
-                if (selectedStartTime <= now) {
-                    alert("For events scheduled today, the start time cannot be in the past! Please choose a valid time for today's event.");
-                    return false; 
-                }
-            }
-
-            if (startDate >= endDate) {
-                alert("The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.");
-                return false;  
-            }
-
-            return true; 
-        }
-
-        </script>
     </body>
 </html>
