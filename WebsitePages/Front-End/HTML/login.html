@@ -7,6 +7,18 @@
 
     <link rel="stylesheet" type="text/css" href="../CSS/login.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        #EmailNotValid {
+            color: red;
+            font-size: 0.9em;
+            margin-right: 22%;
+        }  
+        
+        .Clogo {
+            white-space: nowrap;
+        }
+        
+    </style>
   </head>
   <body>
 
@@ -20,20 +32,18 @@
 
           <!-- Company Name -->
           <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
-          <span id="cname-error" class="error-message"></span>
 
           <!-- Email -->
           <input name="email" class="form__input" type="email" id="email" placeholder="Email" required>
-          <span id="email-error" class="error-message"></span>
+          <div class="errorMessage" id="EmailNotValid"></div>
 
           <!-- Password -->
           <input name="password" class="form__input" type="password" id="password" placeholder="Password" required>
-          <span id="password-error" class="error-message"></span>
 
           <!-- Logo Upload (Preserved Style) -->
-          <label name="logo" id="label" style="color: #a0a5a8; font-size:13px;"> Company logo: <br>  
+          <label class="Clogo" name="logo" id="label" style="width:63.5%; color: grey; font-size:13px;"> Company logo: <br>  
           <input type="file" name="logo" id="logo" accept="image/*" required> </label>
-          <span id="logo-error" class="error-message"></span> <br><br>
+          
           <input type="submit" name="submit" class="form__button button submit" id="button" value="SIGN UP">
         </form>
       </div>
@@ -66,55 +76,27 @@
     </div>
 
     <script>
-      // JavaScript validation function for the sign-up form
       function validateSignUpForm() {
         let isValid = true;
-        let errorMessage = ""; // To store the error messages
+        let errorMessage = "";
 
-        // Get the form fields
         const email = document.getElementById("email");
         const password = document.getElementById("password");
         const logo = document.getElementById("logo");
 
-        // Validate email format
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailPattern.test(email.value)) {
-          errorMessage += "Please enter a valid email address.\n";
+          errorMessage = "Please enter a valid email address!\n";
           isValid = false;
         }
-
-        // Validate password is not empty
-        if (password.value.trim() === "") {
-          errorMessage += "Password is required.\n";
-          isValid = false;
-        }
-
-        // Ensure the logo is uploaded
-        if (!logo.value) {
-          errorMessage += "Please upload a company logo.\n";
-          isValid = false;
-        }
-
-        // If there are any errors, show an alert with the error message(s)
+        
         if (!isValid) {
-          alert(errorMessage);
+           document.getElementById('EmailNotValid').innerText = errorMessage;
         }
 
-        // Prevent form submission if invalid
         return isValid;
       }
     </script>
-
-
-    <style>
-      .error-message {
-        color: red;
-        font-size: 12px;
-        margin-top: 5px;
-        display: block;
-      }
-    </style>
-
     <script src="../JavaScript/login.js"></script>
   </body>
 </html>
