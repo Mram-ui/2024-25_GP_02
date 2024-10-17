@@ -26,7 +26,8 @@
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
-            echo '<script>window.location.href="../../Front-End/HTML/login.html?error=invalid_credentialsUP";</script>';            exit();
+            echo '<script>window.location.href="../../Front-End/HTML/login.html?error=invalid_credentialsUP";</script>';          
+            exit();
         }
 
     }
