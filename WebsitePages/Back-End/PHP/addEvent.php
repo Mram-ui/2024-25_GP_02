@@ -21,6 +21,12 @@
         .addCameraLink a:hover {
             color: #4a56ff;
         }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 3px;
+            margin-bottom: 4%;
+        }
     </style>
 
     <body>
@@ -58,6 +64,8 @@
                         <label for="endTime">End Time:</label>  
                         <input name="endTime" class="form__input time" type="time" value="<?php echo isset($_POST['endTime']) ? $_POST['endTime'] : ''; ?>" required> 
                     </div>
+                    <div class="error-message" id="startTimeError"></div>
+
                 </div>
 
                 <div class="AllHalls">
@@ -67,33 +75,32 @@
 
                         <label for="hallCamera">Hall Camera:</label><br>
 
-                        <!-- Camera Dropdown populated from database -->
                         <select name="hallCamera" required>
                             <option value="" disabled selected style="display: none;">Select your camera</option>
                             <?php
-                            $servername = "localhost"; 
-                            $username = "root";
-                            $password = "";
-                            $dbname = "raqeebdb";
+                                $servername = "localhost"; 
+                                $username = "root";
+                                $password = "";
+                                $dbname = "raqeebdb";
 
-                            $conn = new mysqli($servername, $username, $password, $dbname);
+                                $conn = new mysqli($servername, $username, $password, $dbname);
 
-                            if ($conn->connect_error) {
-                                die("Connection failed: " . $conn->connect_error);
-                            }
-
-                            $companyID = $_SESSION['CompanyID'];
-
-                            $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
-
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $selected = isset($_POST['hallCamera']) && $_POST['hallCamera'] == $row['CameraID'] ? 'selected' : '';
-                                    echo "<option value='{$row['CameraID']}' $selected>{$row['CameraName']}</option>";
+                                if ($conn->connect_error) {
+                                    die("Connection failed: " . $conn->connect_error);
                                 }
-                            }
 
-                            $conn->close();
+                                $companyID = $_SESSION['CompanyID'];
+
+                                $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
+
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $selected = isset($_POST['hallCamera']) && $_POST['hallCamera'] == $row['CameraID'] ? 'selected' : '';
+                                        echo "<option value='{$row['CameraID']}' $selected>{$row['CameraName']}</option>";
+                                    }
+                                }
+
+                                $conn->close();
                             ?>
                         </select> <br>
                         <p class="addCameraLink">
@@ -207,18 +214,18 @@
 
                 if ($eventStartDate == $today) {
                     if ($eventStartTime <= $now) {
-                        echo "<script>alert('For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.');</script>";
+                        echo "<script> document.getElementById('startTimeError').innerText= 'For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.';</script>";
                         $validationPassed = false;
                         exit;
                     }
                 } elseif ($eventStartDate < $today) {
-                    echo "<script>alert('The event cannot start in the past! Please select a future start date and time.');</script>";
+                    echo "<script> document.getElementById('startTimeError').innerText ='The event cannot start in the past! Please select a future start date and time.';</script>";
                     $validationPassed = false;
                     exit;
                 }
 
                 if ($eventStartDate > $eventEndDate || ($eventStartDate == $eventEndDate && $eventStartTime >= $eventEndTime)) {
-                    echo "<script>alert('The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.');</script>";
+                    echo "<script> document.getElementById('startTimeError').innerText ='The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.';</script>";
                     $validationPassed = false;
                     exit;
                 }
