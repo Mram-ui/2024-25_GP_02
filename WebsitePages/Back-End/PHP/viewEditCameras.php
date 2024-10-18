@@ -1,38 +1,32 @@
 <?php
     include '../../Back-End/PHP/session.php';
     
-    // Database connection
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
-    // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
 
-    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Get the camera ID from the URL
     $cameraId = isset($_GET['cameraId']) ? intval($_GET['cameraId']) : 0;
 
-    // Prepare SQL query to fetch camera details
     $cameraQuery = $conn->prepare("SELECT CameraName, CameraIPAddress, PortNo, StreamingChannel, CameraUsername, CameraPassword FROM camera WHERE CameraID = ?");
     $cameraQuery->bind_param("i", $cameraId);
     $cameraQuery->execute();
     $cameraResult = $cameraQuery->get_result();
 
-    // Check if the camera was found
     if ($cameraResult->num_rows > 0) {
         $cameraData = $cameraResult->fetch_assoc();
+        $passwordLength = strlen($cameraData['CameraPassword']);
     } else {
         echo "<script>alert('Camera not found');</script>";
-        exit; // Stop further processing if no camera is found
+        exit; 
     }
 
-    // Close the database connection
     $conn->close();
 ?>
 
@@ -145,7 +139,7 @@
         <input name="cameraUsername" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraUsername']); ?>" required readonly>
 
         <label id='lable' for="cameraPassword">Camera Password:</label>
-        <input name="cameraPassword" class="form__input" type="text" value="* * * * * * * * * *" required readonly>
+            <input name="cameraPassword" class="form__input" type="text" value="<?= str_repeat('*' . ' ', $passwordLength); ?>" required readonly>
     </form>
 
     <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Camera</button>
