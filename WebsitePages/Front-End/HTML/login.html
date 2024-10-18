@@ -149,6 +149,10 @@
         if (error === 'invalid_credentialsUP') {
           document.getElementById('EmailExsit').innerText = 'This email is already being used! Please log in instead.';
         }
+        
+        document.getElementById('email').addEventListener('focus', function() {
+            document.getElementById('EmailExsit').innerText = '';
+        });
       };
     </script>
     <script src="../JavaScript/login.js"></script>
