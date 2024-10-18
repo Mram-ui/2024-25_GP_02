@@ -2,7 +2,7 @@
     include '../../Back-End/PHP/session.php';
     $servername = "localhost"; 
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -35,10 +35,11 @@
             $stmt->bind_param("ssisssi", $cameraName, $cameraIP, $portNo, $stream, $cameraUsername, $cameraPassword, $CompanyID);
 
             if ($stmt->execute()) {
-                echo ( "<script> alert('Camera added successfully!');
+                $message = 'Camera added successfully!';
+                echo "<script>
                         localStorage.removeItem('cameraFormData');
                         window.location.href='../../Back-End/PHP/cameras.php'; 
-                        </script>");
+                      </script>";
             } else {
                 $message = 'Failed to add camera: ' . $stmt->error;
             }
@@ -81,12 +82,7 @@
             <form id='addcam' class="form" method="POST" action="" onsubmit="return validateForm();">
                 <label for="cameraName">Camera Name:</label>
                 <input name="cameraName" id="cameraName" class="form__input" type="text" placeholder="Camera 1" required>
-                <div class="error-message" id="cameraNameError"></div>
-                <?php if ($message): ?>
-                <div class="<?php echo strpos($message, 'successfully') !== false ? 'success-message' : 'error-message'; ?>">
-                    <?php echo $message; ?>
-                </div>
-                <?php endif; ?>
+                <div class="error-message" id="cameraNameError"><?php echo isset($message) ? ($message === 'The camera name is already in your list. Please choose a different name.' ? $message : '') : ''; ?></div>
 
                 <label for="cameraIP">Camera IP Address:</label>
                 <input name="cameraIP" id="cameraIP" class="form__input" type="text" placeholder="000.000.0.000" required>
@@ -109,6 +105,9 @@
         </div>
 
         <script>
+            let ipValid = false;
+            let ipErrorShown = false;
+
             function saveFormData() {
                 const formData = {
                     cameraName: document.getElementById('cameraName').value,
@@ -146,18 +145,45 @@
                 document.getElementById('cameraNameError').innerText = '';
             });
 
-            function validateForm() {
-                const ipAddress = document.getElementById("cameraIP").value;
-                const ipPattern = /^(?:\d{1,3}\.){2}\d{1,3}\.\d{1,3}$/;
+            const cameraIPInput = document.getElementById('cameraIP');
+
+            cameraIPInput.addEventListener('blur', function () {
+                if (cameraIPInput.value.trim() !== '') {
+                    validateIP();
+                }
+            });
+
+            cameraIPInput.addEventListener('input', function () {
+                if (ipErrorShown) {
+                    validateIP();
+                }
+            });
+
+            function validateIP() {
+                const ipAddress = cameraIPInput.value.trim();
+                const ipPattern = /^(?:\d{1,3}\.){3}\d{1,3}$/;
 
                 if (!ipPattern.test(ipAddress)) {
+                    ipValid = false;
+                    ipErrorShown = true;
                     document.getElementById('IPError').innerText = "Please enter a valid IP address (e.g., 000.000.0.000).";
+                } else {
+                    ipValid = true;
+                    ipErrorShown = false;
+                    document.getElementById('IPError').innerText = "";
+                }
+            }
+
+            function validateForm() {
+                validateIP();
+
+                if (!ipValid) {
                     return false;
                 }
 
                 return true;
             }
         </script>
-    </body>
 
+    </body>
 </html>
