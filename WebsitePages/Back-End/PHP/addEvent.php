@@ -80,7 +80,7 @@
                             <?php
                                 $servername = "localhost"; 
                                 $username = "root";
-                                $password = "root";
+                                $password = "";
                                 $dbname = "raqeebdb";
 
                                 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -117,19 +117,31 @@
         </div>
         
         <script>
-            function isLocalStorageSupported() {
-                try {
-                    const testKey = '__test__';
-                    localStorage.setItem(testKey, testKey);
-                    localStorage.removeItem(testKey);
-                    return true;
-                } catch (e) {
-                    return false;
-                }
-            }
-
             document.addEventListener('DOMContentLoaded', () => {
                 const form = document.getElementById('addEvent');
+                const startDateInput = form.elements.startDate;
+                const startTimeInput = form.elements.startTime;
+                const startTimeError = document.getElementById('startTimeError');
+
+                let lastStartDate = startDateInput.value;
+
+                startDateInput.addEventListener('input', () => {
+                    if (startDateInput.value !== lastStartDate) {
+                        startTimeError.innerText = '';
+                    }
+                    lastStartDate = startDateInput.value;
+                });
+
+                function isLocalStorageSupported() {
+                    try {
+                        const testKey = '__test__';
+                        localStorage.setItem(testKey, testKey);
+                        localStorage.removeItem(testKey);
+                        return true;
+                    } catch (e) {
+                        return false;
+                    }
+                }
 
                 function saveFormData() {
                     if (!isLocalStorageSupported()) return;
@@ -172,11 +184,11 @@
                 window.addEventListener('beforeunload', saveFormData);
 
                 form.addEventListener('submit', () => {
-                    console.log("Form submitted. Clearing localStorage after submission.");
                     localStorage.removeItem('formData');
                 });
             });
         </script>
+
         
         <?php
             include '../../Back-End/PHP/session.php';
@@ -185,7 +197,7 @@
 
             $servername = "localhost";
             $username = "root";
-            $password = "root";
+            $password = "";
             $dbname = "raqeebdb";
 
             $conn = new mysqli($servername, $username, $password, $dbname);
