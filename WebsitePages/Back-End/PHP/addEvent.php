@@ -120,10 +120,12 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const form = document.getElementById('addEvent');
                 const startDateInput = form.elements.startDate;
+                const endDateInput = form.elements.endDate;
                 const startTimeInput = form.elements.startTime;
                 const startTimeError = document.getElementById('startTimeError');
 
                 let lastStartDate = startDateInput.value;
+                let lastEndDate = endDateInput.value;
 
                 startDateInput.addEventListener('input', () => {
                     if (startDateInput.value !== lastStartDate) {
@@ -131,6 +133,16 @@
                     }
                     lastStartDate = startDateInput.value;
                 });
+
+                endDateInput.addEventListener('input', () => {
+                    if (endDateInput.value !== lastEndDate) {
+                        if (startTimeError.innerText.trim() === "The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.") {
+                            startTimeError.innerText = '';
+                        }
+                    }
+                    lastEndDate = endDateInput.value;
+                });
+
 
                 function isLocalStorageSupported() {
                     try {
@@ -188,6 +200,7 @@
                 });
             });
         </script>
+
 
         
         <?php
