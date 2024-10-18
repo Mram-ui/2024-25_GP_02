@@ -73,7 +73,8 @@
         <form class="form" id="b-form" method="POST" action="../../Back-End/PHP/login.php">
           <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
           <h2 class="form_title title">LOG IN</h2>
-          <input name="semail" class="form__input" type="email" placeholder="Email" required>
+          <input name="semail" class="form__input" type="email" placeholder="Email" id="email" required>
+          <div class="errorMessage" id="EmailNotValid"></div>
           <input name="spassword" class="form__input" type="password" placeholder="Password" required>
           <div class="error-message" id="PassEmailError"></div>
           <a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
@@ -97,64 +98,96 @@
       </div>
     </div>
 
-    <script>
-      function validateSignUpForm() {
-    let isValid = true;
-    let emailErrorMessage = "";
-    let passwordErrorMessage = "";
+<script>
+    function validateSignUpForm() {
+        let isValid = true;
+        let emailErrorMessage = "";
+        let passwordErrorMessage = "";
 
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const logo = document.getElementById("logo");
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
 
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email.value)) {
-        emailErrorMessage = "Please enter a valid email address!\n";
-        isValid = false;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email.value)) {
+            emailErrorMessage = "Please enter a valid email address!\n";
+            isValid = false;
+        } else {
+            emailErrorMessage = "";
+        }
+
+        const passwordValue = password.value;
+        if (passwordValue.length < 8) {
+            passwordErrorMessage += "Password must be at least 8 characters long!\n";
+            isValid = false;
+        }
+
+//        if (!/[A-Z]/.test(passwordValue)) {
+//            passwordErrorMessage += "Password must contain at least one uppercase letter.\n";
+//            isValid = false;
+//        }
+//        if (!/[a-z]/.test(passwordValue)) {
+//            passwordErrorMessage += "Password must contain at least one lowercase letter.\n";
+//            isValid = false;
+//        }
+//        if (!/\d/.test(passwordValue)) {
+//            passwordErrorMessage += "Password must contain at least one number.\n";
+//            isValid = false;
+//        }
+
+        document.getElementById('EmailNotValid').innerText = emailErrorMessage;
+        document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
+
+        return isValid;
     }
 
-    const passwordValue = password.value;
-    if (passwordValue.length < 8) {
-        passwordErrorMessage += "Password must be at least 8 characters long!\n";
-        isValid = false;
-    }
-    
-//    if (!/[A-Z]/.test(passwordValue)) {
-//        passwordErrorMessage += "Password must contain at least one uppercase letter.\n";
-//        isValid = false;
-//    }
-//    if (!/[a-z]/.test(passwordValue)) {
-//        passwordErrorMessage += "Password must contain at least one lowercase letter.\n";
-//        isValid = false;
-//    }
-//    if (!/\d/.test(passwordValue)) {
-//        passwordErrorMessage += "Password must contain at least one number.\n";
-//        isValid = false;
-//    }
-
-    document.getElementById('EmailNotValid').innerText = emailErrorMessage;
-    document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
-
-    return isValid;
-}
-      
-       window.onload = function() {
+    window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
-        
+
         if (error === 'invalid_credentialsLOG') {
-          document.getElementById('PassEmailError').innerText = 'Email or password incorrect! Please try again.';
+            document.getElementById('PassEmailError').innerText = 'Email or password incorrect! Please try again.';
         }
-        
+
         if (error === 'invalid_credentialsUP') {
-          document.getElementById('EmailExsit').innerText = 'This email is already being used! Please log in instead.';
+            document.getElementById('EmailExsit').innerText = 'This email is already being used! Please log in instead.';
         }
-        
-        document.getElementById('email').addEventListener('focus', function() {
+
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        emailInput.addEventListener('focus', function() {
             document.getElementById('EmailExsit').innerText = '';
         });
-      };
-    </script>
+
+        passwordInput.addEventListener('input', function() {
+            const passwordValue = passwordInput.value;
+            if (passwordValue.length < 8) {
+                document.getElementById('PasswrodNotValid').innerText = 'Password must be at least 8 characters long!';
+            } else {
+                document.getElementById('PasswrodNotValid').innerText = '';
+            }
+        });
+
+        emailInput.addEventListener('blur', function() {
+            const emailValue = emailInput.value;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailValue)) {
+                document.getElementById('EmailNotValid').innerText = 'Please enter a valid email address!';
+            } else {
+                document.getElementById('EmailNotValid').innerText = '';
+            }
+        });
+
+        emailInput.addEventListener('input', function() {
+            const emailValue = emailInput.value;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailPattern.test(emailValue)) {
+                document.getElementById('EmailNotValid').innerText = '';
+            }
+        });
+    };
+</script>
+
     <script src="../JavaScript/login.js"></script>
   </body>
 </html>
