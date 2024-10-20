@@ -17,6 +17,7 @@
         #EmailExsit {
             color: red;
             font-size: 0.9em;
+            margin-right: 24%;
         }
 
         
@@ -45,7 +46,19 @@
 
     <div class="main">
       <div class="container a-container" id="a-container">
-        <form enctype="multipart/form-data" class="form" id="a-form" action="../../Back-End/PHP/signup.php" method="POST" onsubmit="return validateSignUpForm();">
+        <form class="form" id="b-form" method="POST" action="../../Back-End/PHP/login.php">
+          <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
+          <h2 class="form_title title">LOG IN</h2>
+          <input name="semail" class="form__input" type="email" placeholder="Email" required>
+          <input name="spassword" class="form__input" type="password" placeholder="Password" required>
+          <div class="error-message" id="PassEmailError"></div>
+          <a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
+          <button class="form__button button submit">LOG IN</button>
+        </form>
+      </div>
+
+      <div class="container b-container" id="b-container">
+          <form enctype="multipart/form-data" class="form" id="a-form" action="../../Back-End/PHP/signup.php" method="POST" onsubmit="return validateSignUpForm();">
           <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
           <h2 class="form_title title">Create Account</h2>
 
@@ -69,124 +82,111 @@
         </form>
       </div>
 
-      <div class="container b-container" id="b-container">
-        <form class="form" id="b-form" method="POST" action="../../Back-End/PHP/login.php">
-          <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo" style="width: 50%; margin-bottom:3%;"></a>
-          <h2 class="form_title title">LOG IN</h2>
-          <input name="semail" class="form__input" type="email" placeholder="Email" id="email" required>
-          <div class="errorMessage" id="EmailNotValid"></div>
-          <input name="spassword" class="form__input" type="password" placeholder="Password" required>
-          <div class="error-message" id="PassEmailError"></div>
-          <a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
-          <button class="form__button button submit">LOG IN</button>
-        </form>
-      </div>
-
       <div class="switch" id="switch-cnt">
         <div class="switch__circle"></div>
         <div class="switch__circle switch__circle--t"></div>
         <div class="switch__container" id="switch-c1">
-          <h2 class="switch__title title side">Already have an account?</h2>
-          <p class="switch__description description">Click log in to enter your account</p>
-          <button class="switch__button button switch-btn">LOG IN</button>
-        </div>
-        <div class="switch__container is-hidden" id="switch-c2">
           <h2 class="switch__title title side">Don't have an account?</h2>
           <p class="switch__description description">Click sign up to create a new account with us!</p>
           <button class="switch__button button switch-btn">SIGN UP</button>
         </div>
+        <div class="switch__container is-hidden" id="switch-c2">
+          <h2 class="switch__title title side">Already have an account?</h2>
+          <p class="switch__description description">Click log in to enter your account</p>
+          <button class="switch__button button switch-btn">LOG IN</button>
+        </div>
       </div>
     </div>
 
-<script>
-    function validateSignUpForm() {
-        let isValid = true;
-        let emailErrorMessage = "";
-        let passwordErrorMessage = "";
+    <script>
+        function validateSignUpForm() {
+            let isValid = true;
+            let emailErrorMessage = "";
+            let passwordErrorMessage = "";
 
-        const email = document.getElementById("email");
-        const password = document.getElementById("password");
+            const email = document.getElementById("email");
+            const password = document.getElementById("password");
 
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(email.value)) {
-            emailErrorMessage = "Please enter a valid email address!\n";
-            isValid = false;
-        } else {
-            emailErrorMessage = "";
-        }
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email.value)) {
+                emailErrorMessage = "Please enter a valid email address!\n";
+                isValid = false;
+            } else {
+                emailErrorMessage = "";
+            }
 
-        const passwordValue = password.value;
-        if (passwordValue.length < 8) {
-            passwordErrorMessage += "Password must be at least 8 characters long!\n";
-            isValid = false;
-        }
-
-//        if (!/[A-Z]/.test(passwordValue)) {
-//            passwordErrorMessage += "Password must contain at least one uppercase letter.\n";
-//            isValid = false;
-//        }
-//        if (!/[a-z]/.test(passwordValue)) {
-//            passwordErrorMessage += "Password must contain at least one lowercase letter.\n";
-//            isValid = false;
-//        }
-//        if (!/\d/.test(passwordValue)) {
-//            passwordErrorMessage += "Password must contain at least one number.\n";
-//            isValid = false;
-//        }
-
-        document.getElementById('EmailNotValid').innerText = emailErrorMessage;
-        document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
-
-        return isValid;
-    }
-
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get('error');
-
-        if (error === 'invalid_credentialsLOG') {
-            document.getElementById('PassEmailError').innerText = 'Email or password incorrect! Please try again.';
-        }
-
-        if (error === 'invalid_credentialsUP') {
-            document.getElementById('EmailExsit').innerText = 'This email is already being used! Please log in instead.';
-        }
-
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-
-        emailInput.addEventListener('focus', function() {
-            document.getElementById('EmailExsit').innerText = '';
-        });
-
-        passwordInput.addEventListener('input', function() {
-            const passwordValue = passwordInput.value;
+            const passwordValue = password.value;
             if (passwordValue.length < 8) {
-                document.getElementById('PasswrodNotValid').innerText = 'Password must be at least 8 characters long!';
-            } else {
-                document.getElementById('PasswrodNotValid').innerText = '';
+                passwordErrorMessage += "Password must be at least 8 characters long!\n";
+                isValid = false;
             }
-        });
 
-        emailInput.addEventListener('blur', function() {
-            const emailValue = emailInput.value;
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(emailValue)) {
-                document.getElementById('EmailNotValid').innerText = 'Please enter a valid email address!';
-            } else {
-                document.getElementById('EmailNotValid').innerText = '';
-            }
-        });
+    //        if (!/[A-Z]/.test(passwordValue)) {
+    //            passwordErrorMessage += "Password must contain at least one uppercase letter.\n";
+    //            isValid = false;
+    //        }
+    //        if (!/[a-z]/.test(passwordValue)) {
+    //            passwordErrorMessage += "Password must contain at least one lowercase letter.\n";
+    //            isValid = false;
+    //        }
+    //        if (!/\d/.test(passwordValue)) {
+    //            passwordErrorMessage += "Password must contain at least one number.\n";
+    //            isValid = false;
+    //        }
 
-        emailInput.addEventListener('input', function() {
-            const emailValue = emailInput.value;
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (emailPattern.test(emailValue)) {
-                document.getElementById('EmailNotValid').innerText = '';
+            document.getElementById('EmailNotValid').innerText = emailErrorMessage;
+            document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
+
+            return isValid;
+        }
+
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+
+            if (error === 'invalid_credentialsLOG') {
+                document.getElementById('PassEmailError').innerText = 'Email or password incorrect! Please try again.';
             }
-        });
-    };
-</script>
+
+            if (error === 'invalid_credentialsUP') {
+                document.getElementById('EmailExsit').innerText = 'This email is already being used!';
+            }
+
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            emailInput.addEventListener('focus', function() {
+                document.getElementById('EmailExsit').innerText = '';
+            });
+
+            passwordInput.addEventListener('input', function() {
+                const passwordValue = passwordInput.value;
+                if (passwordValue.length < 8) {
+                    document.getElementById('PasswrodNotValid').innerText = 'Password must be at least 8 characters long!';
+                } else {
+                    document.getElementById('PasswrodNotValid').innerText = '';
+                }
+            });
+
+            emailInput.addEventListener('blur', function() {
+                const emailValue = emailInput.value;
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(emailValue)) {
+                    document.getElementById('EmailNotValid').innerText = 'Please enter a valid email address!';
+                } else {
+                    document.getElementById('EmailNotValid').innerText = '';
+                }
+            });
+
+            emailInput.addEventListener('input', function() {
+                const emailValue = emailInput.value;
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailPattern.test(emailValue)) {
+                    document.getElementById('EmailNotValid').innerText = '';
+                }
+            });
+        };
+    </script>
 
     <script src="../JavaScript/login.js"></script>
   </body>
