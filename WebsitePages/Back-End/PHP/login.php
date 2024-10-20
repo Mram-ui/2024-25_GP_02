@@ -26,12 +26,12 @@
             $row = $result->fetch_assoc();
             if (password_verify($_POST['spassword'], $row['Password'])) {
                 $_SESSION["CompanyID"] = $row['CompanyID']; // Use CompanyID here
-                header('Location: userHome.php?id=' . urlencode($_SESSION["CompanyID"])); // Pass the user ID in the URL
+                header('Location: userHome.php?id=' . urlencode($_SESSION["CompanyID"]));
                 exit();
             }
         }
 
-        echo '<script> alert("Email or password incorrect! Please try again."); window.location.href="../../Front-End/HTML/login.html?error=invalid_credentialsLOG"; </script>';
+        echo '<script>window.location.href="../../Front-End/HTML/login.html?error=invalid_credentialsLOG"; </script>';
         exit();
     }
 ?>
