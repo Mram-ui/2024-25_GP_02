@@ -321,7 +321,7 @@
                     <li><a class="Hname" style="text-decoration:none" href="#AboutUs" accesskey="s">About Us</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#aaaallServices" accesskey="s">Solutions</a></li>
                     <li><a class="Hname" style="text-decoration:none" href="#contact-us" accesskey="y">Contact</a></li>
-                    <li><a class="Hname" style="text-decoration:none" href="../../Front-End/HTML/login.html" accesskey="s">SignUp</a></li>
+                    <li><a class="Hname" style="text-decoration:none" href="../../Front-End/HTML/login.html" accesskey="s">Login</a></li>
                 </ul>
             </nav>
             <i id="fa2" class="fa-solid fa-bars" onclick="showMenu()"></i>
