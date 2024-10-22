@@ -27,7 +27,6 @@
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
             echo '<script> alert("This email is already being used! Please log in instead.");
-                   localStorage.removeItem("formData");
                    window.location.href="../../Front-End/HTML/login.html?error=invalid_credentialsUP";</script>';            
             exit();
         }
