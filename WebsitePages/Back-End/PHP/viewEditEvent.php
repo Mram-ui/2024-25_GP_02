@@ -291,7 +291,7 @@
         <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
     </div>
     </header>
-        
+    
     <div id="main" class="main">
         <div class="headerTitle">
             <a id='arrow' href="../../Back-End/PHP/userHome.php">
