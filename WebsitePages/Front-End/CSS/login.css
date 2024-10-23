@@ -319,3 +319,8 @@ body {
 .header nav a:hover {
     text-decoration: underline;
 }
+
+#forgetpass{
+    height: 500px;
+
+}
