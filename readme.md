@@ -14,7 +14,7 @@
 - **Services:** OpenCV for camera integration 📹 
 
 ## **Launching Instructions** 🚀
-  **1. Download the project:** Click the <> Code button on this page and select Download ZIP. Extract the files to a folder on your computer. <br>
+  **1. Download the project:** Click the `<> Code` button on this page and select `Download ZIP.` Extract the files to a folder on your computer. <br>
   **2. Install Flask:** Within the environment, use the following command to install Flask:
   - Install Flask:
   ```
