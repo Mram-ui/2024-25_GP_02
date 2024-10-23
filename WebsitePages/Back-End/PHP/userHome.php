@@ -2,7 +2,7 @@
     include '../../Back-End/PHP/session.php';
     $servername = "localhost";
     $username = "root";
-    $password = "";
+    $password = "root";
     $dbname = "raqeebdb";
 
     if (!isset($_SESSION['CompanyID'])) {
