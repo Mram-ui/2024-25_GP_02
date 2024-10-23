@@ -14,8 +14,29 @@
 - **Services:** OpenCV for camera integration 📹 
 
 ## **Launching Instructions** 🚀
-  **1. Download the project:** Click the `<> Code` button on this page and select `Download ZIP`. Extract the files to a folder on your computer. <br>
-  **2. Run the project:** Open the folder on your computer, and run it using your local server or preferred development environment. <br> <br> 🌟 That's it! The project should now be running on your local machine. 
+  **1. Download the project:** Click the <> Code button on this page and select Download ZIP. Extract the files to a folder on your computer. <br>
+  **2. Install Flask:** Within the environment, use the following command to install Flask:
+  - Install Flask:
+  ```
+  pip install Flask
+  ```
+  ```
+  pip install mysql-connector-python
+  ```
+
+
+
+  - Navigate to the project directory:
+  ```
+  cd path/to/app.py-directory
+  ```
+  - Run the Flask server:
+  ```
+  python app.py
+  ```
+
+  
+  **3. Run the project:** Open the folder on your computer, and run it using your local server or preferred development environment. <br> <br> 🌟 That's it! The project should now be running on your local machine. <br>
 
 
 
