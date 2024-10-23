@@ -2,7 +2,7 @@
     include '../../Back-End/PHP/session.php';
     $servername = "localhost";
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
     if (!isset($_SESSION['CompanyID'])) {
@@ -1238,7 +1238,7 @@
                                <div class="footer-social-icon">
                                <span>Follow us</span>
                                    <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                   <a href="https://x.com/Raqeeb_ai" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
+                                   <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
                                </div>
                            </div>
                        </div>
