@@ -10,7 +10,6 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-
     $CompanyID = $_SESSION['CompanyID']; 
     $message = '';  
 

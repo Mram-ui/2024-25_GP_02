@@ -9,70 +9,11 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
         <meta charset="utf-8">
         <title>Add Event</title>
-        <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/boxes.css">
+        <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/addEvent.css">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     </head>
-    <style>
-        .addCameraLink{
-            margin-bottom: 2%;
-        }
-
-        .addCameraLink a:hover {
-            color: #4a56ff;
-        }
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 3px;
-            margin-bottom: 4%;
-        }
-        .row {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-
-        }
-
-        #cameraInputs {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .btn {
-            width: 180px;
-            height: 50px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 14px;
-            letter-spacing: 1.15px;
-            box-shadow: 5px 5px 10px #d1d9e6, -5px -5px 10px #f9f9f9;
-            border: none;
-            outline: none;
-            transition: 0.5s;
-            cursor:pointer;
-            color :white;
-        }
-
-        .btn-success {
-            background-color: seagreen; 
-        }
-        .btn-danger {
-            background-color: #FFD6D6;
-            color: #F94141;
-        }
-
-
-        .btn:hover {
-            box-shadow: 6px 6px 10px #d1d9e6, -6px -6px 10px #f9f9f9;
-            transform: scale(0.985);
-            transition: 0.25s;
-        }
-
-
-
-
-    </style>
+ 
 
     <body>
         <header class="header">
@@ -85,38 +26,50 @@
             <a id='arrow' href="../../Back-End/PHP/userHome.php"><i class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
             <h2 class="title">Add Event</h2>
             <form id="addEvent" class="form" method="POST" action="../../Back-End/PHP/addEvent.php" id="add_form" onsubmit="return validateDates()">
+
+                <h3>Event information</h3> 
                 <label for="eventName">Event Name:</label> 
-                <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo isset($_POST['eventName']) ? htmlspecialchars($_POST['eventName']) : ''; ?>" required> <br>
+                <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo isset($_POST['eventName']) ? htmlspecialchars($_POST['eventName']) : ''; ?>" required> 
 
                 <label for="eventLocation">Event Location:</label> 
-                <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo isset($_POST['eventLocation']) ? htmlspecialchars($_POST['eventLocation']) : ''; ?>" required> <br>
+                <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo isset($_POST['eventLocation']) ? htmlspecialchars($_POST['eventLocation']) : ''; ?>" required> 
+                <br><br>
 
+                <h3>Dates and Time</h3> 
                 <div id="times">
+                    <div id="startTimes">
                     <div class="timeBlocks">
                         <label for="startDate">Start Date:</label>  
                         <input name="startDate" class="form__input time" type="date" value="<?php echo isset($_POST['startDate']) ? $_POST['startDate'] : ''; ?>" required> 
                     </div>
+
                     <div class="timeBlocks"> 
                         <label for="startTime">Start Time:</label> 
                         <input name="startTime" class="form__input time" type="time" value="<?php echo isset($_POST['startTime']) ? $_POST['startTime'] : ''; ?>" required> 
                     </div> 
-                    <br>
+                    </div>
+
+                    <div id="endTimes">
+
                     <div class="timeBlocks">
                         <label for="endDate">End Date:</label>  
                         <input name="endDate" class="form__input time" type="date" value="<?php echo isset($_POST['endDate']) ? $_POST['endDate'] : ''; ?>" required> 
                     </div>
+
                     <div class="timeBlocks"> 
                         <label for="endTime">End Time:</label>  
                         <input name="endTime" class="form__input time" type="time" value="<?php echo isset($_POST['endTime']) ? $_POST['endTime'] : ''; ?>" required> 
                     </div>
                     <div class="error-message" id="startTimeError"></div>
-
+                    </div>
                 </div>
 
 
 
-            
-
+            <br> <br>
+            <div id="addHalls"> <h3>Halls</h3>                    
+                        <button class="btn btn-success add_item_btn"> Add new hall</button> 
+                    </div>
                 <div class="AllHalls">
                     <div id="hall" class="hall">
                 <div id="show_item">
@@ -127,7 +80,7 @@
                             </div>
 
                         <div class="col-md-3 mb-3" id="cameraInputs">       
-                        <label for="hallCamera">Hall Camera:</label><br>
+                        <label for="hallCamera">Hall Camera:</label>
 
                         <select name="hallCamera[]" required>
                             <option value="" disabled selected style="display: none;">Select your camera</option>
@@ -168,31 +121,29 @@
                         <label for="hallThreshold">Hall Max Capacity:</label><br>
                         <input name="hallThreshold[]" class="form__input" type="number" placeholder="00" min="0" value="<?php echo isset($_POST['hallThreshold']) ? $_POST['hallThreshold'] : ''; ?>" required>
                     </div>
-                    <br>
-                    <div class="col-md-2 mb-3 d-grid">
-                        <button class="btn btn-success add_item_btn"> Add new hall</button> 
-                    </div>
+
                     </div>
                 </div>
                 <div>
+                    <br>
                 <button type="submit" class="form__button button submit">ADD EVENT</button>
                 </div>
                 </form>
-                <br>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
             <script>
                 $(document).ready(function() {
                 $(".add_item_btn").click(function(e) {
                 e.preventDefault();
-                $("#show_item").prepend(
-                `   <div class="row">
+                $("#show_item").append(
+                `  
+                <div class="row">
                         <div class="col-md-4 mb-3">
                                 <label for="hallName">Hall Name:</label><br>
                                 <input name="hallName[]" class="form__input" type="text" placeholder="Main hall" value="<?php echo isset($_POST['hallName']) ? htmlspecialchars($_POST['hallName']) : ''; ?>" required>
                             </div>
 
                         <div class="col-md-3 mb-3" id="cameraInputs">       
-                        <label for="hallCamera">Hall Camera:</label><br>
+                        <label for="hallCamera">Hall Camera:</label>
 
                         <select name="hallCamera[]" required>
                             <option value="" disabled selected style="display: none;">Select your camera</option>
@@ -222,19 +173,18 @@
                                 $conn->close();
                             ?>
                         </select> 
-                        <p class="addCameraLink">
-                            <a href="addCamera.php">Don't have a camera?</a>
-                        </p>
                     </div>
                         
 
                     <div class="col-md-3 mb-3">
-                        <label for="hallThreshold">Hall Max Capacity:</label><br>
+                        <label for="hallThreshold">Hall Max Capacity:</label>
+                    
                         <input name="hallThreshold[]" class="form__input" type="number" placeholder="00" min="0" value="<?php echo isset($_POST['hallThreshold']) ? $_POST['hallThreshold'] : ''; ?>" required>
                     </div>
-                    <br>
+
                     <div class="col-md-2 mb-3 d-grid">
-                        <button class="btn btn-danger remove_item_btn">Remove</button> 
+                    <br>
+                        <input type="image" src="../../images/close.png" class="btn btn-danger remove_item_btn"> 
                     </div>
                     </div>`);
                 });
@@ -427,10 +377,10 @@
                    echo "<script>
                         alert('New event added successfully!');
                         localStorage.removeItem('formData');
+                        window.location.href = 'userHome.php';
+                                            exit;       
 
                     </script>";
-                    exit;
-//                    window.location.href = 'userHome.php';
 
                 } catch (Exception $e) {
                     $conn->rollback();

@@ -71,7 +71,7 @@ if(isset($_POST['email'])){
                 $mail->Username = "raqeeb.project@gmail.com";
                 
                 //Password to use for SMTP authentication
-                $mail->Password = ""; //due to upload to github password is not there
+                $mail->Password = "vjrd xeyj lrlw ymcf"; //due to upload to github password is not there
                 
                 //Set who the message is to be sent from
                 $mail->setFrom('raqeeb.project@gmail.com', 'Raqeeb');
