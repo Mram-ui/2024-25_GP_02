@@ -1,4 +1,3 @@
----- Html Style ----
 * {
     margin: 0;
     padding: 0;
@@ -20,36 +19,72 @@ body {
 
 /* ---- new header style */
 
-.header {
-    position: fixed;
-    z-index: 200;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    padding: 10px 40px;
-    width: 100%;
-    font-weight: bold;
-}
+            .header {
+                position: fixed;
+                z-index: 200;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: white;
+                padding: 10px 40px;
+                width: 100%;
+                font-weight: bold;  
+            }
+          
+            .header .logo img {
+                height: 60px; 
+                width: auto; 
+                margin-top: 1.5%;
+            }
+   
+            
+            
+           .headerlinks li {
+                text-align: left;
+                margin-left: -134%;
+                list-style: none;
+                display: inline-block;
+                padding: 8px 12px;
+                position: relative;
+                color: black;
+                font-weight: lighter;
+                font-size: 110%;
+            }
 
-.header .logo img {
-    height: 60px;
-    width: auto;
-}
+            .headerlinks li a {
+                color: #504f4f;
+                text-decoration: none;
+            }
+
+            .headerlinks li::after {
+                content: "";
+                width: 0;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
+
+            .headerlinks li:hover::after {
+                width: 100%;
+            }
+
+            .headerlinks li a:hover {
+                color: #4a56ff;
+            }
+
+            .headerlinks li.active a {
+                color: #3B5998;
+            }
+
+            .headerlinks li.active::after {
+                width: 100%;
+            }
 /* ---- END header style */
 
-/* main {
-    background-color: #e9edf3;
-    width: 100%;
-}
-
-.mainContainer {
-    box-sizing: border-box;
-    width: 100%;
-    margin-top: 10%;
-    margin-bottom: 10%;
-    height: 1000px;
-} */
 
 main{
     display: flex;
@@ -66,8 +101,6 @@ main h2{
 .allEventInformation {
     display: flex;
     justify-content: space-around;
-
-    /* min-width: 1500px; */
     margin-top: 5%;
     padding: 0px;
     margin-bottom: 3%;
@@ -78,8 +111,8 @@ main h2{
     border-radius: 15px;
     padding: 1% 5%;
     z-index: 0; 
-
     position: relative;
+    transition: 0.5s;
 }
 .eventInformation h2{
     text-align: center
@@ -93,23 +126,14 @@ main h2{
 
 
 .infoBoxes{
-    /* width: 95%;
-    margin-top: 2%; */
-
     width:min-content;
     display: flex;
     justify-content: end;
 }
 
-/* .infoBoxes2{
-    width:min-content;
-    display: flex;
-    justify-content: end;
-} */
 
 .infoBox {
     color: black;
-
     background-color: white;
     width: 250px;
     height: 70px;
@@ -119,13 +143,12 @@ main h2{
     align-items: center;
     flex-direction: column;
     padding: 3% 5%;
-    /* margin: 2%; */
     position: relative; 
     z-index: 0; 
-
     height: 220px;
     padding: 0px 5%;
     margin: 0 2%;
+    transition: 0.5s;
 }
 
 #numberOfHalls {
@@ -139,7 +162,6 @@ main h2{
     font-weight: bold;
 }
 
-/* Create the animated moving border */
 .infoBox::before{
     content: '';
     position: absolute;
@@ -147,19 +169,17 @@ main h2{
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 15px; /* Matches the infoBox border radius */
+    border-radius: 15px;
     border: 2px solid transparent;
     background-image: linear-gradient(white, white), 
     linear-gradient(90deg, rgba(10, 60, 255, 0.7), rgba(10, 60, 255, 0.3), rgba(10, 60, 255, 0.7));
     background-origin: border-box;
     background-clip: content-box, border-box;
     animation: moving-border 3s linear infinite; 
-    z-index: -1; /* Keep the border behind the content */
+    z-index: -1; 
 }
 
 
-
-/* Keyframes for the animated border */
 @keyframes moving-border {
     0% {
         background-position: 0% 0%;
@@ -170,12 +190,11 @@ main h2{
 }
 
 .infoBox:hover {
-    transform: scale(1.01); /* Scale up the box slightly */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    transform: scale(1.01);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     transition: 0.5s;
 }
 
-/* Create the animated moving border for eventInformation */
 .eventInformation::before {
     content: '';
     position: absolute;
@@ -183,17 +202,17 @@ main h2{
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 15px; /* Matches the eventInformation border radius */
+    border-radius: 15px;
     border: 2px solid transparent;
     background-image: linear-gradient(white, white),
     linear-gradient(90deg, rgba(10, 60, 255, 0.7), rgba(10, 60, 255, 0.3), rgba(10, 60, 255, 0.7));
     background-origin: border-box;
     background-clip: content-box, border-box;
     animation: moving-border 3s linear infinite;
-    z-index: -1; /* Keep the border behind the content */
+    z-index: -1;
+    transition: 0.5s;
 }
 
-/* Keyframes for the animated border */
 @keyframes moving-border {
     0% {
         background-position: 0% 0%;
@@ -203,10 +222,9 @@ main h2{
     }
 }
 
-/* Hover effect for eventInformation */
 .eventInformation:hover {
-    transform: scale(1.01); /* Scale up the box slightly */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+    transform: scale(1.01);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     transition: 0.5s;
 }
 
@@ -214,8 +232,7 @@ main h2{
     background-color: white;
     border-radius: 15px;
     padding: 1% 6%;
-    /* min-width: 1200px; */
-padding-bottom: 3%;
+    padding-bottom: 3%;
 }
 
 #cameraFeeds {
@@ -224,8 +241,8 @@ padding-bottom: 3%;
     background-color: white;
     border-radius: 15px;
     display: flex;
-    flex-wrap: wrap; /* Allow items to wrap to the next line if necessary */
-    justify-content: space-around; /* Align items to the start */
+    flex-wrap: wrap;
+    justify-content: space-around;
     margin-bottom: 2%;
 }
 
@@ -238,6 +255,7 @@ padding-bottom: 3%;
     margin-left: 4%;
     margin-bottom: 2%;
 }
+
 .cameraFeed h3 {
     text-align: center;
     margin: 0; 
@@ -246,19 +264,18 @@ padding-bottom: 3%;
 
 
 .cameraFeeds h3 {
-    margin: 2.5% 2%; /* Remove default margin */
+    margin: 2.5% 2%;
 }
 
 .dot {
-    width: 10px; /* Size of the dot */
-    height: 10px; /* Size of the dot */
-    background-color: red; /* Dot color */
-    border-radius: 50%; /* Make it a circle */
-    display: inline-block; /* Ensure it behaves like an inline element */
-    margin-right: 2px; /* Space between the dot and text */
-    vertical-align: middle; /* Align the dot vertically with the text */
-    transform: translateY(-5px); /* Adjust the vertical position of the dot */
-
+    width: 10px;
+    height: 10px; 
+    background-color: red; 
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 2px; 
+    vertical-align: middle;
+    transform: translateY(-5px);
 }
 
 .cameraFeedImg{
@@ -267,8 +284,6 @@ padding-bottom: 3%;
     min-height: 200px;
     margin: 5%;
 }
-
-
 
 .cameraFeed img {
     width: 120%;
@@ -279,8 +294,6 @@ padding-bottom: 3%;
 #cameraFeedImg{
     
 }
-
-
 
 
 /* ---- Footer Style ---- */
@@ -521,9 +534,6 @@ ul {
 
 }
 
-/* .copyright-text p a{
-color: #3B5998;
-} */
 .footer-menu li {
     display: inline-block;
     margin-left: 20px;
@@ -541,23 +551,15 @@ color: #3B5998;
 /* ---------------END FOOTER ------------------ */
 
 
-
-
-
 /*------------------- camera feed boxes -------------------*/
 
-/* Container to hold both video streams side by side */
 .video-container {
     display: flex;
-    /* Flexbox layout to place videos side by side */
     justify-content: space-around;
-    /* Space between the divs */
 }
 
-/* Style for each video div without altering original dimensions */
 .video-stream {
     margin: 10px;
-    /* Add some margin between the streams */
     border-color: red;
     width: 25%;
     height: auto;
