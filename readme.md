@@ -28,7 +28,7 @@
 
   - Navigate to the project directory:
   ```
-  cd path/to/Flask-directory
+  cd path/to/2024-25_GP_02-main\WebsitePages\flask-directory
   ```
   - Run the Flask server:
   ```
