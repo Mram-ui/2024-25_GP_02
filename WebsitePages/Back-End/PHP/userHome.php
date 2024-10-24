@@ -26,6 +26,10 @@
     $stmt->execute();
     $result = $stmt->get_result();
     
+    $query = 'SELECT Logo FROM company WHERE CompanyID=' . $companyID;
+    $row = mysqli_fetch_assoc(mysqli_query($conn, $query));
+    $logo = $row['Logo'];
+    
     $flaskUrl = "http://localhost:####";
 ?>
 
@@ -89,19 +93,10 @@
             }
 
             .header .logo img {
+                margin-top: 1.5%;
                 height: 60px;
                 width: auto;
             }
-
-            /* .header nav img {
-                    width: 10%;
-                    margin-left: 85%;
-                    transition: 0.5s;
-                }
-
-                .header nav img:hover {
-                    width: 10.2%;
-                } */
 
             /* ---- end new header style */
 
@@ -180,7 +175,6 @@
                 }
             }
 
-            /* Ensure content is visible */
             .card * {
                 position: relative;
                 z-index: 2;
@@ -323,7 +317,6 @@
                 margin-left: 10%;
             }
 
-            /* Custom scrollbar styling */
             .cardContainerEvents::-webkit-scrollbar {
                 width: 10px;
             }
@@ -416,8 +409,6 @@
                 color: #232323;
                 white-space: nowrap;
             }
-
-
 
             .radio-inputs {
                 position: relative;
@@ -735,9 +726,6 @@
 
         }
 
-        /* .copyright-text p a{
-                color: #3B5998;
-                } */
         .footer-menu li {
             display: inline-block;
             margin-left: 20px;
@@ -758,116 +746,8 @@
                 font-family: 'Montserrat', sans-serif;
             }
 
-            /* --------------- USERACCOUNT ------------------ */
-            .popup {
-                --burger-line-width: 1.125em;
-                --burger-line-height: 0.125em;
-                --burger-offset: 0.625em;
-                --burger-bg: #122fbd;
-                --burger-color: #333;
-                --burger-line-border-radius: 0.1875em;
-                --burger-diameter: 3.125em;
-                --burger-btn-border-radius: calc(var(--burger-diameter) / 2);
-                --burger-line-transition: 0.3s;
-                --burger-transition: all 0.1s ease-in-out;
-                --burger-hover-scale: 1.1;
-                --burger-active-scale: 0.95;
-                --burger-enable-outline-color: var(--burger-bg);
-                --burger-enable-outline-width: 0.125em;
-                --burger-enable-outline-offset: var(--burger-enable-outline-width);
-                /* nav */
-                --nav-padding-x: 0.25em;
-                --nav-padding-y: 0.625em;
-                --nav-border-radius: 0.375em;
-                --nav-border-color: #ccc;
-                --nav-border-width: 0.0625em;
-                --nav-shadow-color: rgba(0, 0, 0, 0.2);
-                --nav-shadow-width: 0 1px 5px;
-                --nav-bg: #eee;
-                --nav-font-family: "Poppins", sans-serif;
-                --nav-default-scale: 0.8;
-                --nav-active-scale: 1;
-                --nav-position-left: 0;
-                --nav-position-right: unset;
-                --nav-title-size: 0.625em;
-                --nav-title-color: #777;
-                --nav-title-padding-x: 1rem;
-                --nav-title-padding-y: 0.25em;
-                /* nav button */
-                --nav-button-padding-x: 1rem;
-                --nav-button-padding-y: 0.375em;
-                --nav-button-border-radius: 0.375em;
-                --nav-button-font-size: 17px;
-                --nav-button-hover-bg: #2e44b1;
-                --nav-button-hover-text-color: #fff;
-                --nav-button-distance: 0.875em;
-                /* underline */
-                --underline-border-width: 0.0625em;
-                --underline-border-color: #ccc;
-                --underline-margin-y: 0.3125em;
-            }
-
-            /* popup settings */
-
-            .popup {
-                display: inline-block;
-                text-rendering: optimizeLegibility;
-                position: relative;
-            }
-
             .popup input {
                 display: none;
-            }
-
-            .burger {
-                display: flex;
-                position: relative;
-                align-items: center;
-                justify-content: center;
-                background: var(--burger-bg);
-                width: var(--burger-diameter);
-                height: var(--burger-diameter);
-                border-radius: var(--burger-btn-border-radius);
-                border: none;
-                cursor: pointer;
-                overflow: hidden;
-                transition: var(--burger-transition);
-                outline: var(--burger-enable-outline-width) solid transparent;
-                outline-offset: 0;
-            }
-
-            .burger:hover {
-                transform: scale(var(--burger-hover-scale));
-            }
-
-            .burger:active {
-                transform: scale(var(--burger-active-scale));
-            }
-
-            .burger:focus:not(:hover) {
-                outline-color: var(--burger-enable-outline-color);
-                outline-offset: var(--burger-enable-outline-offset);
-            }
-
-            .popup input:checked+.burger span:nth-child(1) {
-                top: 50%;
-                transform: translateY(-50%) rotate(45deg);
-            }
-
-            .popup input:checked+.burger span:nth-child(2) {
-                bottom: 50%;
-                transform: translateY(50%) rotate(-45deg);
-            }
-
-            .popup input:checked+.burger span:nth-child(3) {
-                transform: translateX(calc(var(--burger-diameter) * -1 - var(--burger-line-width)));
-
-            }
-
-            .popup input:checked~nav {
-                transform: scale(var(--nav-active-scale));
-                visibility: visible;
-                opacity: 1;
             }
 
             .NoEvents {
@@ -949,6 +829,10 @@
             .EventNameAndDate {
                 display: column;
             }
+            
+            .popup img {
+                margin-top: 3.5%;
+            }
             /* ---- End style */
         </style> 
         <script>
@@ -986,18 +870,18 @@
                 });
             </script>
             <nav>
-                <?php
-                    $query = 'SELECT Logo FROM company WHERE CompanyID=' . $companyID;
-                    $row = mysqli_fetch_assoc(mysqli_query($conn, $query));
-                    $logo = $row['Logo'];
-                ?>
-
-                <label class="popup"> <input type="checkbox" />
-                    <a href="../../Back-End/PHP/accountDetails.php"><img src="../../images/<?php echo $logo ?>" style="width: 60px; height:60px; border-radius: 50%;"></a>
+                <label class="popup">
+                    <input type="checkbox" />
+                    <a href="../../Back-End/PHP/accountDetails.php">
+                        <?php if (is_null($logo) || empty($logo)): ?>
+                            <img src="../../images/CLogo.png" style="width: 60px; height: 60px; border-radius: 50%;" alt="Default User Logo">
+                        <?php else: ?>
+                            <img src="../../images/<?php echo $logo ?>" style="width: 60px; height: 60px; border-radius: 50%;" alt="User Company Logo">
+                        <?php endif; ?>
+                    </a>
                 </label>
             </nav>
         </header>
-
             <main>
                 <div class="mainContainer">
                     <div class="Cards">
@@ -1015,11 +899,11 @@
                     </div>
                     <div class="radio-inputs">
                         <label class="radio" id="PastEvent">
-                          <input type="radio" name="radio" checked="" />
+                          <input type="radio" name="radio" checked=""/>
                           <span class="name">Past Events</span>
                         </label>
                         <label class="radio" id="CurrentEvent">
-                          <input type="radio" name="radio" />
+                          <input type="radio" name="radio"  />
                           <span class="name">Current Events</span>
                         </label>
 
