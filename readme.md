@@ -28,7 +28,7 @@
 
   - Navigate to the project directory:
   ```
-  cd path/to/app.py-directory
+  cd path/to/Flask-directory
   ```
   - Run the Flask server:
   ```
