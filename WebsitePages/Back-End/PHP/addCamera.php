@@ -2,7 +2,7 @@
     include '../../Back-End/PHP/session.php';
     $servername = "localhost"; 
     $username = "root";
-    $password = "root";
+    $password = "";
     $dbname = "raqeebdb";
 
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -10,8 +10,22 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
+
     $CompanyID = $_SESSION['CompanyID']; 
     $message = '';  
+    
+    $logoQuery = "SELECT Logo FROM company WHERE CompanyID = ?";
+    $logoStmt = $conn->prepare($logoQuery);
+    $logoStmt->bind_param("i", $companyID);
+    $logoStmt->execute();
+    $logoResult = $logoStmt->get_result();
+
+    if ($logoResult->num_rows > 0) {
+        $logoRow = $logoResult->fetch_assoc();
+        $logo = $logoRow['Logo'];
+    } else {
+        $logo = null;
+    }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Get the form data
@@ -60,6 +74,95 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         <style>
+            .header {
+                position: fixed;
+                z-index: 200;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: white;
+                padding: 13px 40px;
+                padding-bottom: 14px;
+                width: 100%;
+                font-weight: bold;  
+            }
+          
+            .header .logo img {
+                height: 60px; 
+                width: auto;  
+            }
+            
+            #main {
+                width: -20%;
+                padding: 0%;
+                margin-left: 20%;
+                margin-right: 20%;
+                padding-bottom: 2%;
+            }
+            
+             .popup input {
+                display: none;
+            }
+            
+            
+           .headerlinks li {
+                text-align: left;
+                margin-left: -130%;
+                list-style: none;
+                display: inline-block;
+                padding: 8px 12px;
+                position: relative;
+                color: black;
+                font-weight: lighter;
+                font-size: 110%;
+            }
+
+            .headerlinks li a {
+                color: #504f4f;
+                text-decoration: none;
+            }
+
+            .headerlinks li::after {
+                content: "";
+                width: 0;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
+
+            .headerlinks li:hover::after {
+                width: 100%;
+            }
+
+            .headerlinks li a:hover {
+                color: #4a56ff;
+            }
+
+            .headerlinks li.active a {
+                color: #3B5998;
+            }
+
+            .headerlinks li.active::after {
+                width: 100%;
+            }
+            
+            body {
+                background-color: #e9edf3; 
+            }
+            
+            .main {
+                background-color: #eaeef2;
+                margin-top: 10%;
+            }
+            
+            .headerTitle {
+                margin-top: 5%;
+            }
+            
             .error-message {
                 color: red;
                 font-size: 0.9em;
@@ -72,8 +175,36 @@
             <div class="logo">
                 <a href="../../Back-End/PHP/userHome.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
             </div>
-        </header>
+            <ul class="headerlinks">
+                <li><a href="../../Back-End/PHP/cameras.php">Cameras</a></li>
+                <li><a href="../../Back-End/PHP/userHome.php">Events</a></li>
+            </ul>
+            <script>
+                const currentPath = window.location.pathname;
 
+                const menuItems = document.querySelectorAll('ul li');
+
+                menuItems.forEach((item) => {
+                    const link = item.querySelector('a');
+
+                    if (link.href.includes(currentPath)) {
+                        item.classList.add('active');
+                    }
+                });
+            </script>
+            <nav>
+                <label class="popup">
+                    <input type="checkbox" />
+                    <a href="../../Back-End/PHP/accountDetails.php">
+                        <?php if (is_null($logo) || empty($logo)): ?>
+                            <img src="../../images/CLogo.png" style="width: 60px; height: 60px; border-radius: 50%;" alt="Default User Logo">
+                        <?php else: ?>
+                            <img src="../../images/<?php echo $logo ?>" style="width: 60px; height: 60px; border-radius: 50%;" alt="User Company Logo">
+                        <?php endif; ?>
+                    </a>
+                </label>
+            </nav>
+        </header>
         <div class="main">
             <a id='arrow' href="../../Back-End/PHP/cameras.php"><i class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
             <h2 class="title">Add a Camera</h2>
