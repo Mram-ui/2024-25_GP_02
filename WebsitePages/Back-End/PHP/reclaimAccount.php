@@ -13,16 +13,14 @@
 
 </head>
 
-<body>
-    <header class="header">
-        <div class="logo">
-            <a href="../../Back-End/PHP/index.php"><img src="../../images/Logo2.png" alt="Company Logo"></a>
-        </div>
-    </header>
 
-    <div class="main" style="margin: 2%;">
-        <h2 id="forgotTitle" class="title" style="margin-top: 8%;">Reset password</h2>
-        <br> <br> 
+<body>
+
+<div class="main" style="margin-top: 8%;" id="forgetpass">
+            <a href="../../Back-End/PHP/index.php"><img id="logo" src="../../images/Logo2.png" alt="Company Logo"></a>
+            <a id='arrow' href="../../Front-End/HTML/login.html"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; float: left; margin-left: 20px; margin-top: 20px;"></i></a>
+            <h2 id="forgotTitle" class="title" style="margin-top: 3%;">Reset Password</h2>
+            <br> <br> 
 
         <div id="reclaimMsg" >
                 <?php 

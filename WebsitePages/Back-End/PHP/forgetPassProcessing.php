@@ -7,12 +7,40 @@ include("dbConnection.php");
 if(isset($_POST['email'])){
 
     if (empty($_POST["email"])) {
-        echo "Please enter your email to retreive your account";
+        echo '
+            <a href="../../Back-End/PHP/index.php"><img id="logo" src="../../images/Logo2.png" alt="Company Logo"></a>
+            <a id="arrow" href="../../Front-End/HTML/login.html"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; float: left; margin-left: 20px; margin-top: 20px;"></i></a>
+            <h2 id="forgotTitle" class="title" style="margin-top: 3%;">FORGET YOUR PASSWORD?</h2>
+            <br> <br> 
+            <div id="forgotDesc" > 
+                <p style="font-size: 17px;">Please enter your registered email address and<br> we will send you an email to reset your password</p>
+                <form class="form" id="ForgotPasswordForm">
+                    <br>
+                    <input name="femail" class="form__input" id="email" type="email" placeholder="Email" required>
+                    <div class="errorMessage" id="EmailNotValid"></div>
+                    <button type="submit" class="form__button button submit"> SEND</button>
+                  </form>
+                  <div class="form-message" id="msg" style="color:red;">Please enter your email to retreive your account</div>
+            </div>';
     } else {
         $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo "Invalid email format";
+            echo '
+            <a href="../../Back-End/PHP/index.php"><img id="logo" src="../../images/Logo2.png" alt="Company Logo"></a>
+            <a id="arrow" href="../../Front-End/HTML/login.html"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; float: left; margin-left: 20px; margin-top: 20px;"></i></a>
+            <h2 id="forgotTitle" class="title" style="margin-top: 3%;">FORGET YOUR PASSWORD?</h2>
+            <br> <br> 
+            <div id="forgotDesc" > 
+                <p style="font-size: 17px;">Please enter your registered email address and<br> we will send you an email to reset your password</p>
+                <form class="form" id="ForgotPasswordForm">
+                    <br>
+                    <input name="femail" class="form__input" id="email" type="email" placeholder="Email" required>
+                    <div class="errorMessage" id="EmailNotValid"></div>
+                    <button type="submit" class="form__button button submit"> SEND</button>
+                  </form>
+                  <div class="form-message" id="msg" style="color:red;">Invalid email format</div>
+            </div>';
         }
         else{
 
@@ -71,7 +99,7 @@ if(isset($_POST['email'])){
                 $mail->Username = "raqeeb.project@gmail.com";
                 
                 //Password to use for SMTP authentication
-                $mail->Password = "vjrd xeyj lrlw ymcf"; //due to upload to github password is not there
+                $mail->Password = ""; //due to upload to github password is not there
                 
                 //Set who the message is to be sent from
                 $mail->setFrom('raqeeb.project@gmail.com', 'Raqeeb');
@@ -87,7 +115,7 @@ if(isset($_POST['email'])){
                 
                 //Read an HTML message body from an external file, convert referenced images to embedded,
                 //convert HTML into a basic plain-text alternative body
-                $mail->msgHTML("<!DOCTYPE html> <html> <body>Greetings, <br> You have requested to reclaim your account, if the request was made by you, please click <a href='http://localhost:8888/GP_Raqeeb/WebsitePages/Back-End/PHP/reclaimAccount.php?token=$token&email=$email'>Here</a>. Please note that the reset link will expire in 10 minutes. <br> If you did not make this request, please ignore this email.</body> </html>");
+                $mail->msgHTML("<!DOCTYPE html> <html> <body>Greetings, <br> You have requested to reclaim your account, if the request was made by you, please click <a href='http://localhost/GP_Raqeeb/WebsitePages/Back-End/PHP/reclaimAccount.php?token=$token&email=$email'>Here</a>. Please note that the reset link will expire in 10 minutes. <br> If you did not make this request, please ignore this email.</body> </html>");
                 
                 //Replace the plain text body with one created manually
                 $mail->AltBody = 'This is a plain-text message body';
@@ -97,41 +125,50 @@ if(isset($_POST['email'])){
                 
                 //send the message, check for errors
                 if (!$mail->send()) {
-                    echo "Mailer Error: " . $mail->ErrorInfo;
+                    echo "
+                    <a href='../../Back-End/PHP/index.php'><img id='logo' src='../../images/Logo2.png' alt='Company Logo'></a>
+                    <a id='arrow' href='../../Front-End/HTML/login.html'><i  class='fa fa-chevron-left' style='color: #003f91; font-size: 30px; float: left; margin-left: 20px; margin-top: 20px;'></i></a>
+                    <h2 id='forgotTitle' class='title' style='margin-top: 3%;'>FORGET YOUR PASSWORD?</h2>
+                    <br> <br> 
+                    <div id='forgotDesc' > 
+                        <p style='font-size: 17px;'>Please enter your registered email address and<br> we will send you an email to reset your password</p>
+                        <form class='form' id='ForgotPasswordForm'>
+                            <br>
+                            <input name='femail' class='form__input' id='email' type='email' placeholder='Email' required>
+                            <div class='errorMessage' id='EmailNotValid'></div>
+                            <button type='submit' class='form__button button submit;> SEND</button>
+                          </form>
+                          <div class='form-message' id='msg' style='color:red;'> Mailer Error: . $mail->ErrorInfo </div>
+                    </div>";
                 } else {
-                    echo "<img src='../../images/confirmation.png' style='height:250px; width:auto;'> <br> <br> <p style='font-size:20px;'> Email sent! please make sure you open the link on the same browser you requested the email from </p>";
-                    //Section 2: IMAP
-                    //Uncomment these to save your message in the 'Sent Mail' folder.
-                    #if (save_mail($mail)) {
-                    #    echo "Message saved!";
-                    #}
-                }
-                
-                //Section 2: IMAP
-                //IMAP commands requires the PHP IMAP Extension, found at: https://php.net/manual/en/imap.setup.php
-                //Function to call which uses the PHP imap_*() functions to save messages: https://php.net/manual/en/book.imap.php
-                //You can use imap_getmailboxes($imapStream, '/imap/ssl') to get a list of available folders or labels, this can
-                //be useful if you are trying to get this working on a non-Gmail IMAP server.
-                function save_mail($mail) {
-                    //You can change 'Sent Mail' to any other folder or tag
-                    $path = "{imap.gmail.com:993/imap/ssl}[Gmail]/Sent Mail";
-                
-                    //Tell your server to open an IMAP connection using the same username and password as you used for SMTP
-                    $imapStream = imap_open($path, $mail->Username, $mail->Password);
-                
-                    $result = imap_append($imapStream, $path, $mail->getSentMIMEMessage());
-                    imap_close($imapStream);
-                
-                    return $result;
-                }
+                    echo " <a href='../../Back-End/PHP/index.php'> <img id='logo' src='../../images/Logo2.png' alt='Company Logo'></a>
+                    <a id='arrow' href='../../Front-End/HTML/login.html'><i  class='fa fa-chevron-left' style='color: #003f91; font-size: 30px; float: left; margin-left: 18px; margin-top: 20px;'></i></a> <br><br><br>
 
+                    <img src='../../images/mail.png' style='height:180px; width:auto;'>  <br>  <h2 class='title' style='margin-top: 3%;'>Email sent!</h2>  <p style='font-size:20px;'> please make sure you open the link on the same browser you made the request from </p>";
+                }
+                
 
 
 
 
         
             }else{
-                echo "user not found";
+                echo "
+                <a href='../../Back-End/PHP/index.php'><img id='logo' src='../../images/Logo2.png' alt='Company Logo'></a>
+                <a id='arrow' href='../../Front-End/HTML/login.html'><i  class='fa fa-chevron-left' style='color: #003f91; font-size: 30px; float: left; margin-left: 20px; margin-top: 20px;'></i></a>
+                <h2 id='forgotTitle' class='title' style='margin-top: 3%;'>FORGET YOUR PASSWORD?</h2>
+                <br> <br> 
+                <div id='forgotDesc' > 
+                    <p style='font-size: 17px;'>Please enter your registered email address and<br> we will send you an email to reset your password</p>
+                    <form class='form' id='ForgotPasswordForm'>
+                        <br>
+                        <input name='femail' class='form__input' id='email' type='email' placeholder='Email' required>
+                        <div class='errorMessage' id='EmailNotValid'></div>
+                        <button type='submit' class='form__button button submit'> SEND</button>
+                      </form>
+                      <br>
+                      <div class='form-message' id='msg' style='color:red;'> User Not Found </div>
+                </div>";
             }
 
         }
