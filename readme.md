@@ -27,7 +27,7 @@
 
 
   - Navigate to the project directory: <br>
-    Replace path\to in the command below with the actual path to your project files.
+    Replace `path\to\` in the command below with the actual path to your project files.
   ```
   cd path\to\2024-25_GP_02-main\WebsitePages\flask-directory
   ```
