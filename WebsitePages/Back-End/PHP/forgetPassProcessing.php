@@ -59,7 +59,7 @@ if(isset($_POST['email'])){
                 
                 //SMTP needs accurate times, and the PHP time zone MUST be set
                 //This should be done in your php.ini, but this is how to do it if you don't have access to that
-                date_default_timezone_set('');
+                date_default_timezone_set('Asia/Riyadh');
                 
                 require '../../PHPMailer/PHPMailerAutoload.php';
                 
@@ -143,7 +143,7 @@ if(isset($_POST['email'])){
                     echo " <a href='../../Back-End/PHP/index.php'> <img id='logo' src='../../images/Logo2.png' alt='Company Logo'></a>
                     <a id='arrow' href='../../Front-End/HTML/login.html'><i  class='fa fa-chevron-left' style='color: #003f91; font-size: 30px; float: left; margin-left: 18px; margin-top: 20px;'></i></a> <br><br><br>
 
-                    <img src='../../images/mail.png' style='height:180px; width:auto;'>  <br>  <h2 class='title' style='margin-top: 3%;'>Email sent!</h2>  <p style='font-size:20px;'> please make sure you open the link on the same browser you made the request from </p>";
+                    <img src='../../images/mail.png' style='height:180px; width:auto;'>  <br>  <h2 class='title' style='margin-top: 3%;'>Email sent!</h2>  <p style='font-size:20px;'>Please make sure you open the link on the <br> same browser you made the request from.</p>";
                 }
                 
 
