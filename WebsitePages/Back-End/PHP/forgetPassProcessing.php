@@ -113,7 +113,7 @@ if(isset($_POST['email'])){
                 
                 //Read an HTML message body from an external file, convert referenced images to embedded,
                 //convert HTML into a basic plain-text alternative body
-                $mail->msgHTML("<!DOCTYPE html> <html> <body>Greetings, <br> You have requested to reclaim your account, if the request was made by you, please click <a href='http://localhost/2024-25_GP_02-main/WebsitePages/Back-End/PHP/reclaimAccount.php?token=$token&email=$email'>Here</a>. Please note that the reset link will expire in 10 minutes. <br> If you did not make this request, please ignore this email.</body> </html>");
+                $mail->msgHTML("<!DOCTYPE html> <html> <body>Greetings, <br> You have requested to reclaim your account, if the request was made by you, please click <a href='http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/reclaimAccount.php?token=$token&email=$email'>Here</a>. Please note that the reset link will expire in 10 minutes. <br> If you did not make this request, please ignore this email.</body> </html>");
                 
                 //Replace the plain text body with one created manually
                 $mail->AltBody = 'This is a plain-text message body';
