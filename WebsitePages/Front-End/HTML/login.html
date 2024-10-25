@@ -32,10 +32,15 @@
         }  
         
         #PasswrodNotValid {
-             color: red;
+            color: #003f91;
             font-size: 0.9em;
             margin-right: 8%;
-
+        }
+        
+        #LogoNotValid {
+            color: red;
+            font-size: 0.9em;
+            margin-right: 16%;
         }
         
     </style>
@@ -52,7 +57,7 @@
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
           <input name="spassword" class="form__input" type="password" placeholder="Password" required>
           <div class="error-message" id="PassEmailError"></div>
-          <a id="forgotpass" class="form__link" href="forgotpass.html">Forgot your password?</a>
+          <a id="forgotpass" class="form__link" href="../../Back-End/PHP/forgotpass.php">Forgot your password?</a>
           <button class="form__button button submit">LOG IN</button>
         </form>
       </div>
@@ -76,7 +81,8 @@
 
           <!-- Logo Upload (Preserved Style) -->
           <label class="Clogo" name="logo" id="label" style="width:63.5%; color: grey; font-size:13px;"> Company logo: <br>  
-          <input type="file" name="logo" id="logo" accept="image/*" required> </label>
+          <input type="file" name="logo" id="logo" accept="image/png, image/jpeg"> </label>
+          <div class="errorMessage" id="LogoNotValid"></div>
           
           <input type="submit" name="submit" class="form__button button submit" id="button" value="SIGN UP">
         </form>
@@ -120,19 +126,6 @@
                 passwordErrorMessage += "Password must be at least 8 characters long!\n";
                 isValid = false;
             }
-
-    //        if (!/[A-Z]/.test(passwordValue)) {
-    //            passwordErrorMessage += "Password must contain at least one uppercase letter.\n";
-    //            isValid = false;
-    //        }
-    //        if (!/[a-z]/.test(passwordValue)) {
-    //            passwordErrorMessage += "Password must contain at least one lowercase letter.\n";
-    //            isValid = false;
-    //        }
-    //        if (!/\d/.test(passwordValue)) {
-    //            passwordErrorMessage += "Password must contain at least one number.\n";
-    //            isValid = false;
-    //        }
 
             document.getElementById('EmailNotValid').innerText = emailErrorMessage;
             document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
@@ -186,8 +179,31 @@
                 }
             });
         };
-    </script>
+        
+        document.getElementById("logo").addEventListener("change", function() {
+            const logoInput = document.getElementById("logo");
+            const errorMessage = document.getElementById("LogoNotValid");
+            const file = logoInput.files[0];
 
+            errorMessage.innerText = "";
+
+            if (file) {
+                const validFormats = ["image/png", "image/jpeg"];
+                if (!validFormats.includes(file.type)) {
+                    errorMessage.innerText = "Please upload a PNG or JPG image only.";
+                    logoInput.value = ""; 
+                    return;
+                }
+           
+                const maxSize = 15 * 1024 * 1024;
+                if (file.size > maxSize) {
+                    errorMessage.innerText = "File size should not exceed 15 MB.";
+                    logoInput.value = ""; 
+                    return;
+                }
+            }
+        });
+    </script>
     <script src="../JavaScript/login.js"></script>
   </body>
 </html>

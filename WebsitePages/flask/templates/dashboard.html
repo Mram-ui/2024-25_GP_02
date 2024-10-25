@@ -1,229 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <link rel="stylesheet" href="/Front-End/CSS/dashboard.css">
+        <!--  Icons logo  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer">
+        <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
+        <!--  Fonts Link  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Acme&family=Tilt+Neon&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> -->
-    <link rel="stylesheet" href="/Front-End/CSS/dashboard.css">
-
-    <!--  Icons logo  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
-    <!--  Fonts Link  -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Tilt+Neon&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=ABeeZee&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-
-
-
-    <script>
-        // function fetchStaticData() {
-        //     fetch('/get_static_data')
-        //         .then(response => response.json())
-        //         .then(data => {
-        //             let eventInfo = data.event[0];
-        //             document.getElementById('EventName').innerText = eventInfo['EventName'];
-        //             document.getElementById('EventLocation').innerText = eventInfo['EventLocation'];
-        //             //date
-        //             let startDate = eventInfo['EventStartDate'].split(' ');
-        //             let endDate = eventInfo['EventEndDate'].split(' ');
-        //             let formattedDate = `${startDate[1]} ${startDate[2]} ${startDate[3]} - ${endDate[1]} ${endDate[2]} ${endDate[3]}`;  // Extract hour and minute
-        //             document.getElementById('EventDate').innerText = formattedDate;
+        <script>
+            // function fetchStaticData() {
+            //     fetch('/get_static_data')
+            //         .then(response => response.json())
+            //         .then(data => {
+            //             let eventInfo = data.event[0];
+            //             document.getElementById('EventName').innerText = eventInfo['EventName'];
+            //             document.getElementById('EventLocation').innerText = eventInfo['EventLocation'];
+            //             //date
+            //             let startDate = eventInfo['EventStartDate'].split(' ');
+            //             let endDate = eventInfo['EventEndDate'].split(' ');
+            //             let formattedDate = `${startDate[1]} ${startDate[2]} ${startDate[3]} - ${endDate[1]} ${endDate[2]} ${endDate[3]}`;  // Extract hour and minute
+            //             document.getElementById('EventDate').innerText = formattedDate;
 
 
-        //             //time
-        //             // Format the start time to show only hours and minutes
-        //             let startTime = eventInfo['EventStartTime'].split(':');
-        //             let endTime = eventInfo['EventEndTime'].split(':');
-        //             let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
-        //             document.getElementById('EventTime').innerText = formattedTime;
+            //             //time
+            //             // Format the start time to show only hours and minutes
+            //             let startTime = eventInfo['EventStartTime'].split(':');
+            //             let endTime = eventInfo['EventEndTime'].split(':');
+            //             let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
+            //             document.getElementById('EventTime').innerText = formattedTime;
 
-        //             // Retrieve camera information data
-        //             let cameraInfo = data.cameras[0];
-        //             document.getElementById('numberOfHalls').innerText = cameraInfo.numOfHalls;
-        //             document.getElementById('infoHallName').innerText = cameraInfo.HallName;
+            //             // Retrieve camera information data
+            //             let cameraInfo = data.cameras[0];
+            //             document.getElementById('numberOfHalls').innerText = cameraInfo.numOfHalls;
+            //             document.getElementById('infoHallName').innerText = cameraInfo.HallName;
 
-        //             console.log(cameraInfo.HallName, formattedTime, formattedDate, cameraInfo.eventID);
-        //         });
-        // }
+            //             console.log(cameraInfo.HallName, formattedTime, formattedDate, cameraInfo.eventID);
+            //         });
+            // }
 
-        // window.onload = fetchStaticData;
-        // console.log();
-    </script>
+            // window.onload = fetchStaticData;
+            // console.log();
+        </script>
+    </head>
 
-</head>
-
-<body>
-    <header class="header">
-        <div class="logo">
-            <a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php"><img src="/images/Logo2.png"
-                    alt="Company Logo"></a>
-        </div>
-    </header>
-
-    <main>
-        <div class="allEventInformation">
-            <div class="eventInformation">
-                {% for event in eventData %}
-                <h3><span id="EventName" style="margin-left: 2%; ">{{ event.EventName }}</span></h3>
-                <p style="white-space: nowrap;"><strong>Event Date:</strong><span id="EventDate"
-                        style="margin-left: 2%;"></span></p>
-                <p><strong>Event Time: </strong><span id="EventTime" style="margin-left: 2%;"></span></p>
-                <p id="EventLocation"><strong>Event Location: </strong> <span style="margin-left: 2%;">{{
-                        event.EventLocation }}</span></p>
-
-                <script>
-                    //date
-                    sDate = '{{ event.EventStartDate }}';
-                    eDate = '{{ event.EventEndDate }}';
-                    // console.log(date);
-                    let startDate = sDate.split('-');
-                    let endDate = eDate.split('-');
-                    let formattedDate = `${startDate[2]}-${startDate[1]}-${startDate[0]} / ${endDate[2]}-${endDate[1]}-${endDate[0]}`;  // Extract hour and minute
-                    document.getElementById('EventDate').innerText = formattedDate;
-                    // console.log(formattedDate);
-
-
-                    //time
-                    sTime = '{{ event.EventStartTime }}';
-                    eTime = '{{ event.EventEndTime }}';
-                    // Format the start time to show only hours and minutes
-                    let startTime = '{{ event.EventStartTime }}'.split(':');
-                    let endTime = '{{ event.EventEndTime }}'.split(':');
-                    let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`;  // Extract hour and minute
-                    document.getElementById('EventTime').innerText = formattedTime;
-                    // console.log(formattedTime);
-
-                </script>
-
-                {% endfor %}
+    <body>
+        <header class="header">
+            <div class="logo">
+                <a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php"><img src="/images/Logo2.png" alt="Company Logo"></a>
             </div>
+            <ul class="headerlinks">
+                <li><a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/cameras.php">Cameras</a></li>
+                <li><a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php">Events</a></li>
+            </ul>
+            <nav></nav>
+        </header>
+        <main>
+            <div class="allEventInformation">
+                <div class="eventInformation">
+                    {% for event in eventData %}
+                    <h3><span id="EventName" style="margin-left: 2%; ">{{ event.EventName }}</span></h3>
+                    <p style="white-space: nowrap;"><strong>Event Date:</strong><span id="EventDate"
+                            style="margin-left: 2%;"></span></p>
+                    <p><strong>Event Time: </strong><span id="EventTime" style="margin-left: 2%;"></span></p>
+                    <p id="EventLocation"><strong>Event Location: </strong> <span style="margin-left: 2%;">{{
+                            event.EventLocation }}</span></p>
+
+                    <script>
+                        sDate = '{{ event.EventStartDate }}';
+                        eDate = '{{ event.EventEndDate }}';
+                        let startDate = sDate.split('-');
+                        let endDate = eDate.split('-');
+                        let formattedDate = `${startDate[2]}-${startDate[1]}-${startDate[0]} / ${endDate[2]}-${endDate[1]}-${endDate[0]}`; 
+                        document.getElementById('EventDate').innerText = formattedDate;
 
 
+                        sTime = '{{ event.EventStartTime }}';
+                        eTime = '{{ event.EventEndTime }}';
+                        let startTime = '{{ event.EventStartTime }}'.split(':');
+                        let endTime = '{{ event.EventEndTime }}'.split(':');
+                        let formattedTime = `${startTime[0]}:${startTime[1]} - ${endTime[0]}:${endTime[1]}`; 
+                        document.getElementById('EventTime').innerText = formattedTime;
 
-            <div class="eventInformation">
-                <p>Number of Halls</p>
-                <h3 id="numberOfHalls" style="font-size: xx-large;"></h3>
-            </div>
-            <div id="totalOfVisitors" class="eventInformation">
-                <p>Total of visitors</p>
-                <h2 style="margin-bottom: 45%;">No Data</h2>
-            </div>
-            <script>
-                let numberOfHalls = '{{ numOfHalls }}';
-                console.log(numberOfHalls);
-                document.getElementById('numberOfHalls').innerText = numberOfHalls;
-            </script>
-        </div>
-        </div>
+                    </script>
 
-
-        <!-- Loop through the cameras list passed from Flask -->
-        <div class="camera">
-            <h3><span class="dot"></span> Live Stream</h3>
-            <div id="cameraFeeds">
-                {% for camera in cameras %}
-                <div class="cameraFeed">
-                    <h3 style="margin: 0; margin-bottom: 2%;">{{ camera.HallName }}</h3>
-                    <p style="margin: 0; margin-bottom: 6%;">Current Visitors: No Data</p>
-                    <img class="cameraFeedImg" src="{{ url_for('video_feed', camera_id=camera.CameraID) }}"
-                        alt="No camera connection" style="margin: 1%;">
-
-                    <!-- <p id="cameraFeedImg">Waiting for camera connection...</p> -->
-
+                    {% endfor %}
+                </div>
+                
+                <div class="eventInformation">
+                    <p>Number of Halls</p>
+                    <h3 id="numberOfHalls" style="font-size: xx-large;"></h3>
+                </div>
+                <div id="totalOfVisitors" class="eventInformation">
+                    <p>Total of visitors</p>
+                    <h2 style="margin-bottom: 45%;">No Data</h2>
                 </div>
                 <script>
-                    // console.log('{{ camera.HallName }}', '{{ camera.eventID }}');
+                    let numberOfHalls = '{{ numOfHalls }}';
+                    console.log(numberOfHalls);
+                    document.getElementById('numberOfHalls').innerText = numberOfHalls;
                 </script>
-
-                {% endfor %}
             </div>
-        </div>
-    </main>
 
+            <div class="camera">
+                <br>
+                <h3><span class="dot"></span> Live Stream</h3>
+                <div id="cameraFeeds">
+                    {% for camera in cameras %}
+                    <div class="cameraFeed">
+                        <h3 style="margin: 0; margin-bottom: 2%;">{{ camera.HallName }}</h3>
+                        <p style="margin: 0; margin-bottom: 6%;">Current Visitors: No Data</p>
+                        <img class="cameraFeedImg" src="{{ url_for('video_feed', camera_id=camera.CameraID) }}"
+                            alt="No camera connection" style="margin: 1%;">
+                    </div>
+                    <script> </script>
+                    {% endfor %}
+                </div>
+            </div>
+        </main>
 
-    <!-- ------------FOOTER------------- -->
-    <footer class="footer-section">
-        <div class="container">
-            <!-- <div class="footer-cta pt-5 pb-5">
+        <!-- ------------FOOTER------------- -->
+        <footer class="footer-section">
+            <div class="container">
+                <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
                     <div class="row">
-                        <div class="row-contact">
-                            <div class="col-xl-4 col-md-4 mb-30">
-                                <div class="single-cta">
-                                    <i class="far fa-envelope-open"></i>
-                                    <div class="cta-text">
-                                        <h4>Mail us</h4>
-                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                    </div>
+                        <div class="col-xl-4 col-lg-4 mb-50">
+                            <div class="footer-widget">
+                                <div class="footer-logo">
+                                    <a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
+                                </div>
+                                <div class="footer-text">
+                                    <p>Our system provides real-time crowd management, enabling event <br>organizers to track attendees and streamline operations efficiently.</p>
+                                </div>
+                                <div class="footer-social-icon">
+                                <span>Follow us</span>
+                                    <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
+                                    <a href="https://x.com/Raqeeb_Ai" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div> -->
-            <div class="footer-content pt-5 pb-5" style="margin-top: 4%;">
-                <div class="row">
-                    <div class="col-xl-4 col-lg-4 mb-50">
-                        <div class="footer-widget">
-                            <div class="footer-logo">
-                                <a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php"><img src="../../images/Logo3.png" class="img-fluid" alt="logo"></a>
-                            </div>
-                            <div class="footer-text">
-                                <p>Our system provides real-time crowd management, enabling event <br>organizers to track attendees and streamline operations efficiently.</p>
-                            </div>
-                            <div class="footer-social-icon">
-                            <span>Follow us</span>
-                                <!-- <a href="#"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                <a href="#"><i class="fab fa-twitter twitter-bg"></i></a> -->
-                                <a href="https://www.linkedin.com/company/raqeebai" target="blank_"><i class="fab fa-linkedin linkedin-bg"></i></a>
-                                <a href="https://x.com/RaqeebProject" target="blank_"><i class="fa-brands fa-x-twitter twitter-bg"></i></a>
+                        <div class="col-xl-4 col-lg-4 col-md-6 mb-30" style="margin-left:30%;">
+                            <div class="footer-widget">
+                                <div class="footer-widget-heading">
+                                    <h3>Useful Links</h3>
+                                </div>
+                                <ul class="usfelLinks">
+                                    <li style="white-space: nowrap;"><a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/addEvent.php">Add Event</a></li>
+                                    <li style="white-space: nowrap;"><a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php">List Of Events</a></li>
 
-                                <!-- <a href="mailto:Raqeeb.Project@gmail.com"><i class="fa fa-envelope" style="background-color: #1e52a5; border-radius: 50%; z-index: 0;"></i></a> -->
+                                </ul>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 mb-30" style="margin-left:30%;">
-                        <div class="footer-widget">
-                            <div class="footer-widget-heading">
-                                <h3>Useful Links</h3>
+                            <div class="cta-text" style="padding: 0; ">
+                                <h4 style="margin-top: 19%; ">Mail us</h4>
+                                <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
                             </div>
-                            <ul class="usfelLinks">
-                                <li style="white-space: nowrap;"><a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php">Add Event</a></li>
-                                <li style="white-space: nowrap;"><a href="http://localhost/2024-25_GP_02/WebsitePages/Back-End/PHP/userHome.php">List Of Events</a></li>
-
-                            </ul>
-                        </div>
-                        <div class="cta-text" style="padding: 0; ">
-                                        <h4 style="margin-top: 19%; ">Mail us</h4>
-                                        <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
-                                    </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copyright-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 text-center text-lg-left">
-                        <div class="copyright-text">
-                            <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
-
-</body>
-
+            <div class="copyright-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 text-center text-lg-left">
+                            <div class="copyright-text">
+                                <p>Copyright &copy; 2024 Raqeeb, All Right Reserved </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </body>
 </html>

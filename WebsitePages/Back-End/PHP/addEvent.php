@@ -9,25 +9,11 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
         <meta charset="utf-8">
         <title>Add Event</title>
-        <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/boxes.css">
+        <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/addEvent.css">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     </head>
-    <style>
-        .addCameraLink{
-            margin-bottom: 2%;
-        }
-
-        .addCameraLink a:hover {
-            color: #4a56ff;
-        }
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 3px;
-            margin-bottom: 4%;
-        }
-    </style>
+ 
 
     <body>
         <header class="header">
@@ -39,43 +25,64 @@
         <div class="main">
             <a id='arrow' href="../../Back-End/PHP/userHome.php"><i class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
             <h2 class="title">Add Event</h2>
-            <form id="addEvent" class="form" method="POST" action="../../Back-End/PHP/addEvent.php" onsubmit="return validateDates()">
+            <form id="addEvent" class="form" method="POST" action="../../Back-End/PHP/addEvent.php" id="add_form" onsubmit="return validateDates()">
+
+                <h3>Event information</h3> 
                 <label for="eventName">Event Name:</label> 
-                <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo isset($_POST['eventName']) ? htmlspecialchars($_POST['eventName']) : ''; ?>" required> <br>
+                <input name="eventName" class="form__input" type="text" placeholder="Name" value="<?php echo isset($_POST['eventName']) ? htmlspecialchars($_POST['eventName']) : ''; ?>" required> 
 
                 <label for="eventLocation">Event Location:</label> 
-                <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo isset($_POST['eventLocation']) ? htmlspecialchars($_POST['eventLocation']) : ''; ?>" required> <br>
+                <input name="eventLocation" class="form__input" type="text" placeholder="Exhibition center, Riyadh" value="<?php echo isset($_POST['eventLocation']) ? htmlspecialchars($_POST['eventLocation']) : ''; ?>" required> 
+                <br><br>
 
+                <h3>Dates and Time</h3> 
                 <div id="times">
+                    <div id="startTimes">
                     <div class="timeBlocks">
                         <label for="startDate">Start Date:</label>  
                         <input name="startDate" class="form__input time" type="date" value="<?php echo isset($_POST['startDate']) ? $_POST['startDate'] : ''; ?>" required> 
                     </div>
+
                     <div class="timeBlocks"> 
                         <label for="startTime">Start Time:</label> 
                         <input name="startTime" class="form__input time" type="time" value="<?php echo isset($_POST['startTime']) ? $_POST['startTime'] : ''; ?>" required> 
                     </div> 
-                    <br>
+                    </div>
+
+                    <div id="endTimes">
+
                     <div class="timeBlocks">
                         <label for="endDate">End Date:</label>  
                         <input name="endDate" class="form__input time" type="date" value="<?php echo isset($_POST['endDate']) ? $_POST['endDate'] : ''; ?>" required> 
                     </div>
+
                     <div class="timeBlocks"> 
                         <label for="endTime">End Time:</label>  
                         <input name="endTime" class="form__input time" type="time" value="<?php echo isset($_POST['endTime']) ? $_POST['endTime'] : ''; ?>" required> 
                     </div>
                     <div class="error-message" id="startTimeError"></div>
-
+                    </div>
                 </div>
 
+
+
+            <br> <br>
+            <div id="addHalls"> <h3>Halls</h3>                    
+                        <button class="btn btn-success add_item_btn"> Add new hall</button> 
+                    </div>
                 <div class="AllHalls">
                     <div id="hall" class="hall">
-                        <label for="hallName">Hall Name:</label><br>
-                        <input name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo isset($_POST['hallName']) ? htmlspecialchars($_POST['hallName']) : ''; ?>" required><br>
+                <div id="show_item">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                                <label for="hallName">Hall Name:</label><br>
+                                <input name="hallName[]" class="form__input" type="text" placeholder="Main hall" value="<?php echo isset($_POST['hallName']) ? htmlspecialchars($_POST['hallName']) : ''; ?>" required>
+                            </div>
 
-                        <label for="hallCamera">Hall Camera:</label><br>
+                        <div class="col-md-3 mb-3" id="cameraInputs">       
+                        <label for="hallCamera">Hall Camera:</label>
 
-                        <select name="hallCamera" required>
+                        <select name="hallCamera[]" required>
                             <option value="" disabled selected style="display: none;">Select your camera</option>
                             <?php
                                 $servername = "localhost"; 
@@ -102,18 +109,98 @@
 
                                 $conn->close();
                             ?>
-                        </select> <br>
+                        </select> 
                         <p class="addCameraLink">
-                            <a href="addCamera.php">Don't have a camera?</a>
+                            <a href="addCamera.php">Don't have a camera?</a> <!-- would it be better if we write "can't see the camera you want? register a camera here -->
                         </p>
+                    </div>
+                        
+
+                    <div class="col-md-3 mb-3">
 
                         <label for="hallThreshold">Hall Max Capacity:</label><br>
-                        <input name="hallThreshold" class="form__input" type="number" placeholder="00" min="0" value="<?php echo isset($_POST['hallThreshold']) ? $_POST['hallThreshold'] : ''; ?>" required>
+                        <input name="hallThreshold[]" class="form__input" type="number" placeholder="00" min="0" value="<?php echo isset($_POST['hallThreshold']) ? $_POST['hallThreshold'] : ''; ?>" required>
+                    </div>
+
                     </div>
                 </div>
-                <br>
-                <button class="form__button button submit">ADD EVENT</button>
-            </form>
+                <div>
+                    <br>
+                <button type="submit" class="form__button button submit">ADD EVENT</button>
+                </div>
+                </form>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                $(".add_item_btn").click(function(e) {
+                e.preventDefault();
+                $("#show_item").append(
+                `  
+                <div class="row">
+                        <div class="col-md-4 mb-3">
+                                <label for="hallName">Hall Name:</label><br>
+                                <input name="hallName[]" class="form__input" type="text" placeholder="Main hall" value="<?php echo isset($_POST['hallName']) ? htmlspecialchars($_POST['hallName']) : ''; ?>" required>
+                            </div>
+
+                        <div class="col-md-3 mb-3" id="cameraInputs">       
+                        <label for="hallCamera">Hall Camera:</label>
+
+                        <select name="hallCamera[]" required>
+                            <option value="" disabled selected style="display: none;">Select your camera</option>
+                            <?php
+                                $servername = "localhost"; 
+                                $username = "root";
+                                $password = "root";
+                                $dbname = "raqeebdb";
+
+                                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                                if ($conn->connect_error) {
+                                    die("Connection failed: " . $conn->connect_error);
+                                }
+
+                                $companyID = $_SESSION['CompanyID'];
+
+                                $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
+
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $selected = isset($_POST['hallCamera']) && $_POST['hallCamera'] == $row['CameraID'] ? 'selected' : '';
+                                        echo "<option value='{$row['CameraID']}' $selected>{$row['CameraName']}</option>";
+                                    }
+                                }
+
+                                $conn->close();
+                            ?>
+                        </select> 
+                    </div>
+                        
+
+                    <div class="col-md-3 mb-3">
+                        <label for="hallThreshold">Hall Max Capacity:</label>
+                    
+                        <input name="hallThreshold[]" class="form__input" type="number" placeholder="00" min="0" value="<?php echo isset($_POST['hallThreshold']) ? $_POST['hallThreshold'] : ''; ?>" required>
+                    </div>
+
+                    <div class="col-md-2 mb-3 d-grid">
+                    <br>
+                        <input type="image" src="../../images/close.png" class="btn btn-danger remove_item_btn"> 
+                    </div>
+                    </div>`);
+                });
+
+                $(document).on('click', '.remove_item_btn', function(e){
+                    e.preventDefault();
+                    let row_item =$(this).parent().parent();
+                    $(row_item).remove();
+
+
+                });
+              
+                });
+
+            </script>
+
         </div>
         
         <script>
@@ -228,9 +315,9 @@
                 $eventEndDate = $_POST['endDate'];
                 $eventStartTime = $_POST['startTime'];
                 $eventEndTime = $_POST['endTime'];
-                $hallName = $_POST['hallName'];
-                $hallThreshold = $_POST['hallThreshold'];
-                $hallCamera = $_POST['hallCamera'];
+                //$hallName = $_POST['hallName'];
+                //$hallThreshold = $_POST['hallThreshold'];
+                //$hallCamera = $_POST['hallCamera'];
 
                 $today = date('Y-m-d');
                 $now = date('H:i');
@@ -267,12 +354,23 @@
 
                     $eventID = $conn->insert_id;
 
-                    $stmt = $conn->prepare("INSERT INTO hall (HallName, HallThreshold, CameraID, EventID) VALUES (?, ?, ?, ?)");
-                    $stmt->bind_param("siii", $hallName, $hallThreshold, $hallCamera, $eventID);
 
-                    if (!$stmt->execute()) {
-                        throw new Exception("Error inserting hall(s): " . $stmt->error);
-                    }
+
+                    foreach ($_POST['hallName'] as $key => $value) {
+                        $stmt = $conn->prepare("INSERT INTO hall (HallName, HallThreshold, CameraID, EventID) VALUES (?, ?, ?, ?)");
+                        $stmt->bind_param("siii", $value, $_POST['hallThreshold'][$key], $_POST['hallCamera'][$key], $eventID);
+                        if (!$stmt->execute()) {
+                            throw new Exception("Error inserting hall(s): " . $stmt->error);
+                        }
+
+                        }
+                    
+                    //$stmt = $conn->prepare("INSERT INTO hall (HallName, HallThreshold, CameraID, EventID) VALUES (?, ?, ?, ?)");
+                    //$stmt->bind_param("siii", $hallName, $hallThreshold, $hallCamera, $eventID);
+
+                   // if (!$stmt->execute()) {
+                    //    throw new Exception("Error inserting hall(s): " . $stmt->error);
+                   // }
 
                     $conn->commit();
 
@@ -280,9 +378,9 @@
                         alert('New event added successfully!');
                         localStorage.removeItem('formData');
                         window.location.href = 'userHome.php';
-                    </script>";
-                    exit;
+                                            exit;       
 
+                    </script>";
 
                 } catch (Exception $e) {
                     $conn->rollback();
