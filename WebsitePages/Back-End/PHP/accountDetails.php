@@ -215,8 +215,9 @@
            }
            
             .profileLogo img {
-                max-width: 150px;
-                max-height: 150px;
+                max-width: 100px;
+                max-height: 100px;
+                min-height: 100px;
             }
             
             .profileLogo {
