@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es" dir="ltr">
 
@@ -12,6 +13,28 @@
 
 
 </head>
+<style>  
+    #forgetpass{
+        height: 500px;
+    }
+
+    #logo {
+        width: 30%;
+        margin-top: 5%;
+    }
+    
+    #newPassNotValid {
+         color: #003f91;
+         font-size: 0.9em;
+         margin-right: 5%;
+    }
+    
+    #passerr {
+       color: red;
+       font-size: 0.9em;
+       margin-right: 7%; 
+    }
+</style>
 
 
 <body>
@@ -28,7 +51,7 @@
 
 
     if(!isset($_SESSION["token"]) && !isset($_SESSION["tokenTimeStamp"])){
-        echo "<h3> You do not have access to change password</h3>";
+        echo "<h3> You do not have access to change password (no sessions)</h3>";
 
     }
     else{
@@ -40,22 +63,23 @@
     else{
 
         if($_SESSION["token"]==$_GET['token']){
-            echo '<p style="font-size: 17px;">Please enter a new password and re-enter it to confirm and change your password </p>
+            echo '<p style="font-size: 17px;">Please enter a new password and re-enter <br> it to confirm and change your password </p>
             <br>
         <form class="form" id="resetPasswordForm">
 
             <input name="newpass" id="newpass" class="form__input"  type="password" placeholder="New Password" required>
-                      <div class="errorMessage" id="newPassNotValid" style="color: #003f91;"></div>
+            <div class="errorMessage" id="newPassNotValid"></div>
             <input name="confirmpass" id="confirmpass" class="form__input"  type="password" placeholder="Confirm Password" required>
+            <div id="passerr"></div>
 
-                        <div id="passerr" style="color:red;"></div>
+
+            
             <button type="submit" class="form__button button submit"> SEND</button>
             <br>
-
           </form>';
         }
         else{
-            echo "<h3> You do not have access to change password</h3>";
+            echo "<h3> You do not have access to change password (not equal)</h3>";
         }
 
 
@@ -93,7 +117,7 @@
             var newpass = $("#newpass").val();
             var confirmpass=$("#confirmpass").val();
             if(newpass!=confirmpass){
-                document.getElementById('passerr').innerText = 'Passwords do not match! please try again';
+                document.getElementById('passerr').innerText = 'Passwords do not match! Please try again';
             }
             else{
                 $.ajax({
