@@ -8,7 +8,7 @@ $pass = password_hash($_POST['newpass'], PASSWORD_DEFAULT);
 $query="UPDATE company SET Password='$pass' WHERE Email='$email'";
 $res=mysqli_query($connection,$query);
 if($res){
-    session_destroy();
+    //session_destroy();
     echo "Password updated successfully, please <a href='../../Front-End/HTML/login.html'>Log in</a>";
 }
 else{
