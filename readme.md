@@ -8,7 +8,7 @@
 - **Programming Language (Backend):** PHP, Python 🐍
 - **Programming Language (Frontend):** HTML, CSS, JavaScript 🎨
 - **Backend Framework:** TensorFlow or PyTorch  ⚙️ 
-- **Server:** Apache, and Flask 🌐
+- **Server:** Apache and Flask 🌐
 - **Database:** MySQL 🗄️
 - **Tools:** Visual Studio Code, GitHub, Jira, Figma, and Canva 🛠️
 - **Services:** OpenCV for camera integration 📹 
