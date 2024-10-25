@@ -16,8 +16,8 @@
 ## **Launching Instructions** 🚀
   **1. Download the project:** Click the `<> Code` button on this page and select `Download ZIP`. Extract the files to a folder on your computer. <br>
   **2. Install Flask:** Within the environment, use the following commands to install Flask:
-  - Install Flask: <br>
-    To install Flask, open the Command Prompt (or Terminal) on your computer and enter the following command:
+  - Install Flask and MySQL Connector: <br>
+    To install Flask, open the Command Prompt (or Terminal) on your computer and enter the following command to install the necessary dependencies:
   ```
   pip install Flask
   ```
@@ -28,17 +28,20 @@
 
 
   - Navigate to the project directory: <br>
-    Replace `path\to\` in the command below with the actual path to your project files.
+    Replace `path\to\` in the command below with the actual path to the extracted project files on your computer:
   ```
   cd path\to\2024-25_GP_02-main\WebsitePages\flask-directory
   ```
-  - Run the Flask server:
+  - Run the Flask server: <br>
+    Once in the project directory, start the Flask server by entering:
   ```
   python app.py
   ```
 
   
-  **3. Run the project:** Open the folder on your computer, and run it using your local server or preferred development environment. <br> <br> 🌟 That's it! The project should now be running on your local machine. <br>
+  **3. Run the project:** Open the project folder on your computer and launch it using your local server or preferred development environment. 
+  <br> <br> 
+  🌟 That's it! The project should now be running on your local machine. <br>
 
 
 
