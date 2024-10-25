@@ -28,7 +28,7 @@
 
 
     if(!isset($_SESSION["token"]) && !isset($_SESSION["tokenTimeStamp"])){
-        echo "<h3> You do not have access to change password (no sessions)</h3>";
+        echo "<h3> You do not have access to change password</h3>";
 
     }
     else{
@@ -45,17 +45,17 @@
         <form class="form" id="resetPasswordForm">
 
             <input name="newpass" id="newpass" class="form__input"  type="password" placeholder="New Password" required>
-                      <div class="errorMessage" id="newPassNotValid"></div>
+                      <div class="errorMessage" id="newPassNotValid" style="color: #003f91;"></div>
             <input name="confirmpass" id="confirmpass" class="form__input"  type="password" placeholder="Confirm Password" required>
 
-            
+                        <div id="passerr" style="color:red;"></div>
             <button type="submit" class="form__button button submit"> SEND</button>
             <br>
-            <div id="passerr"></div>
+
           </form>';
         }
         else{
-            echo "<h3> You do not have access to change password (not equal)</h3>";
+            echo "<h3> You do not have access to change password</h3>";
         }
 
 

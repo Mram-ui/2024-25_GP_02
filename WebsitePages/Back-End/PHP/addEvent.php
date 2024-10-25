@@ -60,9 +60,10 @@
                         <label for="endTime">End Time:</label>  
                         <input name="endTime" class="form__input time" type="time" value="<?php echo isset($_POST['endTime']) ? $_POST['endTime'] : ''; ?>" required> 
                     </div>
-                    <div class="error-message" id="startTimeError"></div>
+                    
                     </div>
                 </div>
+                <div class="error-message" id="startTimeError"></div>
 
 
 

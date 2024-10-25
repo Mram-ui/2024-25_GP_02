@@ -17,10 +17,9 @@ if(isset($_POST['email'])){
                 <form class="form" id="ForgotPasswordForm">
                     <br>
                     <input name="femail" class="form__input" id="email" type="email" placeholder="Email" required>
-                    <div class="errorMessage" id="EmailNotValid"></div>
+                  <div class="form-message" id="msg" style="color:red;">Please enter your email to retreive your account</div>
                     <button type="submit" class="form__button button submit"> SEND</button>
                   </form>
-                  <div class="form-message" id="msg" style="color:red;">Please enter your email to retreive your account</div>
             </div>';
     } else {
         $email = filter_var($_POST["email"], FILTER_SANITIZE_EMAIL);
@@ -36,10 +35,9 @@ if(isset($_POST['email'])){
                 <form class="form" id="ForgotPasswordForm">
                     <br>
                     <input name="femail" class="form__input" id="email" type="email" placeholder="Email" required>
-                    <div class="errorMessage" id="EmailNotValid"></div>
+                    <div class="form-message" id="msg" style="color:red;">Invalid email format</div>
                     <button type="submit" class="form__button button submit"> SEND</button>
                   </form>
-                  <div class="form-message" id="msg" style="color:red;">Invalid email format</div>
             </div>';
         }
         else{
@@ -61,7 +59,7 @@ if(isset($_POST['email'])){
                 
                 //SMTP needs accurate times, and the PHP time zone MUST be set
                 //This should be done in your php.ini, but this is how to do it if you don't have access to that
-                date_default_timezone_set('Etc/UTC');
+                date_default_timezone_set('');
                 
                 require '../../PHPMailer/PHPMailerAutoload.php';
                 
@@ -99,7 +97,7 @@ if(isset($_POST['email'])){
                 $mail->Username = "raqeeb.project@gmail.com";
                 
                 //Password to use for SMTP authentication
-                $mail->Password = ""; //due to upload to github password is not there
+                $mail->Password = "vjrd xeyj lrlw ymcf"; //due to upload to github password is not there
                 
                 //Set who the message is to be sent from
                 $mail->setFrom('raqeeb.project@gmail.com', 'Raqeeb');
@@ -136,9 +134,10 @@ if(isset($_POST['email'])){
                             <br>
                             <input name='femail' class='form__input' id='email' type='email' placeholder='Email' required>
                             <div class='errorMessage' id='EmailNotValid'></div>
-                            <button type='submit' class='form__button button submit;> SEND</button>
+                            <div class='form-message' id='msg' style='color:red;'> Mailer Error: . $mail->ErrorInfo </div>
+
+                            <button type='submit' class='form__button button submit'> SEND</button>
                           </form>
-                          <div class='form-message' id='msg' style='color:red;'> Mailer Error: . $mail->ErrorInfo </div>
                     </div>";
                 } else {
                     echo " <a href='../../Back-End/PHP/index.php'> <img id='logo' src='../../images/Logo2.png' alt='Company Logo'></a>
@@ -163,11 +162,10 @@ if(isset($_POST['email'])){
                     <form class='form' id='ForgotPasswordForm'>
                         <br>
                         <input name='femail' class='form__input' id='email' type='email' placeholder='Email' required>
-                        <div class='errorMessage' id='EmailNotValid'></div>
+                      <div class='form-message' id='msg' > <p style='color:red;'> No account was found with that email</p> <a href='../../Front-End/HTML/login.html'>Sign up instead </a> </div> 
                         <button type='submit' class='form__button button submit'> SEND</button>
                       </form>
                       <br>
-                      <div class='form-message' id='msg' style='color:red;'> User Not Found </div>
                 </div>";
             }
 
