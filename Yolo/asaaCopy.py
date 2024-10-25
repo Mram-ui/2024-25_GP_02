@@ -2,10 +2,10 @@ import cv2
 from ultralytics import YOLO
 
 # Load the YOLOv8 model
-model = YOLO('yolov8n.pt')  # we can also use yolov8s.pt, yolov8m.pt, etc. for larger models
+model = YOLO('Yolo/bestWeights.pt')  
 
 # Open the webcam
-cap =cv2.VideoCapture("rtsp://Raqeeb2:raqeebCCTV2025@192.168.8.45:554/stream1")
+cap =cv2.VideoCapture(0)
 
 
 if not cap.isOpened():
@@ -19,13 +19,13 @@ while True:
         break
 
     # Detect people in the frame
-    results = model(frame, agnostic_nms=True,conf=0.5) # Remove the double detection, adding threshod
+    results = model(frame, agnostic_nms=True, conf=0.25 ) # Remove the double detection, adding threshod
 
     # Filter detections to only include people (class ID for person in COCO dataset is 0)
     people_count = 0
     for result in results:
         for box in result.boxes:
-            if int(box.cls) == 0:  # Check if the detected class is person
+            if int(box.cls) == 1:  # Check if the detected class is person
                 people_count += 1
                 # Extract box coordinates
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
