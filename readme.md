@@ -5,8 +5,8 @@
 **Raqeeb** is a comprehensive crowd management solution designed to empower event organizers. By leveraging real-time tracking, camera integration, and data analytics, Raqeeb provides insights to optimize indoor events, enhance safety, and improve the attendee experience. Key functionalities include real-time crowd monitoring, camera integration, and data analytics. Raqeeb ensures seamless event operations.
 
 ## **Technology Stack** 🖥️
-- **Programming Language (Backend):** PHP, Python 🐍
-- **Programming Language (Frontend):** HTML, CSS, JavaScript 🎨
+- **Programming Language (Backend):** PHP, and Python 🐍
+- **Programming Language (Frontend):** HTML, CSS, and JavaScript 🎨
 - **Backend Framework:** TensorFlow or PyTorch  ⚙️ 
 - **Server:** Apache and Flask 🌐
 - **Database:** MySQL 🗄️
