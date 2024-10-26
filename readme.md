@@ -30,7 +30,7 @@
   - Navigate to the project directory: <br>
     Replace `path\to\` in the command below with the actual path to the extracted project files on your computer:
   ```
-  cd path\to\2024-25_GP_02-main\WebsitePages\flask
+  cd "path\to\2024-25_GP_02-main\WebsitePages\flask"
   ```
   - Run the Flask server: <br>
     Once in the project directory, start the Flask server by entering:
