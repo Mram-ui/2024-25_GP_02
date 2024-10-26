@@ -69,7 +69,7 @@
             <nav></nav>
         </header>
         <main>
-            <div class="allEventInformation">
+            <div id="allEventInformation" class="allEventInformation">
                 <div class="eventInformation">
                     {% for event in eventData %}
                     <h3><span id="EventName" style="margin-left: 2%; ">{{ event.EventName }}</span></h3>
@@ -115,7 +115,7 @@
                 </script>
             </div>
 
-            <div class="camera">
+            <div id="cameras"  class="camera">
                 <br>
                 <h3><span class="dot"></span> Live Stream</h3>
                 <div id="cameraFeeds">
@@ -158,8 +158,8 @@
                                     <h3>Useful Links</h3>
                                 </div>
                                 <ul class="usfelLinks">
-                                    <li style="white-space: nowrap;"><a href="http://localhost/2024-25_GP_02-main/WebsitePages/Back-End/PHP/addEvent.php">Add Event</a></li>
-                                    <li style="white-space: nowrap;"><a href="http://localhost/2024-25_GP_02-main/WebsitePages/Back-End/PHP/userHome.php">List Of Events</a></li>
+                                    <li style="white-space: nowrap;"><a href="#allEventInformation">Event Information</a></li>
+                                    <li style="white-space: nowrap;"><a href="#cameras">Cameras</a></li>
 
                                 </ul>
                             </div>
