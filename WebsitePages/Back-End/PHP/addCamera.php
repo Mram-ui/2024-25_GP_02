@@ -10,25 +10,30 @@
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-
-    $CompanyID = $_SESSION['CompanyID']; 
-    $message = '';  
     
-    $logoQuery = "SELECT Logo FROM company WHERE CompanyID = ?";
-    $logoStmt = $conn->prepare($logoQuery);
-    $logoStmt->bind_param("i", $companyID);
-    $logoStmt->execute();
-    $logoResult = $logoStmt->get_result();
+    $CompanyID = $_SESSION['CompanyID'] ?? null; 
+    $message = '';
 
-    if ($logoResult->num_rows > 0) {
-        $logoRow = $logoResult->fetch_assoc();
-        $logo = $logoRow['Logo'];
+    if ($CompanyID) {
+        $logoQuery = "SELECT Logo FROM company WHERE CompanyID = ?";
+        $logoStmt = $conn->prepare($logoQuery);
+        $logoStmt->bind_param("i", $CompanyID);
+        $logoStmt->execute();
+        $logoResult = $logoStmt->get_result();
+
+        if ($logoResult->num_rows > 0) {
+            $logoRow = $logoResult->fetch_assoc();
+            $logo = $logoRow['Logo'];
+            echo "Logo from DB: " . $logo;
+        } else {
+            $logo = null;
+        }
     } else {
         $logo = null;
     }
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Get the form data
+        
         $cameraName = $_POST['cameraName'];
         $cameraIP = $_POST['cameraIP'];
         $portNo = $_POST['portNo'];
@@ -199,7 +204,7 @@
                         <?php if (is_null($logo) || empty($logo)): ?>
                             <img src="../../images/CLogo.png" style="width: 60px; height: 60px; border-radius: 50%;" alt="Default User Logo">
                         <?php else: ?>
-                            <img src="../../images/<?php echo $logo ?>" style="width: 60px; height: 60px; border-radius: 50%;" alt="User Company Logo">
+                            <img src="../../images/<?php echo htmlspecialchars($logo); ?>" style="width: 60px; height: 60px; border-radius: 50%;" alt="User Company Logo">
                         <?php endif; ?>
                     </a>
                 </label>
