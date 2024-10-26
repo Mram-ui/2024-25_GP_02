@@ -1171,7 +1171,6 @@
                 }
             }
 
-            // Function to reset to "Current Events"
             function resetToCurrent() {
                 const eventType = 'CE'; 
                 showEvents(eventType);
@@ -1192,7 +1191,6 @@
 
             document.getElementById('arrow').addEventListener('click', resetToCurrent);
 
-            // Handle back navigation for browser arrow
             window.addEventListener('pageshow', function(event) {
                 if (event.persisted || (performance.navigation && performance.navigation.type === 2)) {
                     resetToCurrent();
