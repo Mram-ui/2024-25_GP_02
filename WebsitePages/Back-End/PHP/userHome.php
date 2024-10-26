@@ -899,11 +899,11 @@
                     </div>
                     <div class="radio-inputs">
                         <label class="radio" id="PastEvent">
-                          <input type="radio" name="radio" checked=""/>
+                          <input type="radio" name="radio"/>
                           <span class="name">Past Events</span>
                         </label>
                         <label class="radio" id="CurrentEvent">
-                          <input type="radio" name="radio"  />
+                          <input type="radio" name="radio"  checked/>
                           <span class="name">Current Events</span>
                         </label>
 
@@ -911,7 +911,7 @@
                           <input type="radio" name="radio" />
                           <span class="name">Upcoming Events</span>
                         </label>
-                      </div>                  
+                    </div>                  
                     <hr class="BreakLinePCU">
                     
                     <?php
@@ -1096,7 +1096,6 @@
                 const eventBlock = 
                     <div class="EventsDetalisDes">
                         <p class="EventNameD">${event.EventName}</p>
-                        <a href="#"><img class="edit" src="../../images/edit.png"></a>
                         <a href="#"><p class="EventD">ViewDetails</p></a>
                     </div>
                     <hr class="BreakLine">
@@ -1157,39 +1156,48 @@
            </div>
        </footer>
        <script>
-           // Function to show the correct event list based on radio input selection
-           function showEvents(eventType) {
-               document.querySelector('.PE').style.display = 'none';
-               document.querySelector('.CE').style.display = 'none';
-               document.querySelector('.UE').style.display = 'none';
+            function showEvents(eventType) {
+                document.querySelector('.PE').style.display = 'none';
+                document.querySelector('.CE').style.display = 'none';
+                document.querySelector('.UE').style.display = 'none';
 
-               document.querySelector('.' + eventType).style.display = 'block';
-           }
+                document.querySelector('.' + eventType).style.display = 'block';
+            }
 
-           // Function to check and set the radio button
-           function checkRadioButton(eventType) {
-               const radioButton = document.getElementById(eventType.replace('E', 'Event'));
-               if (radioButton) {
-                   radioButton.checked = true;
-               }
-           }
+            function checkRadioButton(eventType) {
+                const radioButton = document.getElementById(eventType.replace('E', 'Event'));
+                if (radioButton) {
+                    radioButton.checked = true;
+                }
+            }
 
-           // Add event listeners to each radio input
-           document.getElementById('PastEvent').addEventListener('click', function() {
-               showEvents('PE');
-           });
-           document.getElementById('CurrentEvent').addEventListener('click', function() {
-               showEvents('CE');
-           });
-           document.getElementById('UpcomingEvent').addEventListener('click', function() {
-               showEvents('UE');
-           });
+            // Function to reset to "Current Events"
+            function resetToCurrent() {
+                const eventType = 'CE'; 
+                showEvents(eventType);
+                checkRadioButton(eventType);
+            }
 
-           // On page load, default to Past Events
-           window.addEventListener('load', function() {
-               showEvents('PE');
-               checkRadioButton('PE');
-           });
-       </script>
+            document.getElementById('PastEvent').addEventListener('click', function() {
+                showEvents('PE');
+            });
+            document.getElementById('CurrentEvent').addEventListener('click', function() {
+                showEvents('CE');
+            });
+            document.getElementById('UpcomingEvent').addEventListener('click', function() {
+                showEvents('UE');
+            });
+
+            window.addEventListener('load', resetToCurrent);
+
+            document.getElementById('arrow').addEventListener('click', resetToCurrent);
+
+            // Handle back navigation for browser arrow
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted || (performance.navigation && performance.navigation.type === 2)) {
+                    resetToCurrent();
+                }
+            });
+        </script>
    </body>
 </html>
