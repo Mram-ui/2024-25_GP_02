@@ -51,7 +51,7 @@
 
 
     if(!isset($_SESSION["token"]) && !isset($_SESSION["tokenTimeStamp"])){
-        echo "<h3> You do not have access to change password (no sessions)</h3>";
+        echo "<h3> You do not have access to change password </h3>";
 
     }
     else{
@@ -79,7 +79,7 @@
           </form>';
         }
         else{
-            echo "<h3> You do not have access to change password (not equal)</h3>";
+            echo "<h3> You do not have access to change password</h3>";
         }
 
 
