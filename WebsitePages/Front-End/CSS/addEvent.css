@@ -110,8 +110,9 @@ body {
     width: 180px;
     height: 50px;
     border-radius: 15px;
-    margin-top: 10px;
-    margin-right: 22px;
+    margin-top: 0px;
+    margin-left: 85%;
+    margin-bottom: 1.5%;
     font-weight: 700;
     font-size: 14px;
     letter-spacing: 1.15px;
@@ -301,6 +302,7 @@ select {
 .addCameraLink{
     margin-bottom: 2%;
     font-size: 11px;
+    margin-left: 1.5%;
 }
 
 .addCameraLink a:hover {
@@ -341,12 +343,16 @@ select {
 }
 
 .btn-success {
-    width: 120px;
+    width: 135px;
     height: 40px;
     background-color: seagreen; 
 }
 
-
+.btn-success:hover {
+    transform: scale(0.985);
+    transition: 0.25s;
+    background-color: #226740;
+}
 
 
 .btn:hover {
