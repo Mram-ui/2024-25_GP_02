@@ -14,7 +14,6 @@
                 color: red;
                 font-size: 0.9em;
                 margin-right: 12%;
-                margin-top: 1%;
             } 
             
             .form__input {
@@ -48,6 +47,14 @@
                 width: 30%;
                 margin-top: 5%;
             }
+            
+            .form-message {
+                margin-top: 1%;
+            }
+            
+            .form__button {
+                margin-top: 4%;
+            }
                 
         </style>
     </head>
@@ -64,83 +71,11 @@
                     <br>
                     <input name="femail" class="form__input" id="email" type="email" placeholder="Email" required>
                     <div class="errorMessage" id="EmailNotValid"></div>
-                    <button type='submit' class="form__button button submit"> SEND</button>
+                    <button type='submit' class="form__button button submit">SEND</button>
                   </form>
                   <div class="form-message" id='msg'></div>
             </div>
         </div>
-<!--         <script type="text/javascript">
-            $(document).ready(function() {
-                const emailInput = document.getElementById("email");
-
-                // Email validation on blur (when input loses focus)
-                emailInput.addEventListener('blur', function() {
-                    const emailValue = emailInput.value;
-                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                    // Validate email format
-                    if (!emailPattern.test(emailValue)) {
-                        document.getElementById('EmailNotValid').innerText = 'Please enter a valid email address!';
-                    } else {
-                        document.getElementById('EmailNotValid').innerText = '';
-
-                        // AJAX request to check if email exists
-                        $.ajax({
-                            type: 'POST',
-                            url: "checkEmailExistence.php", // This will check if the email exists in the DB
-                            data: { email: emailValue },
-                            success: function(response) {
-                                if (response.trim() === "email_not_found") {
-                                    document.getElementById('EmailNotValid').innerText = 'Email does not exist!';
-                                } else {
-                                    document.getElementById('EmailNotValid').innerText = '';
-                                }
-                            }
-                        });
-                    }
-                });
-
-                // Email validation on input (while typing)
-                emailInput.addEventListener('input', function() {
-                    const emailValue = emailInput.value;
-                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                    if (emailPattern.test(emailValue)) {
-                        document.getElementById('EmailNotValid').innerText = '';
-                    }
-                });
-
-                // Form submission
-                $("#ForgotPasswordForm").on('submit', function(e) {
-                    e.preventDefault();
-                    const email = $("#email").val();
-                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                    // Check email format before proceeding
-                    if (!emailPattern.test(email)) {
-                        $("#EmailNotValid").text("Please enter a valid email address!");
-                        return; // Stop form submission if email is invalid
-                    }
-
-                    // Proceed with password reset if email is valid
-                    $.ajax({
-                        type: 'POST',
-                        url: "forgetPassProcessing.php", // This is your existing processing PHP file
-                        data: { email: email },
-                        success: function(data) {
-                            if (data.trim() === "email_sent") {
-                                $("#forgetpass").html("<p>Password reset instructions have been sent to your email.</p>");
-                            } else {
-                                $("#EmailNotValid").text("An error occurred. Please try again.");
-                            }
-                        },
-                        error: function() {
-                            $("#EmailNotValid").text("An error occurred while processing your request.");
-                        }
-                    });
-                });
-            });
-        </script>-->
         <script type="text/javascript">
          $(document).ready(function(){
             $("#ForgotPasswordForm").on('submit', function(e){
@@ -155,8 +90,6 @@
                 success:function(data){
                     $(".form-message").css("display","block");
                     $("#forgetpass").html(data);
-
-
                 }
             })
          })
