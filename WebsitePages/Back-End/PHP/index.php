@@ -10,6 +10,8 @@
             crossorigin="anonymous" referrerpolicy="no-referrer">
         <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
         <!--  Fonts Link  -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -433,17 +435,53 @@
                 <div id="contact-us">
                     <div class="container a-container" id="a-container">
                         <!-- u need to reActivate it when hosted on the web -->
-                        <form class="form" id="a-form" action="b0a7d8effe4beb48f2b0dfe6f7d90d9f" method="POST">
+                        <form class="form" id="a-form" method="POST" >
                             <h2 class="form_title title">Contact Us</h2>
                             <h4 style="text-align:center">Get in touch</h4>
-                            <input name="cname" class="form__input" type="text" placeholder="Company Name" required>
-                            <input name="email" class="form__input" type="email" placeholder="Email" required>
-                            <input name="password" class="form__input" type="text" placeholder="Phone Number" required>
-                            <textarea name="message" class="form__input" type="text" placeholder="Message" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
+                            <input name="cname" class="form__input" id="cname" type="text" placeholder="Company Name" required>
+                            <input name="email" class="form__input" id="email"  type="email" placeholder="Email" required>
+                            <input name="phone" class="form__input" id="phone"  type="tel" placeholder="Phone Number" required>
+                            <textarea name="message" class="form__input" id="msg"  type="text" placeholder="Message" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
                             <input type="submit" name="submit" class="form__button button submit" id="button" value="Send Message">
+                            <div id="msgSent" style="color: #003f91;"></div>
                         </form>
                     </div>
                 </div>
+
+
+
+                <script type="text/javascript">
+
+            $(document).ready(function(){
+            $("#a-form").on('submit', function(e){
+            e.preventDefault();
+            var cname = $("#cname").val();
+            var email = $("#email").val();
+            var phone = $("#phone").val();
+            var msg = $("#msg").val();
+
+
+            $.ajax({
+
+                type:'POST',
+                url:"contactUs.php",
+                data:{ cname:cname,
+                       email:email,
+                       phone:phone,
+                       msg:msg
+                },
+
+                success:function(data){
+                    $("#msgSent").html(data);
+
+
+                }
+            })
+         })
+        })
+    </script>
+
+
 
             <script>
                 function auto_grow(element) {
