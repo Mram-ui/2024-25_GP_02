@@ -67,9 +67,9 @@
             <br>
         <form class="form" id="resetPasswordForm">
 
-            <input name="newpass" id="newpass" class="form__input"  type="password" placeholder="New Password" required>
+            <input name="newpass" id="newpass" class="form__input"  type="password" placeholder="Enter New Password" required>
             <div class="errorMessage" id="newPassNotValid"></div>
-            <input name="confirmpass" id="confirmpass" class="form__input"  type="password" placeholder="Confirm Password" required>
+            <input name="confirmpass" id="confirmpass" class="form__input"  type="password" placeholder="Confirm New Password" required>
             <div id="passerr"></div>
 
 
