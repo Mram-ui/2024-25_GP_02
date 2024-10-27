@@ -24,7 +24,6 @@
         if ($logoResult->num_rows > 0) {
             $logoRow = $logoResult->fetch_assoc();
             $logo = $logoRow['Logo'];
-            echo "Logo from DB: " . $logo;
         } else {
             $logo = null;
         }
