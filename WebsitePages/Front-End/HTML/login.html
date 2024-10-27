@@ -11,13 +11,13 @@
         #EmailNotValid {
             color: red;
             font-size: 0.9em;
-            margin-right: 22%;
+            margin-right: 20.6%;
         }  
         
         #EmailExsit {
             color: red;
             font-size: 0.9em;
-            margin-right: 24%;
+            margin-right: 23%;
         }
 
         
@@ -40,9 +40,14 @@
         #LogoNotValid {
             color: red;
             font-size: 0.9em;
-            margin-right: 16%;
+            margin-right: 12%;
         }
         
+        #PasswrodNotMatch {
+            color: red;
+            font-size: 0.9em;
+            margin-right: 11%;
+        }
     </style>
   </head>
   <body>
@@ -57,8 +62,8 @@
           <input name="semail" class="form__input" type="email" placeholder="Email" required>
           <input name="spassword" class="form__input" type="password" placeholder="Password" required>
           <div class="error-message" id="PassEmailError"></div>
-          <a id="forgotpass" class="form__link" href="../../Back-End/PHP/forgotpass.php">Forgot your password?</a>
-          <button class="form__button button submit">LOG IN</button>
+          <a id="forgotpass" class="form__link" href="../../Back-End/PHP/forgotpass.php">Forgot Your Password?</a>
+          <button style="margin-top: 5%;" class="form__button button submit">LOG IN</button>
         </form>
       </div>
 
@@ -78,13 +83,15 @@
           <!-- Password -->
           <input name="password" class="form__input" type="password" id="password" placeholder="Password" required>
           <div class="errorMessage" id="PasswrodNotValid"></div>
+          <input name="password" id="confirmpass" class="form__input" type="password" placeholder="Confirm Password" required>
+          <div class="errorMessage" id="PasswrodNotMatch"></div>
 
           <!-- Logo Upload (Preserved Style) -->
           <label class="Clogo" name="logo" id="label" style="width:63.5%; color: grey; font-size:13px;"> Company logo: <br>  
           <input type="file" name="logo" id="logo" accept="image/png, image/jpeg"> </label>
           <div class="errorMessage" id="LogoNotValid"></div>
           
-          <input type="submit" name="submit" class="form__button button submit" id="button" value="SIGN UP">
+          <input style="margin-top: 5%;" type="submit" name="submit" class="form__button button submit" id="button" value="SIGN UP">
         </form>
       </div>
 
@@ -190,7 +197,7 @@
             if (file) {
                 const validFormats = ["image/png", "image/jpeg"];
                 if (!validFormats.includes(file.type)) {
-                    errorMessage.innerText = "Please upload a PNG or JPG image only.";
+                    errorMessage.innerText = "Please upload a PNG or JPEG image only.";
                     logoInput.value = ""; 
                     return;
                 }
@@ -202,6 +209,37 @@
                     return;
                 }
             }
+        });
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmpass');
+            const errorMessage = document.getElementById('PasswrodNotMatch');
+            const form = document.getElementById("a-form");
+
+            function displayErrorOnBlur() {
+                if (password.value !== confirmPassword.value) {
+                    errorMessage.textContent = 'Passwords do not match! Please try again.';
+                    errorMessage.style.color = 'red';
+                }
+            }
+
+            function removeErrorOnInput() {
+                if (password.value === confirmPassword.value) {
+                    errorMessage.textContent = '';
+                }
+            }
+
+            confirmPassword.addEventListener('blur', displayErrorOnBlur);
+
+            confirmPassword.addEventListener('input', removeErrorOnInput);
+
+            form.addEventListener("submit", function(event) {
+                if (password.value !== confirmPassword.value) {
+                    errorMessage.textContent = 'Passwords do not match! Please try again.';
+                    event.preventDefault();
+                }
+            });
         });
     </script>
     <script src="../JavaScript/login.js"></script>
