@@ -353,7 +353,7 @@
 
                 <div class="buttonss">
                     <div class="button">
-                        <button class="reset" name='submit' id="resetPassword" value='0' onclick="alert('Reset Password feature is not available yet.');">Reset Password</button>
+                        <button style="width:180px" class="reset" name='submit' id="resetPassword" value='0' onclick="alert('Change Password feature is not available yet.');">Change Password</button>
                     </div>
 
                     <div class="button">
