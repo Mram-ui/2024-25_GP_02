@@ -1,16 +1,15 @@
 <?php
 
-session_start();
-
-include("dbConnection.php");
-
-if(isset($_POST['cname']) && isset($_POST['email']) && isset($_POST['phone']) && isset($_POST['msg'])){
-
-    $cname=$_POST['cname'];
-    $email=$_POST['email'];
-    $phone=$_POST['phone'];
-    $msg=$_POST['msg'];
-
+            session_start();
+            
+            include("dbConnection.php");
+            
+            if(isset($_POST['cname']) && isset($_POST['email']) && isset($_POST['phone']) && isset($_POST['msg'])){
+            
+                $cname=$_POST['cname'];
+                $email=$_POST['email'];
+                $phone=$_POST['phone'];
+                $msg=$_POST['msg'];
     
                 /**
                  * This example shows settings to use when sending via Google's Gmail servers.
@@ -86,22 +85,10 @@ if(isset($_POST['cname']) && isset($_POST['email']) && isset($_POST['phone']) &&
                     echo "Mailer Error: . $mail->ErrorInfo ";
                 }
                  else {
-                    echo "<br> We got your message! we will contact you back soon";
+                    echo "<br> We got your message! We will contact you back soon";
                 }
-                
-
-
-        
             }
             else{
-                echo 'please fill out all the information';
+                echo 'Please fill out all the information';
             }
-
-    
-
-
-
-
-
-
 ?>
