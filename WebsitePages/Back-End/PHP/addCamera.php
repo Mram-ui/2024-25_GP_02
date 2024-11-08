@@ -52,7 +52,7 @@
             $stmt->bind_param("ssisssi", $cameraName, $cameraIP, $portNo, $stream, $cameraUsername, $cameraPassword, $CompanyID);
 
             if ($stmt->execute()) {
-                $message = 'Camera added successfully!';
+                echo "<script> alert('Camera added successfully!'); </script>";
                 echo "<script>
                         localStorage.removeItem('cameraFormData');
                         window.location.href='../../Back-End/PHP/cameras.php'; 
