@@ -5,9 +5,12 @@ import datetime
 
 # Define the model path
 MODEL_PATH = 'Yolo/yolo11s.pt'
-VIDEO_SOURCES = [0]  # List of video sources (0 for webcam, or file paths)
+video1 = "rtsp://Raqeeb1:raqeebCCTV2025@192.168.8.46:554/stream1"
+video2 = "rtsp://Raqeeb2:raqeebCCTV2025@192.168.8.45:554/stream1"
 
-def run_tracker_in_thread(model_path, video_source):
+VIDEO_SOURCES = [video1, video2]  # List of video sources (0 for webcam, or file paths)
+
+def run_tracker_in_thread(model_path, video_source, db):
     """
     Run YOLO tracker in a thread for concurrent processing.
 
@@ -61,7 +64,8 @@ def run_tracker_in_thread(model_path, video_source):
             current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             # Append the people count and time to the array
             people_counts_with_time.append({"time": current_time, "people_count": people_count})
-
+            print({"Source": video_source, "time": current_time, "people_count": people_count})
+            print('db stored: ', db)
             # Display the number of people in the frame
             text = f"People count: {people_count}"
             cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
@@ -83,7 +87,7 @@ def run_tracker_in_thread(model_path, video_source):
 # Create and start threads for each video source
 threads = []
 for source in VIDEO_SOURCES:
-    thread = threading.Thread(target=run_tracker_in_thread, args=(MODEL_PATH, source), daemon=True)
+    thread = threading.Thread(target=run_tracker_in_thread, args=(MODEL_PATH, source, VIDEO_SOURCES.index(source)), daemon=True)
     threads.append(thread)
     thread.start()
 
@@ -92,3 +96,6 @@ for thread in threads:
     thread.join()
 
 cv2.destroyAllWindows()
+
+
+
