@@ -10,12 +10,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <style>
             
-            #EmailNotValid {
-                color: red;
-                font-size: 0.9em;
-                margin-right: 12%;
-            } 
-            
             .form__input {
                 margin-top: 3%;
                 margin-bottom: 0%;
@@ -53,7 +47,7 @@
             }
             
             .form__button {
-                margin-top: 4%;
+                margin-top: 2%;
             }
                 
         </style>
@@ -70,30 +64,32 @@
                 <form class="form" id="ForgotPasswordForm">
                     <br>
                     <input name="femail" class="form__input" id="email" type="email" placeholder="Email" required>
-                    <div class="errorMessage" id="EmailNotValid"></div>
+                    <div class="form-message" id='msg'></div>
                     <button type='submit' class="form__button button submit">SEND</button>
-                  </form>
-                  <div class="form-message" id='msg'></div>
+                </form>
             </div>
         </div>
-        <script type="text/javascript">
-         $(document).ready(function(){
-            $("#ForgotPasswordForm").on('submit', function(e){
-            e.preventDefault();
-            var email = $("#email").val();
-            $.ajax({
-
-                type:'POST',
-                url:"forgetPassProcessing.php",
-                data:{email:email},
-
-                success:function(data){
-                    $(".form-message").css("display","block");
-                    $("#forgetpass").html(data);
-                }
-            })
-         })
-        })
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#ForgotPasswordForm").on('submit', function(e) {
+                e.preventDefault();
+                var email = $("#email").val();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: "forgetPassProcessing.php",
+                    data: {email: email},
+                    success: function(response) {
+                        $(".form-message").css("display", "block");
+                        $("#msg").html(response);
+                    },
+                    error: function() {
+                        $(".form-message").css("display", "block");
+                        $("#msg").html("An error occurred. Please try again.");
+                    }
+                });
+            });
+        });
     </script>
     </body>
 </html>
