@@ -21,8 +21,28 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <script type="text/javascript" src="jquery-1.3.2.js"> </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+       
+            var grbData = $.ajax({
+        type : "GET",
+        url : "http://grb.sonoma.edu:81/getgrbs.php",
+        data : "start=0&perPage=3",
+        success: function (html) {
+            $("#ajaxDiv").html(html);
+        }
+});
+       });
+       
+       </script>
+
+
 
     <script>
+        
         // Function to fetch latest people count data
         async function fetchPeopleCount() {
             try {
@@ -33,9 +53,29 @@
                 data.forEach(item => {
                     const hallElement = document.getElementById(`hall-${item.HallID}`);
                     if (hallElement) {
+
+                        $.ajax({
+                                type : "POST",
+                                url : "../../Back-End/PHP/getThreshold.php",
+                                data:{ hallID:item.HallID
+                                     },
+                                success: function (data) {
+                                    var threshold = data;
+                                }
+                        });
                         
                     const count = item.Count || 0; // Fallback to 0 if Count is null
+                    
                     hallElement.innerHTML = `Current Visitors: ${count}`;
+                    if (threshold!=-1){
+                        if(threshold<count){
+                            document.getElementById('alert').innerHTML = `hall ${item.HallName} is above the set people limit! please take action`;
+                            document.getElementById('alert').style.display = 'block';
+                        }
+                        else{
+                            document.getElementById('alert').style.display = 'none';
+                        }
+                    }
                     totalCount += count; // Add the count to the total
                     // console.log('item.Count =', count, ' for HallID:', item.HallID);
                     }
@@ -104,6 +144,8 @@
                     document.getElementById('EventTime').innerText = formattedTime;
 
                 </script>
+
+                <div id="alert" style="background-color: rgba(255, 108, 108, 0.714);"></div>
 
                 {% endfor %}
             </div>
