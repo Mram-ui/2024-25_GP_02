@@ -23,6 +23,9 @@
         <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
         <title>Home</title>
         <style>
+            html {
+                scroll-behavior: smooth;
+            }
             .HeaderMain {
                 font-family: Poppins;
                 color: black;
@@ -396,6 +399,7 @@
                     and <br> managed. Make them safer, more enjoyable, and more <br> efficient for both the organizer and
                     the attendees.</p>
                 <a class="btn" href="#aaaallServices">Our Solutions</a>
+                <div id="AboutUs"> </div>
             </div>
         </header>
 
@@ -432,6 +436,7 @@
                         </div>
                     </div>
                 </div>
+               
                 <div id="contact-us">
                     <div class="container a-container" id="a-container">
                         <!-- u need to reActivate it when hosted on the web -->
@@ -450,8 +455,7 @@
 
 
 
-                <script type="text/javascript">
-
+    <script type="text/javascript">
             $(document).ready(function(){
             $("#a-form").on('submit', function(e){
             e.preventDefault();
