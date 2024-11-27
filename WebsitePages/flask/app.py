@@ -355,6 +355,26 @@ def latest_people_count():
         cursor.close()
         connection.close()
 
+
+@app.route('/get_threshold', methods=['POST'])
+def get_threshold():
+    """Fetch the threshold for a specific hall."""
+    hall_id = request.json.get('hallID')  # Expect JSON with hallID
+    connection = get_db_connection()
+    try:
+        cursor = connection.cursor(dictionary=True)
+        query = "SELECT HallThreshold FROM hall WHERE HallID = %s"
+        cursor.execute(query, (hall_id,))
+        result = cursor.fetchone()
+        if result:
+            return jsonify({"threshold": result["HallThreshold"]}), 200
+        else:
+            return jsonify({"threshold": -1}), 404  # Return -1 if no threshold found
+    finally:
+        cursor.close()
+        connection.close()
+
+
 if __name__ == '__main__':
     #camera_data = get_shared_camera_data()
     app.run(debug=True, port=5000)

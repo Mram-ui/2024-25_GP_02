@@ -21,85 +21,77 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <script type="text/javascript" src="jquery-1.3.2.js"> </script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script type="text/javascript">
 
-        $(document).ready(function() {
-       
-            var grbData = $.ajax({
-        type : "GET",
-        url : "http://grb.sonoma.edu:81/getgrbs.php",
-        data : "start=0&perPage=3",
-        success: function (html) {
-            $("#ajaxDiv").html(html);
-        }
-});
-       });
-       
-       </script>
+// Function to fetch thresholds
+async function fetchThreshold(hallID) {
+    try {
+        const response = await fetch('/get_threshold', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ hallID }),
+        });
+        const data = await response.json();
+        return data.threshold; // Return the threshold value
+    } catch (error) {
+        console.error(`Error fetching threshold for HallID ${hallID}:`, error);
+        return -1; // Default to -1 if there's an error
+    }
+}
 
+// Function to fetch the latest people count data
+async function fetchPeopleCount() {
+    try {
+        const response = await fetch('/latest_people_count');
+        const data = await response.json();
 
+        let totalCount = 0;
+        const alertElement = document.getElementById('alert');
 
-    <script>
-        
-        // Function to fetch latest people count data
-        async function fetchPeopleCount() {
-            try {
-                const response = await fetch('/latest_people_count');
-                const data = await response.json();
-                // Update the UI with the latest data
-                let totalCount = 0;
-                data.forEach(item => {
-                    const hallElement = document.getElementById(`hall-${item.HallID}`);
-                    if (hallElement) {
+        for (const item of data) {
+            const hallElement = document.getElementById(`hall-${item.HallID}`);
+            if (hallElement) {
+                const count = item.Count || 0; // Fallback to 0 if Count is null
+                hallElement.innerHTML = `Current Visitors: ${count}`;
 
-                        $.ajax({
-                                type : "POST",
-                                url : "../../Back-End/PHP/getThreshold.php",
-                                data:{ hallID:item.HallID
-                                     },
-                                success: function (data) {
-                                    var threshold = data;
-                                }
-                        });
-                        
-                    const count = item.Count || 0; // Fallback to 0 if Count is null
-                    
-                    hallElement.innerHTML = `Current Visitors: ${count}`;
-                    if (threshold!=-1){
-                        if(threshold<count){
-                            document.getElementById('alert').innerHTML = `hall ${item.HallName} is above the set people limit! please take action`;
-                            document.getElementById('alert').style.display = 'block';
-                        }
-                        else{
-                            document.getElementById('alert').style.display = 'none';
-                        }
+                // Fetch threshold for the hall
+                const threshold = await fetchThreshold(item.HallID);
+
+                if (threshold !== -1) {
+                    if (count > threshold) {
+                        alertElement.innerHTML = `Hall ${item.HallName} is above the set people limit! Please take action.`;
+                        alertElement.style.display = 'block';
+                    } else {
+                        alertElement.style.display = 'none';
                     }
-                    totalCount += count; // Add the count to the total
-                    // console.log('item.Count =', count, ' for HallID:', item.HallID);
-                    }
+                } else {
+                    console.log(`Threshold not set for HallID ${item.HallID}`);
+                }
 
-
-                });
-            // Update the totalCountTag with the total count
-            const totalCountTag = document.getElementById(`totalCountTag`);
-            if (totalCountTag) {
-                totalCountTag.innerHTML = `${totalCount || 0}`;
-                // console.log('totalCountTag =', totalCount);
+                totalCount += count; // Add the count to the total
             }
-
-            // Log totalCount once (for debugging)
-            console.log('Total Visitors:', totalCount);
-
-        } catch (error) {
-            console.error("Error fetching people count:", error);
-        }
         }
 
-        // Periodically fetch data every 5 seconds
-        setInterval(fetchPeopleCount, 5000);
-        fetchPeopleCount() // Initial call
+        // Update the totalCountTag with the total count
+        const totalCountTag = document.getElementById('totalCountTag');
+        if (totalCountTag) {
+            totalCountTag.innerHTML = `${totalCount || 0}`;
+        }
+
+        // Log totalCount for debugging
+        console.log('Total Visitors:', totalCount);
+    } catch (error) {
+        console.error('Error fetching people count:', error);
+    }
+}
+
+// Periodically fetch data every 5 seconds
+setInterval(fetchPeopleCount, 5000);
+fetchPeopleCount(); // Initial call
     </script>
 
 </head>

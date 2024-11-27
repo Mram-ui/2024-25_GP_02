@@ -338,7 +338,7 @@ def frame_handler(frame, session_id, hall_id):
     """
     Process a frame to detect people, add bounding boxes, and log time, people count, and session ID.
     """
-    results = model.track(frame, conf=0.45, persist=True, tracker="botsort.yaml")
+    results = model.track(frame, conf=0.3, persist=True, tracker="botsort.yaml")
     people_count = 0
 
     # Process detections to count people
