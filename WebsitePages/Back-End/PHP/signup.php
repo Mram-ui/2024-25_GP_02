@@ -5,7 +5,6 @@
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
 
-
     $servername = "localhost"; 
     $username = "root";
     $password = "root";
@@ -19,15 +18,17 @@
     }
 
     if (isset($_POST['email'])) {
+        $email = $_POST['email'];
         $select = "SELECT * FROM company WHERE Email = ?";
         $stmt = $connection->prepare($select);
-        $stmt->bind_param("s", $_POST['email']);
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+        
         if ($result->num_rows > 0) {
-            echo '<script> alert("This email is already being used! Please log in instead.");
-                   window.location.href="../../Front-End/HTML/login.html?error=invalid_credentialsUP";</script>';
-            exit();
+            echo json_encode(['exists' => true]);
+        } else {
+            echo json_encode(['exists' => false]);
         }
     }
 
