@@ -4,9 +4,10 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Log In</title>
-
     <link rel="stylesheet" type="text/css" href="../CSS/login.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <style>
         #EmailNotValid {
             color: red;
@@ -47,6 +48,12 @@
             color: red;
             font-size: 0.9em;
             margin-right: 11%;
+        }
+        
+        .main {
+            height: 670px;
+            width: 1010px;
+            margin-top: 5%;
         }
     </style>
   </head>
@@ -137,7 +144,33 @@
             document.getElementById('EmailNotValid').innerText = emailErrorMessage;
             document.getElementById('PasswrodNotValid').innerText = passwordErrorMessage;
 
+            if (!isValidEmail(email.value)) {
+                isValid = false;
+                document.getElementById('EmailExsit').innerText = 'This email is already being used!';
+            }
+
             return isValid;
+        }
+
+        function isValidEmail(email) {
+            let isEmailValid = true;
+            $.ajax({
+                type: 'POST',
+                url: '../../Back-End/PHP/signup.php', 
+                data: { email: email },
+                dataType: 'json',
+                async: false,
+                success: function(response) {
+                    if (response.exists) {
+                        isEmailValid = false;
+                    }
+                },
+                error: function() {
+                    $('#EmailExsit').text('An error occurred while checking the email.');
+                    isEmailValid = false;
+                }
+            });
+            return isEmailValid;
         }
 
         window.onload = function() {
@@ -186,7 +219,7 @@
                 }
             });
         };
-        
+
         document.getElementById("logo").addEventListener("change", function() {
             const logoInput = document.getElementById("logo");
             const errorMessage = document.getElementById("LogoNotValid");
@@ -201,16 +234,16 @@
                     logoInput.value = ""; 
                     return;
                 }
-           
+
                 const maxSize = 15 * 1024 * 1024;
                 if (file.size > maxSize) {
-                    errorMessage.innerText = "The image size should not exceed 15 MB!";
+                        errorMessage.innerText = "The image size should not exceed 15 MB!";
                     logoInput.value = ""; 
                     return;
                 }
             }
         });
-        
+
         document.addEventListener("DOMContentLoaded", function() {
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirmpass');
