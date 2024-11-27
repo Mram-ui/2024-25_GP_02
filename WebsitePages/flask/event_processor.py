@@ -10,7 +10,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from flask import Flask
 # YOLO model path
-MODEL_PATH = '../../Yolo/thisIsTheBestWallah.pt'
+MODEL_PATH = '../../Yolo/yolo11s.pt'
+
 model = YOLO(MODEL_PATH)
 
 
@@ -204,7 +205,7 @@ def start_frame_reading():
     
 def scheduler():
     sched = BackgroundScheduler(daemon=True)
-    sched.add_job(session_scheduler,'interval',seconds=60, next_run_time=datetime.datetime.now())
+    sched.add_job(session_scheduler,'interval',seconds=600, next_run_time=datetime.datetime.now())
     sched.start()
     print("Scheduler started. Latest Session ID updated:", latest_session_id)
     # Shut down the scheduler when exiting the app
@@ -303,32 +304,6 @@ def save_to_database():
         db_connection.close()
 
 
-# def process_frame(frame, session_id):
-#     """
-#     Process a frame to detect people, add bounding boxes, and log time, people count, and session ID.
-#     """
-#     results = model.track(frame, conf=0.45, persist=True, tracker="botsort.yaml")
-#     people_count = 1
-
-#     # Process detections to count people
-#     for result in results:
-#         for box in result.boxes:
-#             if int(box.cls) == 0:  # Check if the detected class is 'person'
-#                 people_count += 1
-#                 if box.id is not None:
-#                     x1, y1, x2, y2 = map(int, box.xyxy[0])
-#                     # Draw bounding box
-#                     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-#                     person_id = box.id[0]
-#                     cv2.putText(frame, f"ID: {person_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-
-#     # Get the current time
-#     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-#     # Return data as a dictionary
-#     return {"people_count": people_count, "timestamp": current_time, "session_id": session_id}
-
 def frame_handler(frame, session_id, hall_id):
     """
     Receives frames with a session ID from app.py, processes them, and stores people count with timestamp and session ID.
@@ -344,7 +319,7 @@ def frame_handler(frame, session_id, hall_id):
     # Process detections to count people
     for result in results:
         for box in result.boxes:
-            if int(box.cls) == 1:  # Check if the detected class is 'person'
+            if int(box.cls) == 0:  # Check if the detected class is 'person' >> person: 0, head: 1
                 people_count += 1
                 if box.id is not None:
                     x1, y1, x2, y2 = map(int, box.xyxy[0])

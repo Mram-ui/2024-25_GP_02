@@ -306,23 +306,6 @@ def latest_people_count():
                 pc.Count,
                 pc.Time
             FROM hall
-            LEFT JOIN MonitoredSession ms ON hall.HallID = ms.HallID
-            LEFT JOIN (
-                SELECT 
-                    SessionID, 
-                    MAX(Time) AS LatestTime
-                FROM peoplecount
-                GROUP BY SessionID
-            ) latest ON ms.SessionID = latest.SessionID
-            LEFT JOIN peoplecount pc ON latest.SessionID = pc.SessionID AND latest.LatestTime = pc.Time
-        """
-        query = """
-            SELECT 
-                hall.HallID,
-                hall.HallName,
-                pc.Count,
-                pc.Time
-            FROM hall
             LEFT JOIN (
                 SELECT 
                     HallID, 
@@ -356,20 +339,17 @@ def latest_people_count():
         connection.close()
 
 
-@app.route('/get_threshold', methods=['POST'])
-def get_threshold():
-    """Fetch the threshold for a specific hall."""
-    hall_id = request.json.get('hallID')  # Expect JSON with hallID
+@app.route('/get_all_thresholds', methods=['GET'])
+def get_all_thresholds():
+    """Fetch thresholds for all halls."""
     connection = get_db_connection()
+    event_id = request.args.get('eventID')
     try:
         cursor = connection.cursor(dictionary=True)
-        query = "SELECT HallThreshold FROM hall WHERE HallID = %s"
-        cursor.execute(query, (hall_id,))
-        result = cursor.fetchone()
-        if result:
-            return jsonify({"threshold": result["HallThreshold"]}), 200
-        else:
-            return jsonify({"threshold": -1}), 404  # Return -1 if no threshold found
+        query = "SELECT HallID, HallThreshold AS Threshold FROM hall"
+        cursor.execute(query)
+        data = cursor.fetchall()  # Fetch all thresholds
+        return jsonify(data), 200
     finally:
         cursor.close()
         connection.close()

@@ -43,7 +43,29 @@ async function fetchThreshold(hallID) {
     }
 }
 
-// Function to fetch the latest people count data
+
+let hallsThreshold = {}; // Cache for thresholds
+
+// Function to fetch thresholds for all halls once
+async function fetchAllThresholds() {
+    try {
+        const response = await fetch('/get_all_thresholds'); // Endpoint to fetch all thresholds
+        const data = await response.json();
+        
+
+        // Populate the threshold cache
+        data.forEach(item => {
+            // console.log(item);
+            hallsThreshold[item.HallID] = item.Threshold; // Cache the threshold for each HallID
+        });
+
+        console.log("Threshold updated:", hallsThreshold);
+    } catch (error) {
+        console.error("Error fetching thresholds:", error);
+    }
+}
+
+
 async function fetchPeopleCount() {
     try {
         const response = await fetch('/latest_people_count');
@@ -51,36 +73,51 @@ async function fetchPeopleCount() {
 
         let totalCount = 0;
         const alertElement = document.getElementById('alert');
-
-        for (const item of data) {
+        hallsExceedsThreshold = []
+        
+        data.forEach(item => {
             const hallElement = document.getElementById(`hall-${item.HallID}`);
             if (hallElement) {
                 const count = item.Count || 0; // Fallback to 0 if Count is null
                 hallElement.innerHTML = `Current Visitors: ${count}`;
 
-                // Fetch threshold for the hall
-                const threshold = await fetchThreshold(item.HallID);
-
+                // Use the thresholds
+                const threshold = hallsThreshold[item.HallID] ?? -1; // Fallback to -1 if threshold not found
+                //console.log(threshold);
                 if (threshold !== -1) {
                     if (count > threshold) {
-                        alertElement.innerHTML = `Hall ${item.HallName} is above the set people limit! Please take action.`;
-                        alertElement.style.display = 'block';
+                        // alertElement.innerHTML = `Hall ${item.HallName} is above the set people limit! Please take action.`;
+                        // alertElement.style.display = 'block';
+                        hallsExceedsThreshold.push(item.HallName)
                     } else {
                         alertElement.style.display = 'none';
                     }
                 } else {
                     console.log(`Threshold not set for HallID ${item.HallID}`);
                 }
-
+                console.log(item.HallName, ': ', count)    
                 totalCount += count; // Add the count to the total
             }
-        }
+        });
 
         // Update the totalCountTag with the total count
         const totalCountTag = document.getElementById('totalCountTag');
         if (totalCountTag) {
             totalCountTag.innerHTML = `${totalCount || 0}`;
         }
+
+        let halls = "";
+        length = hallsExceedsThreshold.length
+        for (let i=0; i<length; i++) {
+            if(i == length-1){
+                halls += '(' + hallsExceedsThreshold[i] + ')';
+                alertElement.innerHTML = `Hall ${halls} is above the set people limit! Please take action.`;
+                alertElement.style.display = 'block';
+            } else{
+                halls += '(' + hallsExceedsThreshold[i] + ')' + ', ';
+            }
+        }
+
 
         // Log totalCount for debugging
         console.log('Total Visitors:', totalCount);
@@ -89,9 +126,12 @@ async function fetchPeopleCount() {
     }
 }
 
-// Periodically fetch data every 5 seconds
-setInterval(fetchPeopleCount, 5000);
-fetchPeopleCount(); // Initial call
+// Fetch thresholds once when the page loads
+fetchAllThresholds().then(() => {
+    // Fetch people count every 5 seconds
+    setInterval(fetchPeopleCount, 5000);
+    fetchPeopleCount(); // Initial call
+});
     </script>
 
 </head>
