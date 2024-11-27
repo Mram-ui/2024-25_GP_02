@@ -35,6 +35,9 @@
   - Run the Flask server: <br>
     Once in the project directory, start the Flask server by entering:
   ```
+  python event_processor.py
+  ```
+  ```
   python app.py
   ```
 
