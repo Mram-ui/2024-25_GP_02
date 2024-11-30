@@ -44,40 +44,7 @@
                     $mail->setFrom('raqeeb.project@gmail.com', 'Raqeeb');
                     $mail->addAddress($email, 'User');
                     $mail->Subject = 'Forgot password';
-                    $mail->msgHTML("<html>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Account Reclaim</title>
-
-</head>
-<body style='margin: 0;
-            padding: 0;
-            font-family: 'Montserrat', sans-serif;
-            color: #718089;
-            text-align: center;
-            background-image: url('http://localhost/2024-25_GP_02-main/WebsitePages/images/emailBackground.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
-            display: flex;
-            flex-direction:column;
-            justify-content: center;
-            align-items: center;
-            font-size;13px;'>
-<img style='width:40%; height:auto;text-align:center; margin-bottom:7px;'src= 'http://localhost/2024-25_GP_02-main/WebsitePages/images/Logo2.png'> 
-    <div class='content' style='background: #ecf0f3; padding: 20px; border-radius: 10px;box-shadow:10px 10px 10px #d1d9e6, -10px -10px 10px #f9f9f9;'>
-        <p>Greetings,</p>
-        <p>
-            You have requested to reclaim your account. If the request was made by you, please click 
-            <a href='http://localhost/2024-25_GP_02-main/WebsitePages/Back-End/PHP/reclaimAccount.php?token=$token&email=$email' style=' color: #004aad;'>Here</a>
-        </p>
-        <p>Please note that the reset link will expire in 10 minutes. </p>
-        <p> If you did not make this request, please ignore this email.</p>
-    </div>
-</body>
-</html>");
+                    $mail->msgHTML("<html><body>Greetings, <br> You have requested to reclaim your account, if the request was made by you, please click <a href='http://localhost/2024-25_GP_02-main/WebsitePages/Back-End/PHP/reclaimAccount.php?token=$token&email=$email'>Here</a>. Please note that the reset link will expire in 10 minutes. <br> If you did not make this request, please ignore this email.</body></html>");
                     $mail->AltBody = 'This is a plain-text message body';
 
                     if (!$mail->send()) {
