@@ -173,7 +173,7 @@ def generate_frames(rtsp_link, session_id, hall_id):
             print(f"Failed to open RTSP link: {rtsp_link}")
             return
         fps = cap.get(cv2.CAP_PROP_FPS)  # Get frames per second of the video source
-        frames_to_skip = int(fps * 3)  # Calculate how many frames to skip for 5 seconds
+        frames_to_skip = int(fps * 5)  # Calculate how many frames to skip for 5 seconds
         frame_count = 0  # Counter for frames
         while True:
             success, frame = cap.read() # Read a frame from the video stream.
@@ -208,7 +208,7 @@ def start_frame_reading():
     
 def scheduler():
     sched = BackgroundScheduler(daemon=True)
-    sched.add_job(session_scheduler,'interval',seconds=600, next_run_time=datetime.datetime.now())
+    sched.add_job(session_scheduler,'interval',hours=24, next_run_time=datetime.datetime.now())
     sched.start()
     print("Scheduler started. Latest Session ID updated:", latest_session_id)
     # Shut down the scheduler when exiting the app
@@ -356,9 +356,7 @@ if __name__ == '__main__':
     #camera_data = get_shared_camera_data()
 
     scheduler()
-    print('before sleep')
     time.sleep(0.5)
-    print('after sleep')
     start_frame_reading()
     db_thread = threading.Thread(target=save_to_database, daemon=True).start()
 
@@ -372,5 +370,3 @@ if __name__ == '__main__':
     
 
 
-# DELETE FROM `peoplecount`;
-# ALTER TABLE peoplecount AUTO_INCREMENT = 0 
