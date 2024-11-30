@@ -1,0 +1,575 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    width: 100%;
+    background-color: #e9edf3;
+}
+
+
+
+/* ---- new header style */
+
+            .header {
+                position: fixed;
+                z-index: 200;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background-color: white;
+                padding: 10px 40px;
+                width: 100%;
+                font-weight: bold;  
+            }
+          
+            .header .logo img {
+                height: 60px; 
+                width: auto; 
+                margin-top: 1.5%;
+            }
+   
+            
+            
+           .headerlinks li {
+                text-align: left;
+                margin-left: -134%;
+                list-style: none;
+                display: inline-block;
+                padding: 8px 12px;
+                position: relative;
+                color: black;
+                font-weight: lighter;
+                font-size: 110%;
+            }
+
+            .headerlinks li a {
+                color: #504f4f;
+                text-decoration: none;
+            }
+
+            .headerlinks li::after {
+                content: "";
+                width: 0;
+                height: 2px;
+                background: #4a56ff;
+                display: block;
+                margin: auto;
+                left: 0;
+                bottom: -10px;
+                transition: 0.2s;
+            }
+
+            .headerlinks li:hover::after {
+                width: 100%;
+            }
+
+            .headerlinks li a:hover {
+                color: #4a56ff;
+            }
+
+            .headerlinks li.active a {
+                color: #3B5998;
+            }
+
+            .headerlinks li.active::after {
+                width: 100%;
+            }
+/* ---- END header style */
+
+
+main{
+    display: flex;
+    flex-direction: column;
+    margin: 5% 5%;
+}
+
+main h2{
+    justify-content: start;
+    margin-top: 1.5%;
+    margin-bottom: 0%;
+}
+
+.allEventInformation {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5%;
+    padding: 0px;
+    margin-bottom: 3%;
+
+}
+.eventInformation {
+    background-color: white;
+    border-radius: 15px;
+    padding: 1% 5%;
+    z-index: 0; 
+    position: relative;
+    transition: 0.5s;
+}
+.eventInformation h2{
+    text-align: center
+}
+#totalOfVisitors{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+.infoBoxes{
+    width:min-content;
+    display: flex;
+    justify-content: end;
+}
+
+
+.infoBox {
+    color: black;
+    background-color: white;
+    width: 250px;
+    height: 70px;
+    border-radius: 15px;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    flex-direction: column;
+    padding: 3% 5%;
+    position: relative; 
+    z-index: 0; 
+    height: 220px;
+    padding: 0px 5%;
+    margin: 0 2%;
+    transition: 0.5s;
+}
+
+#numberOfHalls {
+    font-size: 40px;       
+    font-weight: bold;
+    text-align: center;
+}
+
+.infoBox h3 {
+    font-size: 500px;
+    font-weight: bold;
+}
+
+.infoBox::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    background-image: linear-gradient(white, white), 
+    linear-gradient(90deg, rgba(10, 60, 255, 0.7), rgba(10, 60, 255, 0.3), rgba(10, 60, 255, 0.7));
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    animation: moving-border 3s linear infinite; 
+    z-index: -1; 
+}
+
+
+@keyframes moving-border {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 200% 0%;
+    }
+}
+
+.infoBox:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+}
+
+.eventInformation::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    background-image: linear-gradient(white, white),
+    linear-gradient(90deg, rgba(10, 60, 255, 0.7), rgba(10, 60, 255, 0.3), rgba(10, 60, 255, 0.7));
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    animation: moving-border 3s linear infinite;
+    z-index: -1;
+    transition: 0.5s;
+}
+
+@keyframes moving-border {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 200% 0%;
+    }
+}
+
+.eventInformation:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+}
+
+.camera{
+    background-color: white;
+    border-radius: 15px;
+    padding: 1% 6%;
+    padding-bottom: 3%;
+}
+
+#cameraFeeds {
+    width: 95%;
+    min-height: 250px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-bottom: 2%;
+}
+
+.cameraFeed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(33% - 20px);
+    margin-right: 4%;
+    margin-left: 4%;
+    margin-bottom: 2%;
+}
+
+.cameraFeed h3 {
+    text-align: center;
+    margin: 0; 
+    margin-bottom: 2.5%; 
+}
+
+
+.cameraFeeds h3 {
+    margin: 2.5% 2%;
+}
+
+.dot {
+    width: 10px;
+    height: 10px; 
+    background-color: red; 
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 2px; 
+    vertical-align: middle;
+    transform: translateY(-5px);
+}
+
+.cameraFeedImg{
+    border: rgba(10, 60, 255, 0.4) 1px solid;
+    min-width: 250px;
+    min-height: 200px;
+    margin: 5%;
+}
+
+.cameraFeed img {
+    width: 120%;
+    height: auto; 
+    border-radius: 5px;
+}
+
+#cameraFeedImg{
+    
+}
+
+
+/* ---- Footer Style ---- */
+ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+
+.row-contact {
+    align-items: center;
+    align-content: center;
+    display: flex;
+}
+
+.row {
+    display: flex;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.footer-section {
+    background: #151414;
+    position: relative;
+}
+
+.footer-cta {
+    border-bottom: 1px solid #373636;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    display: flex;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.single-cta i {
+    color: #1e52a5;
+    font-size: 30px;
+    margin-bottom: 15%;
+}
+
+
+.cta-text {
+    padding-left: 15px;
+    display: inline-block;
+}
+
+.cta-text h4 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 9%;
+}
+
+.cta-text span {
+    color: #757575;
+    font-size: 15px;
+}
+
+#mail a {
+    color: #757575;
+    transition: 0.25s;
+    text-decoration: none;
+}
+
+#mail a:hover {
+    color: #3B5998;
+    transition: 0.25s;
+}
+
+
+.footer-content {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 1%;
+}
+
+.footer-pattern img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 330px;
+    background-size: cover;
+    background-position: 100% 100%;
+}
+
+.footer-logo {
+    margin-bottom: 0px;
+}
+
+.footer-logo img {
+    max-width: 300px;
+}
+
+.footer-text p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #7e7e7e;
+    line-height: 28px;
+    font-family: Poppins;
+    margin-right: 35%;
+    white-space:nowrap;
+}
+
+.footer-social-icon span {
+    color: #fff;
+    display: block;
+    font-size: 25px;
+    font-weight: 700;
+    margin-top: 5%;
+    margin-bottom: 5px;
+}
+
+.footer-social-icon a {
+    color: #fff;
+    font-size: 16px;
+    margin-right: 15px;
+}
+
+.footer-social-icon i {
+    height: 40px;
+    width: 40px;
+    text-align: center;
+    line-height: 38px;
+    border-radius: 50%;
+    margin-top: 1%;
+    margin-bottom: 3%;
+    transition: 0.25s;
+}
+
+.linkedin-bg {
+    background: #0e76a8;
+}
+
+
+.twitter-bg {
+    background: #000000;
+}
+
+
+.linkedin-bg:hover {
+    background: #0c6590;
+    width: 42px;
+    height: 42px;
+    transition: 0.25s;
+    line-height: 40px;
+}
+
+.twitter-bg:hover {
+    background: #504f4f;
+    width: 42px;
+    height: 42px;
+    transition: 0.25s;
+    line-height: 40px;
+}
+
+
+.footer-widget-heading h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.footer-widget-heading h3::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -15px;
+    height: 2px;
+    width: 50px;
+    background: #3B5998;
+}
+
+.footer-widget ul li {
+    display: inline-block;
+    width: 50%;
+    margin-bottom: 12px;
+    transition: 0.25s;
+    text-decoration: none;
+}
+
+.footer-widget ul li a:hover {
+    color: #3B5998;
+    transition: 0.25s;
+}
+
+.footer-widget ul li a {
+    color: #878787;
+    text-transform: capitalize;
+}
+
+.subscribe-form {
+    position: relative;
+    overflow: hidden;
+}
+
+.subscribe-form input {
+    width: 100%;
+    padding: 14px 28px;
+    background: #2E2E2E;
+    border: 1px solid #2E2E2E;
+    color: #fff;
+}
+
+.subscribe-form button {
+    position: absolute;
+    right: 0;
+    background: #3B5998;
+    padding: 13px 20px;
+    border: 1px solid #3B5998;
+    top: 0;
+    transition: 0.25s;
+}
+
+.subscribe-form button:hover {
+    background: #264078;
+    border: 1px solid #264078;
+    transition: 0.25s;
+}
+
+.subscribe-form button i {
+    color: #fff;
+    font-size: 22px;
+    transform: rotate(-6deg);
+}
+
+.copyright-area {
+    background: #202020;
+    padding: 25px 0;
+}
+
+.copyright-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #878787;
+
+}
+
+.footer-menu li {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.footer-menu li:hover a {
+    color: #3B5998;
+}
+
+.footer-menu li a {
+    font-size: 14px;
+    color: #878787;
+}
+
+/* ---------------END FOOTER ------------------ */
+
+
+/*------------------- camera feed boxes -------------------*/
+
+.video-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.video-stream {
+    margin: 10px;
+    border-color: red;
+    width: 25%;
+    height: auto;
+}
+
+header img {
+    height: 60px;
+    width: auto;
+}
