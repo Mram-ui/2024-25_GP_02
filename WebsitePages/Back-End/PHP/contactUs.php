@@ -20,7 +20,7 @@
                 //This should be done in your php.ini, but this is how to do it if you don't have access to that
                 date_default_timezone_set('Asia/Riyadh');
                 
-                require '../../PHPMailer/PHPMailerAutoload.php';
+                require 'PHPMailer/PHPMailerAutoload.php';
                 
                 //Create a new PHPMailer instance
                 $mail = new PHPMailer;
