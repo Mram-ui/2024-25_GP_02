@@ -32,7 +32,7 @@
 
                     date_default_timezone_set('Asia/Riyadh');
 
-                    require '../../PHPMailer/PHPMailerAutoload.php';
+                    require '../../Back-End/PHP/PHPMailer/PHPMailerAutoload.php';
                     $mail = new PHPMailer;
                     $mail->isSMTP();
                     $mail->Host = 'smtp.gmail.com';
