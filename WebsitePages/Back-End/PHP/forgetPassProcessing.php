@@ -56,7 +56,7 @@
             font-family: 'Montserrat', sans-serif;
             color: #718089;
             text-align: center;
-            background-image: url('http://localhost/2024-25_GP_02-main/WebsitePages/images/emailBackground.png'); /* Replace with your image path */
+            background-image: url('http://localhost/2024-25_GP_02-main/WebsitePages/images/emailBackground.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
