@@ -224,6 +224,82 @@
             .profileLogo {
                 margin-left: 5%;
             }
+                
+            .logout {
+                --black: #000000;
+                --ch-black: #141414;
+                --eer-black: #1b1b1b;
+                --night-rider: #2e2e2e;
+                --white: #ffffff;
+                --af-white: #f3f3f3;
+                --ch-white: #e1e1e1;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                width: 60px;
+                height: 40px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                position: relative;
+                overflow: hidden;
+                transition-duration: .3s;
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+                background-color: #e10000;
+              }
+
+              .sign {
+                width: 100%;
+                transition-duration: .3s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .sign svg {
+                width: 17px;
+              }
+
+              .sign svg path {
+                fill: var(--white);
+              }
+              
+              .text {
+                position: absolute;
+                right: 0%;
+                width: 0%;
+                opacity: 0;
+                color: var(--white);
+                font-size: 1.1em;
+                font-weight: 600;
+                transition-duration: .3s;
+                font-family: 'Montserrat', sans-serif;
+              }
+              
+              .logout:hover {
+                width: 130px;
+                border-radius: 5px;
+                transition-duration: .3s;
+                background-color: #cc0000;
+              }
+
+              .logout:hover .sign {
+                width: 30%;
+                transition-duration: .3s;
+                padding-left: 20px;
+              }
+              
+              .logout:hover .text {
+                opacity: 1;
+                width: 70%;
+                transition-duration: .3s;
+                padding-right: 10px;
+              }
+              
+              .logout:active {
+                transform: translate(2px ,2px);
+              }
+       
         </style>
 
         <script>
@@ -332,7 +408,37 @@
         <div class="main">
             <a id='arrow' href="../../Back-End/PHP/userHome.php"><i class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
             <h2 class="title">Profile</h2>
-            <button id="EditBtn" onclick="alert('Edit feature is not available yet.');">Edit</button>
+            <button 
+                type="button" 
+                style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #007bff; background-color: #007bff; overflow: hidden; transition: all 0.3s; margin-left: 70%;"
+                onmouseover="this.style.backgroundColor='#0056b3'; this.querySelector('.button__text').style.color='transparent'; this.querySelector('.button__icon').style.width='148px'; this.querySelector('.button__icon').style.transform='translateX(0)';"
+                onmouseout="this.style.backgroundColor='#007bff'; this.querySelector('.button__text').style.color='#fff'; this.querySelector('.button__icon').style.width='39px'; this.querySelector('.button__icon').style.transform='translateX(109px)';"
+                onmousedown="this.style.border='1px solid #004085'; this.querySelector('.button__icon').style.backgroundColor='#004085';"
+                onmouseup="this.style.border='1px solid #007bff'; this.querySelector('.button__icon').style.backgroundColor='#0056b3';">
+
+                <span 
+                    class="button__text" 
+                    style="transform: translateX(35px); color: #fff; font-weight: 600; transition: all 0.3s; font-size: 120%; margin-left: 2%; font-family: 'Montserrat', sans-serif;">
+                    Edit
+                </span>
+                <span 
+                    class="button__icon" 
+                    style="position: absolute; transform: translateX(109px); height: 100%; width: 39px; background-color: #0056b3; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                    <svg 
+                        style="width: 25px; color: white;" 
+                        aria-hidden="true" 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        fill="none">
+                        <path 
+                            stroke="currentColor" 
+                            stroke-linecap="round" 
+                            stroke-linejoin="round" 
+                            stroke-width="1.3" 
+                            d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                    </svg>
+                </span>
+            </button>
 
             <div class="profileLogo">
                 <div class="profile">
@@ -353,11 +459,14 @@
 
                 <div class="buttonss">
                     <div class="button">
-                        <button style="width:180px" class="reset" name='submit' id="resetPassword" value='0' onclick="alert('Change Password feature is not available yet.');">Change Password</button>
+                        <button style="width:185px; border-radius: 5px; font-family: 'Montserrat', sans-serif; margin-left: -7%;" class="reset" name='submit' id="resetPassword" value='0'>Change Password</button>
                     </div>
 
                     <div class="button">
-                        <button class="logout" id="LogoutBtn" onclick="confirmLogout(event)">Logout</button>
+                        <button class="logout" id="LogoutBtn" onclick="confirmLogout(event)"">
+                            <div class="sign"><svg viewBox="0 0 512 512"><path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path></svg></div>
+                                <div class="text">Logout</div>
+                       </button>
                     </div>
                 </div>
             </form>
