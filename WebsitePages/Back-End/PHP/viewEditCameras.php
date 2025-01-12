@@ -202,6 +202,69 @@
             #title {
                 margin-left: -10%;
             }
+            
+            .button {
+                position: relative;
+                border-radius: 6px;
+                width: 150px;
+                height: 40px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                border: 1px solid #cc0000;
+                background-color: #e50000;
+                overflow: hidden;
+                margin-right: 5%;
+              }
+
+              .button,
+              .button__icon,
+              .button__text {
+                transition: all 0.3s;
+              }
+
+              .button .button__text {
+                transform: translateX(35px);
+                color: #fff;
+                font-weight: 600;
+              }
+
+              .button .button__icon {
+                position: absolute;
+                transform: translateX(109px);
+                height: 100%;
+                width: 39px;
+                background-color: #cc0000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .button .svg {
+                width: 20px;
+              }
+
+              .button:hover {
+                background: #cc0000;
+              }
+
+              .button:hover .button__text {
+                color: transparent;
+              }
+
+              .button:hover .button__icon {
+                width: 148px;
+                transform: translateX(0);
+              }
+
+              .button:active .button__icon {
+                background-color: #b20000;
+              }
+
+              .button:active {
+                border: 1px solid #b20000;
+              }
+
         </style>
     </head>
     <body>
@@ -244,7 +307,20 @@
             <div class="headerTitle">
                 <a id='arrow' href="../../Back-End/PHP/cameras.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
                 <h2 class="title" id="title">Camera Details</h2>
-                <button class="EditBtn" onclick="alert('Edit feature is not available yet.');">Edit</button>
+                <button class="button" type="button" 
+                      style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #007bff; background-color: #007bff; overflow: hidden; transition: all 0.3s; margin-left: 108%;"
+                      onmouseover="this.style.backgroundColor='#0056b3'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
+                      onmouseout="this.style.backgroundColor='#007bff'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
+                      onmousedown="this.style.border = '1px solid #004085'; this.querySelector('.button__icon').style.backgroundColor = '#004085';"
+                      onmouseup="this.style.border = '1px solid #007bff'; this.querySelector('.button__icon').style.backgroundColor = '#0056b3';">
+
+                      <span class="button__icon" style="position: absolute; left: 0; height: 100%; width: 39px; background-color: #0056b3; display: flex; align-items: center; justify-content: center; transition: width 0.3s, transform 0.3s;">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                        </svg>
+                      </span>
+                      <span class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 10px; ">Edit</span>
+                </button>
             </div>
 
             <form id='addcam' class="form" method="POST" action="../../Back-End/PHP/addCamera.php">
@@ -267,7 +343,55 @@
                     <input name="cameraPassword" class="form__input" type="text" value="<?= str_repeat('*' . ' ', $passwordLength); ?>" required readonly>
             </form>
 
-            <button class="DeleteBtn" onclick="alert('Delete feature is not available yet.');">Delete Camera</button>
+                <button class="button" type="button">
+                    <span class="button__text">Delete</span>
+                    <span class="button__icon"
+                      ><svg
+                        class="svg"
+                        height="512"
+                        viewBox="0 0 512 512"
+                        width="512"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <title></title>
+                        <path
+                          d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
+                          style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                        ></path>
+                        <line
+                          style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px"
+                          x1="80"
+                          x2="432"
+                          y1="112"
+                          y2="112"
+                        ></line>
+                        <path
+                          d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
+                          style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                        ></path>
+                        <line
+                          style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                          x1="256"
+                          x2="256"
+                          y1="176"
+                          y2="400"
+                        ></line>
+                        <line
+                          style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                          x1="184"
+                          x2="192"
+                          y1="176"
+                          y2="400"
+                        ></line>
+                        <line
+                          style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"
+                          x1="328"
+                          x2="320"
+                          y1="176"
+                          y2="400"
+                        ></line></svg
+                    ></span>
+                </button>
         </div>
         <script>
              function enableEditing() {
