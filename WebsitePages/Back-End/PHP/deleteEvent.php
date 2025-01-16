@@ -21,15 +21,22 @@
             exit();
         }
 
+        $deleteHallsSQL = "DELETE FROM hall WHERE EventID = '$eventId'";
+
+        if ($conn->query($deleteHallsSQL) !== TRUE) {
+            echo json_encode(array("success" => false, "message" => "Error deleting halls: " . $conn->error));
+            exit();
+        }
+
         $sql = "DELETE FROM events WHERE EventID = '$eventId'";
 
         if ($conn->query($sql) === TRUE) {
-            echo json_encode(array("success" => true));
+            echo json_encode(array("success" => true, "message" => "Event and associated halls deleted successfully."));
         } else {
             echo json_encode(array("success" => false, "message" => "Error deleting event: " . $conn->error));
         }
     } else {
-        echo json_encode(array("success" => false, "message" => "event ID is missing."));
+        echo json_encode(array("success" => false, "message" => "Event ID is missing."));
     }
 
     $conn->close();
