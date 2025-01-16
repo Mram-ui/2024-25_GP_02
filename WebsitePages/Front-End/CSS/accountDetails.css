@@ -316,3 +316,18 @@ body {
 }
 
 
+.button {
+    width: 180px;
+    height: 50px;
+    border-radius: 15px;
+    margin-top: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.15px;
+    background-color: #004aad;
+    color: #f9f9f9;
+    box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #f9f9f9;
+    border: none;
+    outline: none;
+    transition: 0.5s;
+}
