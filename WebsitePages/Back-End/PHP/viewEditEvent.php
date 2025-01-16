@@ -447,8 +447,14 @@
                 </a>
                 <h2 class="title" id="title">Event Details</h2>
 
-                <?php if (strtotime($eventData['EventEndDate']) > time()): ?>
-                    <button class="button" type="button" 
+                <?php 
+                    date_default_timezone_set('Asia/Riyadh');
+                    $now = new DateTime();
+                    $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+                    $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+                    if ($endDate >= $now && $startDate <= $now || $startDate > $now):
+                ?>
+                    <button id="editButton" onclick="enableEditing()" class="button" type="button" 
                       style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #007bff; background-color: #007bff; overflow: hidden; transition: all 0.3s; margin-left: 135%;"
                       onmouseover="this.style.backgroundColor='#0056b3'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
                       onmouseout="this.style.backgroundColor='#007bff'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
@@ -460,7 +466,7 @@
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.3" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                         </svg>
                       </span>
-                      <span class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 10px;">Edit</span>
+                      <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Edit</span>
                     </button>
                 <?php endif; ?>
             </div>
@@ -504,7 +510,7 @@
                             <label id="HMAX" for="hallName">Hall Name:</label><br>
                             <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
                             <label for="cameraName">Camera:</label><br>
-                            <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php echo htmlspecialchars($hall['CameraName']); ?>" required readonly><br>
+                            <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php if ($hall['CameraName']==""){echo "No camera is currently connected to this hall";} else {echo htmlspecialchars($hall['CameraName']);} ?>" required readonly><br>
                             <label id="HMAX" for="hallThreshold">Hall Max Capacity:</label><br>
                             <input id="HInput" name="hallThreshold" class="form__input" type="text" placeholder="ex:100" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
                         </div>
@@ -516,7 +522,13 @@
                 <br>
             </form>
 
-            <?php if (strtotime($eventData['EventEndDate']) < time() || strtotime($eventData['EventStartDate']) > time()):?>
+            <?php 
+                date_default_timezone_set('Asia/Riyadh');
+                $now = new DateTime();
+                $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+                $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+                if ($endDate < $now || $startDate > $now):
+                ?>
                 <button id="deleteTrigger" class="button" type="button">
                   <span class="button__text">Delete</span>
                   <span class="button__icon"
@@ -940,5 +952,48 @@
             closePopupHandler();
           });
           </script>
+          
+          <!--   EDIT SCRIPT   -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const editButton = document.querySelector('#editButton');
+                const deleteButton = document.querySelector('#deleteTrigger');
+                const editSpan = document.querySelector('#edit');
+                const inputs = document.querySelectorAll('.form__input');
+
+                // Track editing state
+                let isEditing = false; 
+
+                editButton.addEventListener('click', function () {
+                    if (!isEditing) {
+                        // Enable editing mode
+                        enableEditing();
+
+                        // Hide delete button and change edit button text to SAVE
+                        deleteButton.style.display = 'none';
+                        editSpan.innerText = 'Save';
+
+                        isEditing = true;
+                    } else {
+                        // Save the changes
+                        saveChanges();
+
+                        // Revert buttons to original state (Display)
+                        deleteButton.style.display = 'block';
+                        editSpan.innerText = 'Edit';
+
+                        isEditing = false;
+                    }
+                });
+
+                function enableEditing() {
+                    inputs.forEach(input => {
+                        input.removeAttribute('readonly');
+                        input.style.border = '1px solid white';
+                        input.style.backgroundColor = '#f4f7ff';
+                    });
+                }
+            });
+        </script>
     </body>
 </html>
