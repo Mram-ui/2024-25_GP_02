@@ -341,7 +341,7 @@
                     if (link.href.includes(currentPath)) {
                         item.classList.add('active');
                     }
-                });
+                });        
             </script>
             <nav></nav>
         </header>
@@ -408,7 +408,8 @@
         <div class="main">
             <a id='arrow' href="../../Back-End/PHP/userHome.php"><i class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
             <h2 class="title">Profile</h2>
-            <button 
+            <button id="editButton"
+                onclick="enableEditing()"
                 type="button" 
                 style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #007bff; background-color: #007bff; overflow: hidden; transition: all 0.3s; margin-left: 70%;"
                 onmouseover="this.style.backgroundColor='#0056b3'; this.querySelector('.button__text').style.color='transparent'; this.querySelector('.button__icon').style.width='148px'; this.querySelector('.button__icon').style.transform='translateX(0)';"
@@ -416,7 +417,7 @@
                 onmousedown="this.style.border='1px solid #004085'; this.querySelector('.button__icon').style.backgroundColor='#004085';"
                 onmouseup="this.style.border='1px solid #007bff'; this.querySelector('.button__icon').style.backgroundColor='#0056b3';">
 
-                <span 
+                <span id="edit"
                     class="button__text" 
                     style="transform: translateX(35px); color: #fff; font-weight: 600; transition: all 0.3s; font-size: 120%; margin-left: 2%; font-family: 'Montserrat', sans-serif;">
                     Edit
@@ -424,13 +425,13 @@
                 <span 
                     class="button__icon" 
                     style="position: absolute; transform: translateX(109px); height: 100%; width: 39px; background-color: #0056b3; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
-                    <svg 
+                    <svg
                         style="width: 25px; color: white;" 
                         aria-hidden="true" 
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24" 
                         fill="none">
-                        <path 
+                        <path
                             stroke="currentColor" 
                             stroke-linecap="round" 
                             stroke-linejoin="round" 
@@ -469,16 +470,125 @@
                        </button>
                     </div>
                 </div>
-            </form>
 
-            <div id="overlay"></div>
-            <div id="logoutModal">
-                <p>Are you sure you want to log out?</p>
-                <div class="modal-buttons">
-                    <button class="logoutC" onclick="logoutConfirmed()">Logout</button>
-                    <button class="cancelC" onclick="cancelLogout()">Cancel</button>
-                </div>
+            </form>
+            
+            
+
+        <div id="logoutModal" style="
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            width: 300px; 
+            z-index: 1000; 
+            padding: 20px;">
+            <div style="text-align: center;">
+              <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Logout?</p>
+              <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to log out?</p>
             </div>
-        </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+              <button id="cancelButton" onclick="cancelLogout()" style="
+                background-color: #f0f0f0; 
+                color: black; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                width: 45%;">Cancel</button>
+              <button id="confirmDeleteButton" onclick="logoutConfirmed()" style="
+                background-color: #e50000; 
+                color: white; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                 width: 45%;">Logout</button>
+            </div>
+            <button id="closePopup" style="
+              position: absolute; 
+              top: 10px; 
+              right: 10px; 
+              background: none; 
+              border: none; 
+              cursor: pointer;">
+              <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
+                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div id="overlay" style="
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 999;"></div>
+            
+            <script>
+                const popup = document.getElementById('logoutModal');
+                const overlay = document.getElementById('overlay');            
+                const closePopup = document.getElementById('closePopup');
+
+                const closePopupHandler = () => {
+                  popup.style.display = 'none';
+                  overlay.style.display = 'none';
+                };
+                        
+                closePopup.addEventListener('click', closePopupHandler);
+            </script>
+            
+            <!--   EDIT SCRIPT   -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const editButton = document.querySelector('#editButton');
+                    const logoutButton = document.querySelector('#LogoutBtn');
+                    const changePasswordButton = document.querySelector('#resetPassword');
+                    const editSpan = document.querySelector('#edit');         
+                    const inputs = document.querySelectorAll('.form__input');
+
+                     // Track editing state
+                    let isEditing = false;
+
+                    editButton.addEventListener('click', function () {
+                        if (!isEditing) {
+                            // Enable editing mode
+                            enableEditing();
+
+                            // Hide buttons and change edit button text to SAVE
+                            logoutButton.style.display = 'none';
+                            changePasswordButton.style.display = 'none';
+                            editSpan.innerText = 'Save';
+
+                            isEditing = true;
+                        } else {
+                            // Save the changes (After EDIT)
+                            saveChanges();
+
+                            // Revert buttons to original state (DISPLAY)
+                            logoutButton.style.display = 'block';
+                            changePasswordButton.style.display = 'block';
+                            editSpan.innerText = 'Edit';
+
+                            isEditing = false;
+                        }
+                    });
+
+                    function enableEditing() {
+                        inputs.forEach(input => {
+                            input.removeAttribute('readonly');
+                            input.style.border = '1px solid white';
+                            input.style.backgroundColor = '#f4f7ff';
+                        });
+                    }
+                });
+            </script>
     </body>
 </html>
