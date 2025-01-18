@@ -6,6 +6,8 @@ import os
 import time
 from datetime import datetime
 from datetime import timedelta
+import threading
+
 
 '''
 This Dictionary is usefull when saving the model results 
@@ -13,6 +15,9 @@ by tracking all the 'Active' sessions for each hall.
 Every 24hr a new session will be created for each hall.
 '''
 latest_session_id={} # key: hall_id, value: session_id
+
+# Global dictionary to store camera status
+camera_status = {}
 
 data={}
 
@@ -201,6 +206,7 @@ def home():
                 'rtsp_link': rtsp_link,
                 'eventID' : event_id,
             })
+            camera_status[camera['CameraName']] = "unknown"  # Initialize camera status
 
 
     # Retrieve event information
@@ -216,18 +222,24 @@ def home():
     connection.close()
 
     # Pass the camera data to the template
-    return render_template('dashboard.html', cameras=detailed_camera_data, eventData=event_data, numOfHalls=numOfHalls)
+    return render_template('dashboard.html', cameras=detailed_camera_data, eventData=event_data, camera_status=camera_status, numOfHalls=numOfHalls)
 
 
-# This function is called by 2 function: initialize_camera_threads and video_feed 
+# This function is called by video_feed 
 def generate_frames(rtsp_link, CameraName):
     cap = cv2.VideoCapture(rtsp_link)
     if not cap.isOpened():
         print(f"Failed to open RTSP link: {rtsp_link}")
+        camera_status[CameraName] = "down"  # Mark camera status as 'failed'
         return
+
+    camera_status[CameraName] = "up"  # Mark the camera as active
+    
     while True:
         success, frame = cap.read()
         if not success:
+            camera_status[CameraName] = "down"  # Mark the camera as disconnected if frame reading fails
+            print('status down. Failed to fetch a frame')
             break
 
 
@@ -235,7 +247,20 @@ def generate_frames(rtsp_link, CameraName):
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
         yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')    
+                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+    cap.release()
+
+def monitor_camera_connections():
+    """Background thread to monitor the camera connections."""
+    print('monitor_camera_connections Thread')
+    while True:
+        for CameraName, status in camera_status.items():
+            if status == "down":
+                print(f"Camera {CameraName} is down. Attempting reconnection...")
+                # Optional: Implement reconnection logic here
+        time.sleep(5)  # Check the connection status every 5 seconds
+
 
 
 # This function is accessed from dashboard.html to display cameras feeds
@@ -321,7 +346,13 @@ def get_all_thresholds():
         cursor.close()
         connection.close()
 
+@app.route('/camera_status', methods=['GET'])
+def get_camera_status():
+    """Endpoint to fetch the current status of all cameras."""
+    return jsonify(camera_status)
 
 if __name__ == '__main__':
     #camera_data = get_shared_camera_data()
+    # Start background thread to monitor camera connections
+    threading.Thread(target=monitor_camera_connections, daemon=True).start()
     app.run(debug=True, port=5000)
