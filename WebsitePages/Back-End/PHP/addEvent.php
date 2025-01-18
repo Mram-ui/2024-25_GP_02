@@ -527,12 +527,126 @@
                     
                     $conn->commit();
 
-                   echo "<script>
-                        alert('New event added successfully!');
-                        localStorage.removeItem('eventData');
-                        localStorage.removeItem('hallData');
-                        window.location.href = 'userHome.php';
-                        exit;       
+                    echo "<script type='text/javascript'>                                         
+                    const overlay = document.createElement('div');
+                    overlay.style.position = 'fixed';
+                    overlay.style.top = '0';
+                    overlay.style.left = '0';
+                    overlay.style.width = '100vw';
+                    overlay.style.height = '100vh';
+                    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                    overlay.style.zIndex = '999';
+                
+                    const notificationsContainer = document.createElement('div');
+                    notificationsContainer.classList.add('notifications-container');
+                    notificationsContainer.style.position = 'fixed';
+                    notificationsContainer.style.top = '50%';
+                    notificationsContainer.style.left = '50%';
+                    notificationsContainer.style.transform = 'translate(-50%, -50%)';
+                    notificationsContainer.style.zIndex = '1000';
+                    notificationsContainer.style.width = '320px';
+                    notificationsContainer.style.fontSize = '0.875rem';
+                    notificationsContainer.style.lineHeight = '1.25rem';
+                
+                    const successNotification = document.createElement('div');
+                    successNotification.style.padding = '1.25rem';
+                    successNotification.style.borderRadius = '0.75rem';
+                    successNotification.style.backgroundColor = 'rgb(240 253 244)';
+                    successNotification.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+                    successNotification.style.transition = 'all 0.3s ease';
+                    successNotification.style.border = '1px solid rgba(74, 222, 128, 0.2)';
+                
+                    const flexContainer = document.createElement('div');
+                    flexContainer.style.display = 'flex';
+                
+                    const iconContainer = document.createElement('div');
+                    iconContainer.style.flexShrink = '0';
+                
+                    const icon = document.createElement('svg');
+                    icon.setAttribute('aria-hidden', 'true');
+                    icon.setAttribute('fill', 'currentColor');
+                    icon.setAttribute('viewBox', '0 0 20 20');
+                    icon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                    icon.style.width = '1.5rem';
+                    icon.style.height = '1.5rem';
+                    icon.style.color = 'rgb(74 222 128)';
+                    icon.style.filter = 'drop-shadow(0 0 8px rgba(74, 222, 128, 0.4))';
+                    icon.innerHTML = `<path clip-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z' fill-rule='evenodd'></path>`;
+                    iconContainer.appendChild(icon);
+                
+                    const textContainer = document.createElement('div');
+                    textContainer.style.marginLeft = '1rem';
+                
+                    const heading = document.createElement('p');
+                    heading.style.fontWeight = '700';
+                    heading.style.color = 'rgb(22 101 52)';
+                    heading.style.fontSize = '1.05rem';
+                    heading.style.display = 'flex';
+                    heading.style.alignItems = 'center';
+                    heading.style.gap = '0.5rem';
+                    heading.innerText = 'Event Added';
+                    const checkmark = document.createElement('span');
+                    checkmark.classList.add('checkmark');
+                    checkmark.innerText = '✓';
+                    heading.appendChild(checkmark);
+                
+                    const prompt = document.createElement('p');
+                    prompt.style.marginTop = '0.75rem';
+                    prompt.style.color = 'rgb(21 128 61)';
+                    prompt.style.lineHeight = '1.5';
+                    prompt.innerText = 'Event has been added successfully!';
+                
+                    textContainer.appendChild(heading);
+                    textContainer.appendChild(prompt);
+                
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.style.display = 'flex';
+                    buttonContainer.style.justifyContent = 'flex-end';
+                    buttonContainer.style.marginTop = '1rem';
+                    buttonContainer.style.gap = '0.75rem';
+                
+                    const closeButton = document.createElement('button');
+                    closeButton.classList.add('success-button-main');
+                    closeButton.type = 'button';
+                    closeButton.innerText = 'OK';
+                    closeButton.style.padding = '0.5rem 1rem';
+                    closeButton.style.backgroundColor = 'rgb(22 101 52)';
+                    closeButton.style.color = 'white';
+                    closeButton.style.fontSize = '0.875rem';
+                    closeButton.style.fontWeight = '600';
+                    closeButton.style.borderRadius = '0.5rem';
+                    closeButton.style.border = 'none';
+                    closeButton.style.transition = 'all 0.2s ease';
+                    closeButton.style.boxShadow = '0 2px 8px rgba(22, 101, 52, 0.2)';
+                    closeButton.addEventListener('mouseenter', () => {
+                        closeButton.style.backgroundColor = 'rgb(21 128 61)';
+                        closeButton.style.transform = 'translateY(-1px)';
+                        closeButton.style.boxShadow = '0 4px 12px rgba(22, 101, 52, 0.3)';
+                    });
+                    closeButton.addEventListener('mouseleave', () => {
+                        closeButton.style.backgroundColor = 'rgb(22 101 52)';
+                        closeButton.style.transform = 'none';
+                        closeButton.style.boxShadow = '0 2px 8px rgba(22, 101, 52, 0.2)';
+                    });
+                
+                    closeButton.addEventListener('click', () => {
+                        document.body.removeChild(overlay);
+                        document.body.removeChild(notificationsContainer);
+                        window.location.href = '../../Back-End/PHP/userHome.php';
+                    });
+                
+                    buttonContainer.appendChild(closeButton);
+                
+                    flexContainer.appendChild(iconContainer);
+                    flexContainer.appendChild(textContainer);
+                    successNotification.appendChild(flexContainer);
+                    successNotification.appendChild(buttonContainer);
+                    notificationsContainer.appendChild(successNotification);
+    
+    
+                    localStorage.removeItem('cameraFormData');
+                    document.body.appendChild(overlay);
+                    document.body.appendChild(notificationsContainer);
                     </script>";
 
                 } catch (Exception $e) {
