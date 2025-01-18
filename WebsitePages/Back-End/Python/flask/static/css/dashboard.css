@@ -89,6 +89,48 @@ body {
             }
 /* ---- END header style */
 
+/* camera-status style */
+#camera-status {
+    margin-bottom: 3%;
+    max-width: 35%;
+
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 15px;
+    padding: 1% 2%;
+    z-index: 0; 
+    position: relative;
+    transition: 0.5s;
+
+}
+
+#camera-status::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    background-image: linear-gradient(white, white),
+    linear-gradient(90deg, rgba(10, 60, 255, 0.7), rgba(10, 60, 255, 0.3), rgba(10, 60, 255, 0.7));
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    animation: moving-border 3s linear infinite;
+    z-index: -1;
+    transition: 0.5s;
+}
+
+@keyframes moving-border {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 200% 0%;
+    }
+}
+
 
 main{
     display: flex;
@@ -108,7 +150,6 @@ main h2{
     margin-top: 5%;
     padding: 0px;
     margin-bottom: 3%;
-
 }
 .eventInformation {
     background-color: white;
