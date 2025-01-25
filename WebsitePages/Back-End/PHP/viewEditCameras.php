@@ -33,7 +33,6 @@
         $cameraData = $cameraResult->fetch_assoc();
         $passwordLength = strlen($cameraData['CameraPassword']);
     } else {
-        echo "<script>alert('Camera not found');</script>";
         exit; 
     }
 
@@ -49,8 +48,7 @@
         <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/boxes.css">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
         <style>
             .header {
@@ -269,7 +267,11 @@
                   background-color: #e0e0e0;
                   transition: 0.25s;
               }
-
+              
+              .error-message {
+                color: red;
+                font-size: 0.9em;
+              }      
         </style>
     </head>
     <body>
@@ -312,7 +314,7 @@
             <div class="headerTitle">
                 <a id='arrow' href="../../Back-End/PHP/cameras.php"><i  class="fa fa-chevron-left" style="color: #003f91; font-size: 30px; justify-self: end;"></i></a>
                 <h2 class="title" id="title">Camera Details</h2>
-                <button id="editButton" onclick="enableEditing()" class="button" type="button" 
+                <button id="editButton" onclick="enableEditing()" class="button" type="button submit" 
                       style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #007bff; background-color: #007bff; overflow: hidden; transition: all 0.3s; margin-left: 108%;"
                       onmouseover="this.style.backgroundColor='#0056b3'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
                       onmouseout="this.style.backgroundColor='#007bff'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
@@ -326,17 +328,34 @@
                       </span>
                     <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Edit</span>
                 </button>
+                
+                <button onclick="saveChanges()" id="saveButton" class="button submit" type="submit" 
+                      style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #2e8b57; background-color: #2e8b57; overflow: hidden; transition: all 0.3s;  margin-left: 108%; display: none;"
+                      onmouseover="this.style.backgroundColor='#226740'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
+                      onmouseout="this.style.backgroundColor='#2e8b57'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
+                      onmousedown="this.style.border = '1px solid #194f31'; this.querySelector('.button__icon').style.backgroundColor = '#194f31';"
+                      onmouseup="this.style.border = '1px solid #2e8b57'; this.querySelector('.button__icon').style.backgroundColor = '#226740'; ">
+                      <span class="button__icon" style="position: absolute; left: 0; height: 100%; width: 39px; background-color: #226740; display: flex; align-items: center; justify-content: center; transition: width 0.3s, transform 0.3s;">
+                       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
+                       </svg>
+                      </span>
+                    <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Save</span>
+                </button>
             </div>
 
-            <form id='addcam' class="form" method="POST" action="../../Back-End/PHP/addCamera.php">
+            <form id='cameraForm' class="form" method="POST" action="" onsubmit="return validateForm();">
                 <label id='lable' for="cameraName">Camera Name:</label>
-                <input name="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraName']); ?>" required readonly>
+                <input name="cameraName" id="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraName']); ?>" required readonly>
+                <div class="error-message" id="cameraNameError"><?php echo isset($message) ? ($message === 'The camera name is already in your list. Please choose a different name.' ? $message : '') : ''; ?></div>
 
                 <label id='lable' for="cameraIP">Camera IP Address:</label>
-                <input name="cameraIP" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraIPAddress']); ?>" required readonly>
+                <input name="cameraIP" id="cameraIP" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraIPAddress']); ?>" required readonly>
+                <div class="error-message" id="IPError"></div>
 
                 <label id='lable' for="portNo">Port Number:</label>
-                <input name="portNo" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['PortNo']); ?>" required readonly>
+                <input name="portNo" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['PortNo']); ?>" min="1" required readonly>
+                <div class="error-message" id="portError"></div>
 
                 <label id='lable' for="stream">Streaming Channel:</label>
                 <input name="stream" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['StreamingChannel']); ?>" required readonly>
@@ -345,7 +364,7 @@
                 <input name="cameraUsername" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraUsername']); ?>" required readonly>
 
                 <label id='lable' for="cameraPassword">Camera Password:</label>
-                    <input name="cameraPassword" class="form__input" type="text" value="<?= str_repeat('*' . ' ', $passwordLength); ?>" required readonly>
+                <input id="cameraPassword" name="cameraPassword" class="form__input" type="password" value="<?= htmlspecialchars($cameraData['CameraPassword']); ?>" required readonly>
             </form>
 
                 <button id="deleteTrigger" class="button" type="button">
@@ -395,8 +414,23 @@
                           y1="176"
                           y2="400"
                         ></line></svg
-                    ></span>
-                </button>
+                   ></span>
+               </button>
+                <button id="cancel" class="button" type="button" 
+                      style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: none; align-items: center; border: 1px solid #cc0000; background-color: #e50000; overflow: hidden; transition: all 0.3s; margin-left: 108%;"
+                      onmouseover="this.style.background='#cc0000'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
+                      onmouseout="this.style.background='#e50000'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
+                      onmousedown="this.style.border = '1px solid #b20000'; this.querySelector('.button__icon').style.backgroundColor = '#b20000';"
+                      onmouseup="this.style.border = '1px solid #cc0000'; this.querySelector('.button__icon').style.backgroundColor = '#cc0000';">
+
+                      <span class="button__icon" style="position: absolute; left: 0; height: 100%; width: 39px; background-color: #cc0000; display: flex; align-items: center; justify-content: center; transition: width 0.3s, transform 0.3s;">
+                       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18 17.94 6M18 18 6.06 6"/>
+                      </svg>
+
+                      </span>
+                    <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: -1px;">Cancel</span>
+               </button>
         </div>
         
         <div id="popup" style="
@@ -463,7 +497,8 @@
           const overlay = document.getElementById('overlay');
           const cancelButton = document.getElementById('cancelButton');
           const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-          const closePopup = document.getElementById('closePopup');
+          const closePopup = document.getElementById('closePopup');          
+          
 
           const getCameraIdFromURL = () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -481,7 +516,6 @@
           };
           cancelButton.addEventListener('click', closePopupHandler);
           closePopup.addEventListener('click', closePopupHandler);
-          overlay.addEventListener('click', closePopupHandler);
 
           confirmDeleteButton.addEventListener('click', async () => {
             const cameraId = getCameraIdFromURL();
@@ -764,81 +798,336 @@
           });
         </script>
         
+            <div id="popupCancel" style=" 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            width: 300px; 
+            z-index: 1000; 
+            padding: 20px;">
+            <div style="text-align: center;">
+              <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Cancel Changes?</p> 
+              <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to discard the changes?</p> 
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+              <button id="cancelButtonForCancel" style=" 
+                background-color: #f0f0f0; 
+                color: black; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                width: 45%;">Cancel</button>
+              <button id="confirmRemoveUpdatesButton" style=" 
+                background-color: #e50000; 
+                color: white; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                 width: 45%;">Confirm</button> 
+            </div>
+            <button id="closePopupForCancel" style="
+              position: absolute; 
+              top: 10px; 
+              right: 10px; 
+              background: none; 
+              border: none; 
+              cursor: pointer;">
+              <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
+                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+              </svg>
+            </button>
+           </div>
+          <div id="overlayForCancel" style="
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 999;"></div>
+               
+        
          <!--   EDIT SCRIPT   -->
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const editButton = document.querySelector('#editButton'); 
-                const deleteButton = document.querySelector('#deleteTrigger');
-                const editSpan = document.querySelector('#edit');
-                const inputs = document.querySelectorAll('.form__input'); 
+            document.addEventListener("DOMContentLoaded", function () {
+                const editButton = document.querySelector("#editButton");
+                const saveButton = document.querySelector("#saveButton");
+                const deleteButton = document.querySelector("#deleteTrigger");
+                const cancelButton = document.querySelector("#cancel");
+                const cancelPopup = document.querySelector("#popupCancel");
+                const overlay = document.querySelector("#overlayForCancel");
+                const closePopupButton = document.querySelector("#closePopupForCancel");
+                const confirmRemoveUpdatesButton = document.querySelector("#confirmRemoveUpdatesButton");
+                const cancelButtonForCancel = document.querySelector("#cancelButtonForCancel");
+                const popupContent = document.querySelector("#popupCancel");
+                const inputs = document.querySelectorAll(".form__input");
+                const cameraIPInput = document.getElementById("cameraIP");
+                const passwordInput = document.getElementById("cameraPassword");
+                const portInput = document.querySelector("input[name='portNo']");
+                const ipError = document.getElementById("IPError");
+                const portError = document.getElementById("portError");
 
-                // Track editing state
                 let isEditing = false;
+                let originalValues = {};
+                let ipValid = false;
+                let ipErrorShown = false;
+                let portValid = false;
+                let portErrorShown = false;
 
-                editButton.addEventListener('click', function () {
+                editButton.addEventListener("click", function () {
                     if (!isEditing) {
-                        // Enable editing mode
                         enableEditing();
-
-                        // Hide delete button and change edit button text to SAVE
-                        deleteButton.style.display = 'none';
-                        editSpan.innerText = 'Save';
-
+                        inputs.forEach((input) => {
+                            originalValues[input.name] = input.value;
+                        });
+                        toggleButtons(false);
                         isEditing = true;
-                    } else {
-                        // Save the changes
-                        saveChanges();
-
-                        // Revert buttons to original state
-                        deleteButton.style.display = 'block';
-                        editSpan.innerText = 'Save';
-
-                        isEditing = false;
                     }
                 });
 
-                function enableEditing() {
-                    inputs.forEach(input => {
-                        input.removeAttribute('readonly');
-                        input.style.border = '1px solid white';
-                        input.style.backgroundColor = '#f4f7ff';
-                    });
+                cancelButton.addEventListener("click", function () {
+                    if (isEditing && hasChanges()) {
+                        showCancelPopup();
+                    } else {
+                        resetState();
+                    }
+                });
+
+                closePopupButton.addEventListener("click", hideCancelPopup);
+                cancelButtonForCancel.addEventListener("click", hideCancelPopup);
+
+                confirmRemoveUpdatesButton.addEventListener("click", function () {
+                    resetState();
+                    hideCancelPopup();
+                });
+
+                overlay.addEventListener("click", function (e) {
+                    if (!popupContent.contains(e.target)) {
+                        e.stopPropagation();
+                    }
+                });
+
+                popupContent.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                });
+
+                saveButton.addEventListener("click", function (event) {
+                    if (isEditing) {
+                        validateIP();
+                        validatePort();
+                        if (!ipValid || !portValid) {
+                            event.preventDefault();
+                        } else {
+                            const form = document.querySelector("form");
+                            form.submit();
+                        }
+                    }
+                });
+
+                cameraIPInput.addEventListener("blur", function () {
+                    if (cameraIPInput.value.trim() !== "") {
+                        validateIP();
+                    }
+                });
+
+                cameraIPInput.addEventListener("input", function () {
+                    if (ipErrorShown) {
+                        validateIP();
+                    }
+                });
+
+                function validateIP() {
+                    const ipAddress = cameraIPInput.value.trim();
+                    const ipPattern = /^(?:\d{1,3}\.){3}\d{1,3}$/;
+
+                    if (!ipPattern.test(ipAddress)) {
+                        ipValid = false;
+                        ipErrorShown = true;
+                        ipError.innerText = "Please enter a valid IP address (e.g., 000.000.0.000).";
+                    } else {
+                        ipValid = true;
+                        ipErrorShown = false;
+                        ipError.innerText = "";
+                    }
                 }
 
-                function saveChanges() {
-                    const updatedData = {};
+                portInput.addEventListener("blur", function () {
+                    if (portInput.value.trim() !== "") {
+                        validatePort();
+                    }
+                });
 
-                    // Collect updated input data
-                    inputs.forEach(input => {
-                        updatedData[input.name] = input.value;
-                        input.setAttribute('readonly', true);
-                        input.style.border = 'none'; 
+                portInput.addEventListener("input", function () {
+                    if (portErrorShown) {
+                        validatePort();
+                    }
+                });
+
+                function validatePort() {
+                    const portValue = parseInt(portInput.value.trim(), 10);
+
+                    if (isNaN(portValue) || portValue < 1) {
+                        portValid = false;
+                        portErrorShown = true;
+                        portError.innerText = "Port number must be 1 or greater.";
+                    } else {
+                        portValid = true;
+                        portErrorShown = false;
+                        portError.innerText = "";
+                    }
+                }
+
+                function showCancelPopup() {
+                    overlay.style.display = "block";
+                    cancelPopup.style.display = "block";
+                }
+
+                function hideCancelPopup() {
+                    overlay.style.display = "none";
+                    cancelPopup.style.display = "none";
+                }
+
+                function enableEditing() {
+                    inputs.forEach((input) => {
+                        input.removeAttribute("readonly");
+                        input.style.border = "1px solid white";
+                        input.style.backgroundColor = "#f4f7ff";
                     });
+                    if (passwordInput) {
+                        passwordInput.type = "text";
+                    }
+                }
 
-                    // Send the updated data to the server using AJAX
-                    const cameraId = document.querySelector('#cameraId').value;
+                function disableEditing() {
+                    inputs.forEach((input) => {
+                        input.setAttribute("readonly", true);
+                        input.style.border = "none";
+                        input.style.backgroundColor = "#ecf0f3";
+                    });
+                    if (passwordInput) {
+                        passwordInput.type = "password";
+                    }
+                }
 
-                    fetch('updateCamera.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ cameraId, ...updatedData })
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Camera details updated successfully!');
-                            } else {
-                                alert('Error updating camera details: ' + data.message);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while updating the camera details.');
-                        });
+                function toggleButtons(enableEditMode) {
+                    deleteButton.style.display = enableEditMode ? "" : "none";
+                    editButton.style.display = enableEditMode ? "" : "none";
+                    cancelButton.style.display = enableEditMode ? "none" : "";
+                    saveButton.style.display = enableEditMode ? "none" : "";
+                }
+
+                function hasChanges() {
+                    for (let input of inputs) {
+                        if (input.value !== originalValues[input.name]) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                function resetState() {
+                    disableEditing();
+                    inputs.forEach((input) => {
+                        input.value = originalValues[input.name];
+                    });
+                    ipError.innerText = ""; 
+                    portError.innerText = "";
+                    cameraNameError.innerText = "";
+                    toggleButtons(true);
+                    isEditing = false;
                 }
             });
         </script>
+
+        
+        <?php
+        include '../../Back-End/PHP/session.php';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $servername = "localhost";
+            $username = "root";
+            $password = "root";
+            $dbname = "raqeebdb";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            $companyID = $_SESSION['CompanyID'];
+            $cameraId = isset($_GET['cameraId']) ? intval($_GET['cameraId']) : 0;
+
+            $cameraName = $conn->real_escape_string($_POST['cameraName']);
+            $cameraIP = $conn->real_escape_string($_POST['cameraIP']);
+            $portNo = intval($_POST['portNo']);
+            $stream = $conn->real_escape_string($_POST['stream']);
+            $cameraUsername = $conn->real_escape_string($_POST['cameraUsername']);
+            $cameraPassword = $conn->real_escape_string($_POST['cameraPassword']);
+
+            $checkCamera = $conn->prepare("
+                SELECT * 
+                FROM camera 
+                WHERE LOWER(CameraName) = LOWER(?) 
+                AND CompanyID = ? 
+                AND CameraID != ?
+            ");
+            $checkCamera->bind_param("sii", $cameraName, $companyID, $cameraId);
+            $checkCamera->execute();
+            $result = $checkCamera->get_result();
+
+            if ($result->num_rows > 0) {
+                echo "<script>
+                    document.getElementById('cameraNameError').innerText = 'The camera name is already in your list. Please choose a different name.';
+                </script>";
+                exit;
+            }
+
+            $currentPasswordQuery = $conn->prepare("SELECT CameraPassword FROM camera WHERE CameraID = ?");
+            $currentPasswordQuery->bind_param("i", $cameraId);
+            $currentPasswordQuery->execute();
+            $currentPasswordResult = $currentPasswordQuery->get_result();
+            $currentPasswordRow = $currentPasswordResult->fetch_assoc();
+            $currentPassword = $currentPasswordRow['CameraPassword'];
+
+            if ($cameraPassword === $currentPassword) {
+                $updateSql = "
+                    UPDATE camera
+                    SET CameraName = '$cameraName',
+                        CameraIPAddress = '$cameraIP',
+                        PortNo = $portNo,
+                        StreamingChannel = '$stream',
+                        CameraUsername = '$cameraUsername'
+                    WHERE CameraID = $cameraId
+                ";
+            } else {
+                $updateSql = "
+                    UPDATE camera
+                    SET CameraName = '$cameraName',
+                        CameraIPAddress = '$cameraIP',
+                        PortNo = $portNo,
+                        StreamingChannel = '$stream',
+                        CameraUsername = '$cameraUsername',
+                        CameraPassword = '$cameraPassword'
+                    WHERE CameraID = $cameraId
+                ";
+            }
+
+            if ($conn->query($updateSql) === TRUE) {
+                echo "<script>window.location.href = '../../Back-End/PHP/viewEditCameras.php?cameraId=$cameraId';</script>";
+            } else {
+                echo "<script>alert('Error updating camera: " . $conn->error . "'); history.back();</script>";
+            }
+
+            $conn->close();
+        }
+        ?>
     </body>
 </html>
