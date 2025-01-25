@@ -346,7 +346,6 @@
               border-radius: 5px; 
             }
 
-            /* Profile Image Styling */
             .profileLogo {
               position: relative;
               text-align: center;
