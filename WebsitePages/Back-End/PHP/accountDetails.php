@@ -156,7 +156,7 @@
                 z-index: 500;
             }
 
-        .popup {
+            .popup {
                display: none; 
                position: fixed;
                left: 0;
@@ -329,7 +329,6 @@
 
             }
             
-            /* The buttons' default style */
             .uploadButton {
               display: flex;
               justify-content: center;
@@ -569,7 +568,7 @@
 
                 <div class="buttonss">
                     <div>
-                        <button style="width:185px; border-radius: 5px; font-family: 'Montserrat', sans-serif; margin-left: -7%;" class="reset"  id="resetPassword" >Change Password</button>
+                        <button style="width:185px; border-radius: 5px; font-family: 'Montserrat', sans-serif; margin-left: -7%;" class="reset"  id="resetPassword"  type="button" onclick="window.location.href='../../Back-End/PHP/changePassword.php';">Change Password</button>
                     </div>
                     <div>
                         <button class="logout" id="LogoutBtn" onclick="confirmLogout(event)">
@@ -601,8 +600,6 @@
                 </button>
             </form>
             
-            
-
         <div id="logoutModal" style="
             display: none; 
             position: fixed; 
@@ -941,6 +938,23 @@
 
                     cancelButtonForCancel.addEventListener("click", closeCancelPopup);
                     closePopupForCancel.addEventListener("click", closeCancelPopup);
+
+                    emailInput.addEventListener('blur', function () {
+                        emailErrorMessage.innerText = ""; 
+                        emailExistsMessage.innerText = ""; 
+
+                        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailPattern.test(emailInput.value)) {
+                            emailErrorMessage.innerText = "Please enter a valid email address!";
+                        } else if (!isUserOwnEmail(emailInput.value) && !isValidEmail(emailInput.value)) {
+                            emailExistsMessage.innerText = "This email is already being used!";
+                        }
+                    });
+
+                    emailInput.addEventListener('input', function () {
+                        emailErrorMessage.innerText = "";
+                        emailExistsMessage.innerText = "";
+                    });
                 });
             </script>
     
