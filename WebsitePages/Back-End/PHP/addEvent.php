@@ -644,7 +644,8 @@
                     notificationsContainer.appendChild(successNotification);
     
     
-                    localStorage.removeItem('cameraFormData');
+                    localStorage.removeItem('eventData');
+                    localStorage.removeItem('hallData');
                     document.body.appendChild(overlay);
                     document.body.appendChild(notificationsContainer);
                     </script>";
