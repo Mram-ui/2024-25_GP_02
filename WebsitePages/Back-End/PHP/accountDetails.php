@@ -519,7 +519,7 @@
             
             <button id="saveButton"
                 onclick="saveChanges()"
-                type="button" 
+                type="submit" 
                 style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #2e8b57; background-color: #2e8b57; overflow: hidden; transition: all 0.3s; margin-left: 70%; display: none;"
                 onmouseover="this.style.backgroundColor='#226740'; this.querySelector('.button__text').style.color='transparent'; this.querySelector('.button__icon').style.width='148px'; this.querySelector('.button__icon').style.transform='translateX(0)';"
                 onmouseout="this.style.backgroundColor='#2e8b57'; this.querySelector('.button__text').style.color='#fff'; this.querySelector('.button__icon').style.width='39px'; this.querySelector('.button__icon').style.transform='translateX(109px)';"
@@ -539,7 +539,7 @@
                 </span>
             </button>
            
-            <input type="file" id="logo-upload" style="display: none;" accept="image/*">
+            <input type="file" id="logo-upload" style="display: none;" name="logo" accept="image/*">
 
             <div class="profileLogo">
                 <div class="profile">
@@ -549,6 +549,8 @@
                         <img src="../../images/<?php echo $logo ?>" alt="Logo" id="user-logo" class="logo">
                     <?php endif; ?>
                 </div>
+                <input type="hidden" name="currentLogo" value="<?php echo $currentLogoPath; ?>">
+                
                 <button type="file" id="uploadButton" class="uploadButton" style="display: none;">
                     <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                       <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
