@@ -42,7 +42,7 @@
     }
     
     $hallQuery = $conn->prepare("
-        SELECT hall.HallName, hall.HallThreshold, hall.CameraID, camera.CameraName
+        SELECT hall.HallID, hall.HallName, hall.HallThreshold, hall.CameraID, camera.CameraName
         FROM hall
         LEFT JOIN camera ON hall.CameraID = camera.CameraID
         WHERE hall.EventID = ?
@@ -56,7 +56,7 @@
         $halls[] = $hallRow;
     }
     $conn->close();
- ?>
+?>
 
 <html lang="es" dir="ltr">
 
@@ -67,6 +67,7 @@
         <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/boxes.css">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         
         <style>           
             .header {
@@ -224,13 +225,9 @@
                 width: 70%;
             }
 
-            #HInput {
+            .HInput,.camera-name {
                 width: 210%;
                 margin-top: 0%;
-            }
-
-            .AllHalls {
-                margin-left: -29%;
             }
 
             #evenl {
@@ -243,10 +240,61 @@
             }
 
             .AllHalls {
+                margin-left: -29%;
                 display: flex;
                 flex-direction: column; 
                 gap: 10px;
+                display: flex;
             }
+            
+             .AllHalls input.form__input,
+             .AllHalls select.update-camera {
+                 width: 215%; 
+                 max-width: 215%; 
+                 box-sizing: border-box; 
+                 margin: 0;
+                 padding: 8px 12px;
+             }
+
+             .AllHalls {
+                 position: relative; 
+             }
+
+             .error-messageForCamera {
+                 color: red; 
+                 font-size: 14px; 
+                 margin-top: 5px; 
+                 width: 200%; 
+                 position: absolute; 
+                 top: 100%; 
+                 left: 0; 
+                 margin-right: 200%;
+                 visibility: hidden; 
+             }
+
+             .error-messageForCamera.active {
+                 visibility: visible;
+             }
+             
+            #capacityError {
+                 margin-top: 12%;
+             }
+             
+            .capacity-error {
+                 color: red; 
+                 font-size: 14px; 
+                 margin-top: 5px; 
+                 width: 200%; 
+                 position: absolute; 
+                 top: 100%; 
+                 left: 0; 
+                 margin-right: 200%;
+                 visibility: hidden; 
+            }
+            .capacity-error.active {
+                visibility: visible !important;
+            }
+
 
             #hall {
                 margin-top: 1%;
@@ -264,12 +312,13 @@
                 white-space: nowrap; 
 
             }
+            
             .form__input {
                 box-sizing: border-box;
                 padding: 10px;
             }
 
-              #arrow {
+            #arrow {
                 margin-left: -138%;
             }
 
@@ -284,11 +333,6 @@
 
             #HMAX {
                 white-space: nowrap; 
-            }
-
-
-            .AllHalls {
-                display: flex;
             }
 
             .hall {
@@ -396,7 +440,100 @@
               .button:active {
                 border: 1px solid #b20000;
               }
+              
+            .button2 {
+              display: none;
+              transition: all 0.2s ease-in;
+              position: relative;
+              overflow: hidden;
+              z-index: 1;
+              color: #090909;
+              padding: 0.4em 1.1em;
+              cursor: pointer;
+              font-size: 12px;
+              font-family: 'Montserrat', sans-serif;
+              border-radius: 5px;
+              background: #e8e8e8;
+              border: 1px solid #e8e8e8;
+            }
 
+            .button2:active {
+              color: #666;
+              box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+            }
+
+            .button2:before {
+              content: "";
+              position: absolute;
+              left: 50%;
+              transform: translateX(-50%) scaleY(1) scaleX(1.25);
+              top: 100%;
+              width: 140%;
+              height: 180%;
+              background-color: rgba(0, 0, 0, 0.05);
+              border-radius: 50%;
+              display: block;
+              transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+              z-index: -1;
+            }
+
+            .button2:after {
+              content: "";
+              position: absolute;
+              left: 55%;
+              transform: translateX(-50%) scaleY(1) scaleX(1.45);
+              top: 180%;
+              width: 160%;
+              height: 190%;
+              background-color: #cc0000;
+              border-radius: 50%;
+              display: block;
+              transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+              z-index: -1;
+            }
+
+            .button2:hover {
+              color: #ffffff;
+              border: 1px solid #cc0000;
+            }
+
+            .button2:hover:before {
+              top: -35%;
+              background-color: #cc0000;
+              transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+            }
+
+            .button2:hover:after {
+              top: -45%;
+              background-color: #cc0000;
+              transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+            }
+                      
+            #startTimeError {
+                color: red;
+                font-size: 0.9em;
+                margin-left: 15%;
+                margin-top: -4%;
+                margin-bottom: 5%;
+                margin-right: 15%;
+            }  
+            
+            #startDayError {
+                color: red;
+                font-size: 0.9em;
+                margin-right: 10%;
+                margin-top: -7%;
+                margin-bottom: 5%;
+            }  
+            
+            #endDayError {
+                color: red;
+                font-size: 0.9em;
+                margin-left: 15%;
+                margin-top: -4%;
+                margin-bottom: 5%;
+                margin-right: 13%;
+            } 
         </style>
         <script>
             function validateDates() {
@@ -439,7 +576,7 @@
                 </label>
             </nav>
         </header>
-
+        
         <div id="main" class="main">
             <div class="headerTitle">
                 <a id='arrow' href="../../Back-End/PHP/userHome.php">
@@ -467,6 +604,20 @@
                         </svg>
                       </span>
                       <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Edit</span>
+                    </button>
+                
+                    <button onclick="saveChanges()" id="saveButton" class="button saveButton" type="button" 
+                      style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #2e8b57; background-color: #2e8b57; overflow: hidden; transition: all 0.3s; margin-left: 135%; display: none;"
+                      onmouseover="this.style.backgroundColor='#226740'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
+                      onmouseout="this.style.backgroundColor='#2e8b57'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
+                      onmousedown="this.style.border = '1px solid #194f31'; this.querySelector('.button__icon').style.backgroundColor = '#194f31';"
+                      onmouseup="this.style.border = '1px solid #2e8b57'; this.querySelector('.button__icon').style.backgroundColor = '#226740'; ">
+                      <span class="button__icon" style="position: absolute; left: 0; height: 100%; width: 39px; background-color: #226740; display: flex; align-items: center; justify-content: center; transition: width 0.3s, transform 0.3s;">
+                       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
+                       </svg>
+                      </span>
+                      <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Save</span>
                     </button>
                 <?php endif; ?>
             </div>
@@ -500,7 +651,31 @@
                         <input name="endTime" class="form__input time" type="time" value="<?php echo htmlspecialchars($eventData['EventEndTime']); ?>" required readonly> 
                     </div>
                 </div>
-                <div class="AllHalls">
+                <div class="error-message" id="startTimeError"></div>
+                <div class="error-message" id="endDayError"></div>
+                <div class="error-message" id="startDayError"></div>
+                
+                 <!--   Upcoming events:   -->
+                 <?php 
+                    date_default_timezone_set('Asia/Riyadh');
+                    $now = new DateTime();
+                    $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+                    $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+                    if ($startDate > $now):
+                 ?>              
+                    <button id="addHall" class="button add_item_btn" type="button" 
+                      style="position: relative; border-radius: 6px; width: 50px; height: 40px; cursor: pointer; display: flex; align-items: center; border: 1px solid #2e8b57; background-color: #0049ac; overflow: hidden; transition: all 0.3s; margin-right: 14%; margin-top: 0%; display: none;"
+                      onmouseover="this.style.backgroundColor='#123064'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
+                      onmouseout="this.style.backgroundColor='#0049ac'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
+                      onmousedown="this.style.border = '1px solid #0049ac'; this.querySelector('.button__icon').style.backgroundColor = '#0049ac';"
+                      onmouseup="this.style.border = '1px solid #0049ac'; this.querySelector('.button__icon').style.backgroundColor = '#0049ac'; ">
+                       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" style="margin-left: 25%;">;
+                        <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14m-7 7V5"/>
+                      </svg>
+                    </button>
+               <?php endif; ?>
+
+                <div class="AllHalls" id="show_item">
                     <?php 
                         $hallNumber = 1;
                         foreach ($halls as $hall):
@@ -508,12 +683,55 @@
                     <h3 id="hallName">Hall  <?php echo $hallNumber; ?></h3>
                         <div id="hall" class="hall">
                             <label id="HMAX" for="hallName">Hall Name:</label><br>
-                            <input id="HInput" name="hallName" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
-                            <label for="cameraName">Camera:</label><br>
-                            <input id="HInput" name="cameraName" class="form__input" type="text" value="<?php if ($hall['CameraName']==""){echo "No camera is currently connected to this hall";} else {echo htmlspecialchars($hall['CameraName']);} ?>" required readonly><br>
+                            <input style="margin-bottom: 3%;" name="hallName[]" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
+                            <label style="margin-bottom: 0%;" for="cameraName">Camera:</label><br>
+                            <input style="margin-bottom: -3%; margin-top: 1.5%;" id="cameraName" name="cameraName" class="form__input camera-name" type="text" value="<?php if ($hall['CameraName']==""){echo "No camera is currently connected to this hall";} else {echo htmlspecialchars($hall['CameraName']);} ?>" required readonly><br>
+                            <select id="updateCamera" style="display:none; margin-top: -4%; margin-bottom: 4%;" name="hallCamera[]" class="form__input update-camera">
+                                <option value="" disabled <?php echo ($hall['CameraName'] == "") ? "selected" : ""; ?>>No camera is connected</option>
+                                <?php
+                                    include '../../Back-End/PHP/session.php';
+                                    $servername = "localhost"; 
+                                    $username = "root";
+                                    $password = "root";
+                                    $dbname = "raqeebdb";
+
+                                    $conn = new mysqli($servername, $username, $password, $dbname);
+                                    if ($conn->connect_error) {
+                                        die("Connection failed: " . $conn->connect_error);
+                                    }
+
+                                    $companyID = $_SESSION['CompanyID'];
+                                    $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
+
+                                    while ($row = $result->fetch_assoc()) {
+                                        $selected = ($row['CameraID'] == $hall['CameraID']) ? "selected" : "";
+                                        echo "<option value='{$row['CameraID']}' $selected>{$row['CameraName']}</option>";
+                                    }
+
+                                    $conn->close();
+                                ?>
+                            </select><br>
+                            <div class="error-messageForCamera"></div>
                             <label id="HMAX" for="hallThreshold">Hall Max Capacity:</label><br>
-                            <input id="HInput" name="hallThreshold" class="form__input" type="text" placeholder="ex:100" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" required readonly>
+                            <input id="HInput" name="hallThreshold[]" class="form__input capacity" type="text" placeholder="ex:100" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" min="0" required readonly><br>
+                            <div class="error-messageForCamera capacity-error" id="capacityError"></div>
+                            <!--   Upcoming events:   -->
+                            <?php 
+                               date_default_timezone_set('Asia/Riyadh');
+                               $now = new DateTime();
+                               $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+                               $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+                               if ($startDate > $now):
+                            ?>        
+                                <input type="hidden" name="hallID[]" value="<?php echo $hall['HallID']; ?>">
+                                <input type="hidden" name="removedHalls[]" value="" class="removed-hall">
+                                <button style="margin-top: 2%;" type="button" class="button2 delete-hall-btn" onclick="markForRemoval(this, '<?php echo $hall['HallID']; ?>')">
+                                    Remove <?php echo htmlspecialchars($hall['HallName']); ?> Hall
+                                </button>
+
+                            <?php endif; ?>
                         </div>
+                        <div class="error-messageForCamera" id="lastHall"></div>
                     <?php 
                         $hallNumber++;
                         endforeach;
@@ -521,7 +739,87 @@
                 </div>
                 <br>
             </form>
+            
+            <script>
+                $(document).ready(function () {
+                    const originalState = $("#show_item").html();
+                    let hallCounter = $("#show_item .hall").length; 
+                    
+                    $("#addHall").click(function (e) {
+                        e.preventDefault();
+                        hallCounter++; 
+                        
+                        const newHallId = "new_" + Date.now();
+                        const newHallRow = `
+                            <div id="${newHallId}" class="hall">
+                                <h3 style="margin-bottom: 4%;">New Hall ${hallCounter}</h3>
+                                <label for="hallName">Hall Name:</label><br>
+                                <input style="margin-bottom: 3%; border: 1px solid white; background-color: #f4f7ff;" name="newHallName[]" class="form__input" type="text" placeholder="Main hall" required><br>
+                                <label style="margin-bottom: -1%;" for="cameraName">Camera:</label><br>
+                                <input style="display: none; border: 1px solid white; background-color: #f4f7ff;" id="cameraName" name="cameraName" class="form__input camera-name" type="text" placeholder="No camera connected" readonly required><br>
+                                <select style="margin-top: -4%; border: 1px solid white; background-color: #f4f7ff;" name="newHallCamera[]" class="form__input update-camera cameraNewHall" required>
+                                    <option value="" disabled selected>Select a camera</option>
+                                    <?php
+                                        include '../../Back-End/PHP/session.php';
+                                        $servername = "localhost"; 
+                                        $username = "root";
+                                        $password = "root";
+                                        $dbname = "raqeebdb";
 
+                                        $conn = new mysqli($servername, $username, $password, $dbname);
+                                        if ($conn->connect_error) {
+                                            die("Connection failed: " . $conn->connect_error);
+                                        }
+
+                                        $companyID = $_SESSION['CompanyID'];
+                                        $result = $conn->query("SELECT CameraID, CameraName FROM camera WHERE CompanyID='$companyID'");
+
+                                        while ($row = $result->fetch_assoc()) {
+                                            echo "<option value='{$row['CameraID']}'>{$row['CameraName']}</option>";
+                                        }
+                                        $conn->close();
+                                    ?>
+                                </select><br><br>
+                                <label for="hallThreshold">Hall Max Capacity:</label><br>
+                                <input style="border: 1px solid white; background-color: #f4f7ff;" name="newHallThreshold[]" class="form__input capacity new-hall-capacity" type="number" placeholder="ex:100" min="0" required><br>
+                                <div class="capacity-error2" id="capacityError2"></div>
+                                <button style="display: inline-block; margin-bottom: 7%; margin-top: 3%;" class="button2 remove_item_btn" type="button">Remove New Hall ${hallCounter}</button>
+                            </div>
+                        `;
+
+                        $("#show_item").append(newHallRow);
+                    });
+
+                    $(document).on("click", ".remove_item_btn, #removeOrignalHall", function (e) {
+                        e.preventDefault();
+
+                        const hallElement = $(this).closest(".hall");
+                        const hallName = hallElement.find("h3").text() || "A Hall";
+                        hallElement.replaceWith(`<p style="margin-left: -30%; margin-bottom: 7%; color: #cc0000;" class="hall-removed-msg"><b>${hallName}</b> has been removed.</p>`);
+                    });
+
+                    $("#cancel").click(function (e) {
+                        e.preventDefault();
+                        location.reload();
+                    });
+                });
+                
+                function markForRemoval(button, hallID) {
+                    let hiddenInput = button.previousElementSibling;
+                    if (hiddenInput.value === "") {
+                        hiddenInput.value = hallID;  
+                        button.style.backgroundColor = "red";  
+                        button.innerText = "Marked for Removal";
+                    } else {
+                        hiddenInput.value = "";  
+                        button.style.backgroundColor = "";  
+                        button.innerText = "Remove Hall";
+                    }
+                }
+            </script>
+
+
+            <!-- Past and Upcoming events:   -->
             <?php 
                 date_default_timezone_set('Asia/Riyadh');
                 $now = new DateTime();
@@ -578,6 +876,31 @@
                       ></line></svg
                   ></span>
                 </button>
+            <?php endif; ?>
+            
+            <!--  Current and Upcoming events:   -->
+            <?php 
+                    date_default_timezone_set('Asia/Riyadh');
+                    $now = new DateTime();
+                    $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+                    $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+                    if ($endDate >= $now && $startDate <= $now || $startDate > $now):
+            ?>
+             <button id="cancel" class="button cancel" type="button" 
+                      style="position: relative; border-radius: 6px; width: 150px; height: 40px; cursor: pointer; display: none; align-items: center; border: 1px solid #cc0000; background-color: #e50000; overflow: hidden; transition: all 0.3s; margin-left: 108%;"
+                      onmouseover="this.style.backgroundColor='#cc0000'; this.querySelector('.button__text').style.color = 'transparent'; this.querySelector('.button__icon').style.width = '148px'; this.querySelector('.button__icon').style.transform = 'translateX(0)';"
+                      onmouseout="this.style.backgroundColor='#e50000'; this.querySelector('.button__text').style.color = '#fff'; this.querySelector('.button__icon').style.width = '39px'; this.querySelector('.button__icon').style.transform = 'translateX(109px)';"
+                      onmousedown="this.style.border = '1px solid #b20000'; this.querySelector('.button__icon').style.backgroundColor = '#b20000';"
+                      onmouseup="this.style.border = '1px solid #cc0000'; this.querySelector('.button__icon').style.backgroundColor = '#cc0000';">
+
+                      <span class="button__icon" style="position: absolute; left: 0; height: 100%; width: 39px; background-color: #cc0000; display: flex; align-items: center; justify-content: center; transition: width 0.3s, transform 0.3s;">
+                       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18 17.94 6M18 18 6.06 6"/>
+                      </svg>
+
+                      </span>
+                    <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: -1px;">Cancel</span>
+               </button>
             <?php endif; ?>
         </div>
         <script>
@@ -678,7 +1001,6 @@
           };
           cancelButton.addEventListener('click', closePopupHandler);
           closePopup.addEventListener('click', closePopupHandler);
-          overlay.addEventListener('click', closePopupHandler);
 
           confirmDeleteButton.addEventListener('click', async () => {
             const eventId = getEventIdFromURL();
@@ -951,49 +1273,569 @@
 
             closePopupHandler();
           });
-          </script>
+        </script>
           
-          <!--   EDIT SCRIPT   -->
+           <div id="popupCancel" style=" 
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background-color: white; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+            width: 300px; 
+            z-index: 1000; 
+            padding: 20px;">
+            <div style="text-align: center;">
+              <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Cancel Updates?</p> 
+              <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to remove the updated data?</p> 
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+              <button id="cancelButtonForCancel" style=" 
+                background-color: #f0f0f0; 
+                color: black; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                width: 45%;">Cancel</button>
+              <button id="confirmRemoveUpdatesButton" style=" 
+                background-color: #e50000; 
+                color: white; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                cursor: pointer;
+                 width: 45%;">Conform</button> 
+            </div>
+            <button id="closePopupForCancel" style="
+              position: absolute; 
+              top: 10px; 
+              right: 10px; 
+              background: none; 
+              border: none; 
+              cursor: pointer;">
+              <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
+                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+              </svg>
+            </button>
+           </div>
+          <div id="overlayForCancel" style="
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 999;"></div>
+            
+            
+        <!--   Upcoming events:   -->
+        <?php 
+            date_default_timezone_set('Asia/Riyadh');
+            $now = new DateTime();
+            $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+            $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+            if ($startDate > $now):
+        ?>            
+        <!--   EDIT SCRIPT for Upcoming Events  -->
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const editButton = document.querySelector('#editButton');
-                const deleteButton = document.querySelector('#deleteTrigger');
-                const editSpan = document.querySelector('#edit');
-                const inputs = document.querySelectorAll('.form__input');
+            document.addEventListener("DOMContentLoaded", function () {
+                const editButton = document.querySelector("#editButton");
+                const saveButton = document.querySelector(".saveButton");
+                const deleteButton = document.querySelector("#deleteTrigger");
+                const cancelButton = document.querySelector(".cancel");
+                const addHallButton = document.querySelector("#addHall");
+                const inputs = document.querySelectorAll(".form__input");
+                const errorMessageDiv = document.querySelector(".error-messageForCamera");
+                const halls = document.querySelectorAll(".hall");
+                const capacityInputs = document.querySelectorAll(".capacity"); 
+                const capacityErrorDiv = document.getElementById("capacityError"); 
 
-                // Track editing state
-                let isEditing = false; 
+                let isEditing = false;
+                let originalValues = {};
 
-                editButton.addEventListener('click', function () {
-                    if (!isEditing) {
-                        // Enable editing mode
-                        enableEditing();
+                function validateCameras() {
+                    const cameraSelects = document.querySelectorAll(".update-camera");
+                    const selectedCameras = [];
 
-                        // Hide delete button and change edit button text to SAVE
-                        deleteButton.style.display = 'none';
-                        editSpan.innerText = 'Save';
+                    cameraSelects.forEach((select) => {
+                        if (select.value) {
+                            selectedCameras.push(select.value);
+                        }
+                    });
 
-                        isEditing = true;
+                    const hasDuplicates = new Set(selectedCameras).size !== selectedCameras.length;
+
+                    if (hasDuplicates) {
+                        errorMessageDiv.textContent = "The same camera cannot be selected for multiple halls!";
+                        errorMessageDiv.classList.add("active"); 
+                        return false;
                     } else {
-                        // Save the changes
-                        saveChanges();
+                        errorMessageDiv.textContent = "";
+                        errorMessageDiv.classList.remove("active"); 
+                        return true;
+                    }
+                }
 
-                        // Revert buttons to original state (Display)
-                        deleteButton.style.display = 'block';
-                        editSpan.innerText = 'Edit';
+                function addCameraValidationListeners() {
+                    document.querySelectorAll(".update-camera").forEach((select) => {
+                        select.addEventListener("change", function() {
+                            validateCameras();
+                            checkFormValidity();  
+                        });
+                    });
+                }
 
-                        isEditing = false;
+                function enableEditing() {
+                    inputs.forEach((input) => {
+                        input.removeAttribute("readonly");
+                        input.style.border = "1px solid white";
+                        input.style.backgroundColor = "#f4f7ff";
+                    });
+
+                    halls.forEach((hall) => {
+                        hall.querySelector(".camera-name").style.display = "none";
+                        hall.querySelector(".update-camera").style.display = "";
+                        hall.querySelector(".button2").style.display = "inline-block";
+                    });
+
+                    addCameraValidationListeners();
+                    checkFormValidity();
+                }
+
+                function disableEditing() {
+                    inputs.forEach((input) => {
+                        input.setAttribute("readonly", true);
+                        input.style.border = "none";
+                        input.style.backgroundColor = "#ecf0f3";
+                    });
+
+                    halls.forEach((hall) => {
+                        hall.querySelector(".camera-name").style.display = "";
+                        hall.querySelector(".update-camera").style.display = "none";
+                        hall.querySelector(".button2").style.display = "none";
+                    });
+
+                    errorMessageDiv.textContent = "";
+                    errorMessageDiv.classList.remove("active");
+                }
+
+                function toggleButtons(enableEditMode) {
+                    deleteButton.style.display = enableEditMode ? "" : "none";
+                    editButton.style.display = enableEditMode ? "" : "none";
+                    cancelButton.style.display = enableEditMode ? "none" : "";
+                    addHallButton.style.display = enableEditMode ? "none" : "";
+                    saveButton.style.display = enableEditMode ? "none" : "";
+                }
+
+                function validateCapacity(event) {
+                    const input = event.target;
+                    const value = input.value.trim();
+                    const errorDiv = input.closest(".hall").querySelector(".capacity-error"); 
+
+                    if (isNaN(value) || value < 0 || value === "") {
+                        errorDiv.textContent = "Please enter a valid number greater than or equal to 0!";
+                        errorDiv.classList.add("active");
+                        errorDiv.style.display = "block"; 
+                        return false;
+                    } else {
+                        errorDiv.textContent = "";
+                        errorDiv.classList.remove("active");
+                        errorDiv.style.display = "none";
+                        return true;
+                    }
+                }
+
+                function validateAllCapacities() {
+                    let allValid = true;
+                    capacityInputs.forEach((input) => {
+                        if (!validateCapacity({ target: input })) {
+                            allValid = false;
+                        }
+                    });
+                    return allValid;
+                }
+
+
+                function checkFormValidity() {
+                    const camerasValid = validateCameras();
+                    const capacitiesValid = validateAllCapacities();
+
+                    if (camerasValid && capacitiesValid) {
+                        saveButton.disabled = false;
+                    } else {
+                        saveButton.disabled = true;
+                    }
+                }
+
+                capacityInputs.forEach((input) => {
+                    input.addEventListener("blur", function(event) {
+                        validateCapacity(event);
+                        checkFormValidity(); 
+                    });
+
+                    input.addEventListener("input", function(event) {
+                        validateCapacity(event);
+                        checkFormValidity();
+                    });
+                });
+
+                editButton.addEventListener("click", function () {
+                    if (!isEditing) {
+                        enableEditing();
+                        inputs.forEach((input) => {
+                            originalValues[input.name] = input.value;
+                        });
+
+                        toggleButtons(false);
+                        isEditing = true;
                     }
                 });
 
-                function enableEditing() {
-                    inputs.forEach(input => {
-                        input.removeAttribute('readonly');
-                        input.style.border = '1px solid white';
-                        input.style.backgroundColor = '#f4f7ff';
+                cancelButton.addEventListener("click", function () {
+                    disableEditing();
+                    inputs.forEach((input) => {
+                        input.value = originalValues[input.name];
                     });
-                }
+
+                    toggleButtons(true);
+                    isEditing = false;
+                    checkFormValidity();  
+                });
+
+                saveButton.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    if (validateCameras() && validateAllCapacities()) {
+                        document.querySelector("form").submit();
+                    }
+                });
+
+                setTimeout(checkFormValidity, 200); 
             });
         </script>
+              
+        <?php
+            include '../../Back-End/PHP/session.php';
+
+            date_default_timezone_set('Asia/Riyadh');
+
+            $servername = "localhost";
+            $username = "root";
+            $password = "root";
+            $dbname = "raqeebdb";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            if (isset($_GET['eventId'])) {
+                $eventID = intval($_GET['eventId']);
+            } else {
+                die("Event ID is missing in the URL!");
+            }
+
+            $sql = "SELECT * FROM events WHERE EventID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $eventID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 0) {
+                die("No event found with the provided ID.");
+            }
+
+            $event = $result->fetch_assoc();
+            $stmt->close();
+
+            $sqlHalls = "SELECT HallID, HallName, HallThreshold, CameraID FROM hall WHERE EventID = ?";
+            $stmtHalls = $conn->prepare($sqlHalls);
+            $stmtHalls->bind_param("i", $eventID);
+            $stmtHalls->execute();
+            $hallsResult = $stmtHalls->get_result();
+
+            $halls = [];
+            while ($hall = $hallsResult->fetch_assoc()) {
+                $halls[] = $hall;
+            }
+
+            $stmtHalls->close();
+
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                $eventName = $_POST['eventName'];
+                $eventLocation = $_POST['eventLocation'];
+                $eventStartDate = $_POST['startDate'];
+                $eventEndDate = $_POST['endDate'];
+                $eventStartTime = $_POST['startTime'];
+                $eventEndTime = $_POST['endTime'];
+
+                $today = date('Y-m-d');
+                $now = date('H:i');
+                $validationPassed = true;
+
+                if ($eventStartDate == $today && $eventStartTime <= $now) {
+                    echo "<script> document.getElementById('startTimeError').innerText= 'For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.';</script>";
+                    $validationPassed = false;
+                } elseif ($eventStartDate < $today) {
+                    echo "<script> document.getElementById('startDayError').innerText ='The event cannot start in the past! Please select a future start date and time.';</script>";
+                    $validationPassed = false;
+                }
+
+                if ($eventStartDate > $eventEndDate || ($eventStartDate == $eventEndDate && $eventStartTime >= $eventEndTime)) {
+                    echo "<script> document.getElementById('endDayError').innerText = 'The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.';</script>";
+                    $validationPassed = false;
+                }
+
+                if ($validationPassed) {
+                    $stmt = $conn->prepare("UPDATE events SET EventName = ?, EventLocation = ?, EventStartDate = ?, EventEndDate = ?, EventStartTime = ?, EventEndTime = ? WHERE EventID = ?");
+                    $stmt->bind_param("ssssssi", $eventName, $eventLocation, $eventStartDate, $eventEndDate, $eventStartTime, $eventEndTime, $eventID);
+
+                    if ($stmt->execute()) {
+                
+                        if (!empty($_POST['removedHalls'])) {
+                            foreach ($_POST['removedHalls'] as $removedHallID) {
+                                if (!empty($removedHallID)) {
+                                    $stmtDelete = $conn->prepare("DELETE FROM hall WHERE HallID = ?");
+                                    $stmtDelete->bind_param("i", $removedHallID);
+                                    $stmtDelete->execute();
+                                    $stmtDelete->close();
+                                }
+                            }
+                        }
+
+                        if (isset($_POST['hallName']) || isset($_POST['hallThreshold']) || isset($_POST['hallCamera'])) {
+                            foreach ($_POST['hallName'] as $key => $value) {
+                                $hallID = $halls[$key]['HallID'];
+                                $hallThreshold = $_POST['hallThreshold'][$key];
+                                $hallCameraID = isset($_POST['hallCamera'][$key]) && !empty($_POST['hallCamera'][$key]) 
+                                    ? intval($_POST['hallCamera'][$key]) 
+                                    : null;
+
+                                if ($hallCameraID === null) {
+                                    $stmtHall = $conn->prepare("UPDATE hall SET HallName = ?, HallThreshold = ? WHERE HallID = ?");
+                                    $stmtHall->bind_param("sii", $value, $hallThreshold, $hallID);
+                                } else {
+                                    $stmtHall = $conn->prepare("UPDATE hall SET HallName = ?, HallThreshold = ?, CameraID = ? WHERE HallID = ?");
+                                    $stmtHall->bind_param("siii", $value, $hallThreshold, $hallCameraID, $hallID);
+                                }
+
+                                $stmtHall->execute();
+                                $stmtHall->close();
+                            }
+                        }
+
+                        if (isset($_POST['newHallName']) && isset($_POST['newHallThreshold']) && isset($_POST['newHallCamera'])) {
+                            foreach ($_POST['newHallName'] as $key => $value) {
+                                $newHallName = $value;
+                                $newHallThreshold = $_POST['newHallThreshold'][$key];
+                                $newHallCameraID = isset($_POST['newHallCamera'][$key]) && !empty($_POST['newHallCamera'][$key]) 
+                                    ? intval($_POST['newHallCamera'][$key]) 
+                                    : null;
+
+                                if ($newHallCameraID === null) {
+                                    $stmtNewHall = $conn->prepare("INSERT INTO hall (EventID, HallName, HallThreshold) VALUES (?, ?, ?)");
+                                    $stmtNewHall->bind_param("isi", $eventID, $newHallName, $newHallThreshold);
+                                } else {
+                                    $stmtNewHall = $conn->prepare("INSERT INTO hall (EventID, HallName, HallThreshold, CameraID) VALUES (?, ?, ?, ?)");
+                                    $stmtNewHall->bind_param("isii", $eventID, $newHallName, $newHallThreshold, $newHallCameraID);
+                                }
+
+                                $stmtNewHall->execute();
+                                $stmtNewHall->close();
+                            }
+                        }
+                        echo "<script>window.location.href = '../../Back-End/PHP/viewEditEvent.php?eventId=$eventID';</script>";
+                    } else {
+                        echo "<script>alert('Failed to update the event: " . $stmt->error . "');</script>";
+                    }
+                    
+                    $stmt->close();
+                }
+            }
+
+            $conn->close();
+        ?>  
+        <?php endif; ?>
+        
+            
+            
+        <!--   Current events:   -->
+        <?php 
+            date_default_timezone_set('Asia/Riyadh');
+            $now = new DateTime();
+            $startDate = new DateTime($eventData['EventStartDate'] . ' ' . $eventData['EventStartTime']);
+            $endDate = new DateTime($eventData['EventEndDate'] . ' ' . $eventData['EventEndTime']);
+            if ($startDate <= $now || $startDate > $now):
+        ?>            
+            <!--   EDIT SCRIPT for Current Events  -->
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const editButton = document.querySelector("#editButton");
+                    const saveButton = document.querySelector(".saveButton");
+                    const cancelButton = document.querySelector(".cancel");
+                    const inputs = document.querySelectorAll(".form__input");
+                    const halls = document.querySelectorAll(".hall");
+                    const errorMessageDiv = document.querySelector(".error-messageForCamera");
+
+                    let isEditing = false;
+                    let originalCameraSelections = {};
+
+                    function validateCameras() {
+                        const selectedCameras = new Set();
+                        let hasDuplicates = false;
+
+                        halls.forEach((hall) => {
+                            const updateCamera = hall.querySelector(".update-camera");
+                            if (updateCamera.value) {
+                                if (selectedCameras.has(updateCamera.value)) {
+                                    hasDuplicates = true;
+                                } else {
+                                    selectedCameras.add(updateCamera.value);
+                                }
+                            }
+                        });
+
+                        if (hasDuplicates) {
+                            errorMessageDiv.textContent = "The same camera cannot be selected for multiple halls!";
+                            errorMessageDiv.classList.add("active");
+                            saveButton.disabled = true;
+                            return false;
+                        } else {
+                            errorMessageDiv.textContent = "";
+                            errorMessageDiv.classList.remove("active");
+                            saveButton.disabled = false;
+                            return true;
+                        }
+                    }
+
+                    halls.forEach((hall, index) => {
+                        const updateCamera = hall.querySelector(".update-camera");
+                        originalCameraSelections[index] = updateCamera.value;
+
+                        updateCamera.addEventListener("change", validateCameras);
+                    });
+
+                    editButton.addEventListener("click", function () {
+                        if (!isEditing) {
+                            enableEditing();
+                            toggleButtons(false);
+                            isEditing = true;
+                        }
+                    });
+
+                    cancelButton.addEventListener("click", function () {
+                        disableEditing();
+                        halls.forEach((hall, index) => {
+                            const updateCamera = hall.querySelector(".update-camera");
+                            updateCamera.value = originalCameraSelections[index];
+                        });
+                        toggleButtons(true);
+                        isEditing = false;
+                    });
+
+                    saveButton.addEventListener("click", function (e) {
+                        e.preventDefault();
+                        if (validateCameras()) {
+                            halls.forEach((hall, index) => {
+                                const updateCamera = hall.querySelector(".update-camera");
+                                originalCameraSelections[index] = updateCamera.value;
+                            });
+                            toggleButtons(true);
+                            isEditing = false;
+                            document.querySelector("form").submit();
+                        }
+                    });
+
+                    function enableEditing() {
+                        halls.forEach((hall) => {
+                            const cameraNameInput = hall.querySelector(".camera-name");
+                            const updateCamera = hall.querySelector(".update-camera");
+                            cameraNameInput.style.display = "none";
+                            updateCamera.style.display = "";
+                            updateCamera.style.border = "1px solid white";
+                            updateCamera.style.backgroundColor = "#f4f7ff";
+                        });
+                    }
+
+                    function disableEditing() {
+                        halls.forEach((hall) => {
+                            const cameraNameInput = hall.querySelector(".camera-name");
+                            const updateCamera = hall.querySelector(".update-camera");
+                            cameraNameInput.style.display = "";
+                            updateCamera.style.display = "none";
+                        });
+                        errorMessageDiv.textContent = "";
+                        errorMessageDiv.classList.remove("active");
+                    }
+
+                    function toggleButtons(enableEditMode) {
+                        editButton.style.display = enableEditMode ? "" : "none";
+                        cancelButton.style.display = enableEditMode ? "none" : "";
+                        saveButton.style.display = enableEditMode ? "none" : "";
+                    }
+                });
+            </script>    
+
+            <?php
+               include '../../Back-End/PHP/session.php';
+
+               date_default_timezone_set('Asia/Riyadh');
+
+               $servername = "localhost";
+               $username = "root";
+               $password = "root";
+               $dbname = "raqeebdb";
+
+               $conn = new mysqli($servername, $username, $password, $dbname);
+
+               if ($conn->connect_error) {
+                   die("Connection failed: " . $conn->connect_error);
+               }
+
+               if (isset($_GET['eventId'])) {
+                   $eventID = intval($_GET['eventId']);
+               } else {
+                   die("Event ID is missing in the URL!");
+               }
+               $sqlHalls = "SELECT * FROM hall WHERE EventID = ?";
+               $stmtHalls = $conn->prepare($sqlHalls);
+               $stmtHalls->bind_param("i", $eventID);
+               $stmtHalls->execute();
+               $hallsResult = $stmtHalls->get_result();
+
+               $halls = [];
+               while ($hall = $hallsResult->fetch_assoc()) {
+                   $halls[] = $hall;
+               }
+
+               $stmtHalls->close();
+
+               if ($_SERVER["REQUEST_METHOD"] === "POST") {
+                   echo '<pre>';
+                   print_r($_POST['hallName']);
+                   print_r($_POST['hallCamera']);
+                   echo '</pre>';
+
+                   if (isset($_POST['hallCamera'])) {
+                       foreach ($_POST['hallCamera'] as $key => $hallCameraID) {
+                           if (!empty($hallCameraID)) {
+                               $stmtHall = $conn->prepare("UPDATE hall SET CameraID = ? WHERE EventID = ? AND HallID = ?");
+                               $stmtHall->bind_param("iii", $hallCameraID, $eventID, $halls[$key]['HallID']);
+                               $stmtHall->execute();
+                               $stmtHall->close();
+                           }
+                       }
+                       echo "<script>window.location.href = '../../Back-End/PHP/viewEditEvent.php?eventId=$eventID';</script>";
+                   } else {
+                       echo "No camera data to update!";
+                   }
+               }
+               $conn->close();
+           ?>
+        <?php endif; ?>
     </body>
 </html>
