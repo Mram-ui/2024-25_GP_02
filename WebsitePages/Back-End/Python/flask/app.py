@@ -228,6 +228,13 @@ def home():
 # This function is called by video_feed 
 def generate_frames(rtsp_link, CameraName):
     cap = cv2.VideoCapture(rtsp_link)
+
+    # cap.setExceptionMode(True)
+    # cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 1000)
+    # cap.open("http://10.0.0.114")
+
+
+    
     if not cap.isOpened():
         print(f"Failed to open RTSP link: {rtsp_link}")
         camera_status[CameraName] = "down"  # Mark camera status as 'failed'

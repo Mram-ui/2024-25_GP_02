@@ -350,7 +350,6 @@
         .popup-box .close-btn:hover {
             background: #0f3d81;
         }
-        
     </style>
     <script>
 
@@ -420,7 +419,9 @@
                 <p id="EventLocation"><strong>Event Location: </strong> <span style="margin-left: 2%;">{{
                         event.EventLocation }}</span></p>
 
+                <!-- script for date and time formatting         -->
                 <script>
+                    //script for date and time formatting
                     sDate = '{{ event.EventStartDate }}';
                     eDate = '{{ event.EventEndDate }}';
                     let startDate = sDate.split('-');
@@ -465,95 +466,24 @@
             </script>
         </div>
 
+        <script>
 
-<!-- Div for disconnected cameras -->
-<div id="camera-status" style="">
-    <h3>Alerts</h3>
-    <ul id="camera-status-list" style="list-style-type: none; padding: 0; margin: 0;">
-        <!-- List of disconnected cameras will be added here -->
-    </ul>
-</div>
-
-<!-- <script>
-    const dismissedCameraAlerts = {}; // Cache to track dismissed camera alerts
-
-    // Function to display popup alert for camera disconnection
-    function showCameraAlert(cameraName) {
-        const alertContainer = document.getElementById('alertContainer');
-
-        // Check if the alert for this camera was already dismissed or displayed
-        if (dismissedCameraAlerts[cameraName]) {
-            return; // Skip creating the alert
-        }
-
-        // Mark the alert as displayed to prevent multiple popups
-        dismissedCameraAlerts[cameraName] = true;
-
-        // Create the alert div
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert show';
-        alertDiv.style.background = '#d1e7ff'; // Light blue background for disconnection
-        alertDiv.style.borderLeft = '8px solid #0d6efd'; // Blue border
-        alertDiv.innerHTML = `
-            <span class="fas fa-exclamation-circle"></span>
-            <span class="msg">Camera <strong>${cameraName}</strong> is disconnected!</span>
-            <button class="close-btn">
-                <span class="fas fa-times"></span>
-            </button>
-        `;
-
-        // Append alert to the container
-        alertContainer.appendChild(alertDiv);
-
-        // Add close functionality
-        const closeButton = alertDiv.querySelector('.close-btn');
-        closeButton.addEventListener('click', () => {
-            alertDiv.classList.remove('show');
-            alertDiv.style.opacity = '0'; // Animate hide
-            setTimeout(() => alertDiv.remove(), 300); // Remove after animation
-        });
-
-        // Auto-hide the alert after 5 seconds
-        setTimeout(() => {
-            if (alertDiv.parentElement) {
-                alertDiv.remove();
-            }
-        }, 10000);
-    }
-
-    // Poll the /camera_status endpoint to update the disconnected camera list
-    setInterval(() => {
-        fetch('/camera_status')
-            .then(response => response.json())
-            .then(data => {
-                const statusDiv = document.getElementById('camera-status');
-                const statusList = document.getElementById('camera-status-list');
-                let hasDisconnectedCameras = false;
-
-                // Clear the existing list
-                statusList.innerHTML = '';
-
-                for (const [camera, status] of Object.entries(data)) {
-                    if (status === 'down') {
-                        hasDisconnectedCameras = true;
-
-                        // Add a list item for each disconnected camera
-                        const listItem = document.createElement('li');
-                        listItem.textContent = `Camera: ${camera} is currently down.`;
-                        listItem.style.color = '#0048AF';
-                        listItem.style.fontWeight = 'bold';
-                        statusList.appendChild(listItem);
-
-                        // Show popup alert for this camera
-                        showCameraAlert(camera);
-                    }
+            check_camera_connection() {
+                let switch = 'off';
                 }
+        </script>
+        <!-- Div for disconnected cameras -->
+        <div id="camera-status" style="">
+            <h3>Alerts</h3>
+            <ul id="camera-status-list" style="list-style-type: none; padding: 0; margin: 0;">
+                <!-- List of disconnected cameras will be added here -->
+                 <p class="start-in-camera-status" style="color: rgb(188, 186, 186);">checking for alert...</p>
+                 <p class="refresh-request-in-camera-status" style="color: rgb(188, 186, 186);"></p>
+                 
+            </ul>
+        </div>
 
-                // Show the div only if there are disconnected cameras
-                statusDiv.style.display = hasDisconnectedCameras ? 'block' : 'none';
-            });
-    }, 5000); // Poll every 5 seconds
-</script> -->
+
         <div id="cameras" class="camera">
             <br>
             <h3>
@@ -587,9 +517,8 @@
 
 
                     <p id="hall-{{ camera.hall_id }}" style="margin: 0; margin-bottom: 6%;">Current Visitors: </p>
-                    <img class="cameraFeedImg"
-                        src="{{ url_for('video_feed', camera_id=camera.CameraID) }}" alt="No camera connection"
-                        style="margin: 1%;">
+                    <img class="cameraFeedImg" src="{{ url_for('video_feed', camera_id=camera.CameraID) }}"
+                        alt="No camera connection" style="margin: 1%;">
                 </div>
                 <script> </script>
                 {% endfor %}
@@ -663,12 +592,12 @@
         integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
         crossorigin="anonymous"></script>
 
-        <script>
+    <script>
             let hallsThreshold = {}; // Cache for thresholds
             let dismissedAlerts = {}; // Cache for dismissed alerts, tracking HallID and dismissal time
             let hallsDictionary = {}; // Map hall names to HallIDs
             let activeThresholdAlerts = {}; // Track active threshold alerts
-        
+
             // Fetch thresholds once
             async function fetchAllThresholds() {
                 try {
@@ -682,7 +611,7 @@
                     console.error("Error fetching thresholds:", error);
                 }
             }
-        
+
             // Fetch people count
             async function fetchPeopleCount() {
                 try {
@@ -693,10 +622,10 @@
                     const statusDiv = document.getElementById('camera-status');
                     const statusList = document.getElementById('camera-status-list');
                     let hasThresholdAlerts = false;
-        
+
                     // Keep track of which alerts are still valid (for cleanup)
                     const validThresholdAlerts = new Set();
-        
+
                     data.forEach(item => {
                         const hallElement = document.getElementById(`hall-${item.HallID}`);
                         if (hallElement) {
@@ -704,20 +633,20 @@
                             hallsDictionary[item.HallName] = item.HallID;
                             hallElement.innerHTML = `Current Visitors: ${count}`;
                             totalCount += count;
-        
+
                             // Compare with threshold
                             const threshold = hallsThreshold[item.HallID] ?? -1;
                             if (threshold !== -1 && count > threshold) {
                                 hasThresholdAlerts = true;
-        
+
                                 // Mark the alert for this hall as still valid
                                 validThresholdAlerts.add(item.HallID);
-        
+
                                 // Check if alert is already active or recently dismissed
                                 const isDismissedRecently = checkDismissedRecently(item.HallID);
                                 if (!isDismissedRecently && !activeThresholdAlerts[item.HallID]) {
                                     popupAlertMessages.push(`Hall <strong>${item.HallName}</strong> has exceeded the threshold! Visitors: ${count}, Threshold: ${threshold}`);
-        
+
                                     // Add alert to the camera-status div if not already present
                                     if (!document.getElementById(`threshold-alert-${item.HallID}`)) {
                                         const listItem = document.createElement('li');
@@ -727,7 +656,7 @@
                                         listItem.textContent = `Threshold exceeded: Hall ${item.HallName}`;
                                         statusList.appendChild(listItem);
                                     }
-        
+
                                     // Mark alert as active
                                     activeThresholdAlerts[item.HallID] = true;
                                 }
@@ -737,7 +666,7 @@
                             }
                         }
                     });
-        
+
                     // Clean up invalid alerts from camera-status div
                     const allThresholdAlerts = document.querySelectorAll('.threshold-alert');
                     allThresholdAlerts.forEach(alert => {
@@ -746,13 +675,13 @@
                             alert.remove(); // Remove alert if it's no longer valid
                         }
                     });
-        
+
                     // Show the camera-status div only if there are alerts
-                    statusDiv.style.display = hasThresholdAlerts ? 'block' : 'none';
-        
+                    // statusDiv.style.display = hasThresholdAlerts ? 'block' : 'none';
+
                     // Display popup alerts
                     displayPopupAlerts(popupAlertMessages);
-        
+
                     // Update total count
                     const totalCountTag = document.getElementById('totalCountTag');
                     if (totalCountTag) {
@@ -762,7 +691,7 @@
                     console.error("Error fetching people count:", error);
                 }
             }
-        
+
             // Check if the alert was dismissed within the last 5 minutes
             function checkDismissedRecently(hallID) {
                 const dismissedTime = dismissedAlerts[hallID];
@@ -773,12 +702,12 @@
                 }
                 return false; // If the alert hasn't been dismissed before, show it
             }
-        
+
             // Store the time when an alert is dismissed
             function dismissAlert(hallID) {
                 dismissedAlerts[hallID] = Date.now();
             }
-        
+
             // Display popup alerts for 5 seconds
             function displayPopupAlerts(alertMessages) {
                 const alertContainer = document.getElementById('alertContainer');
@@ -792,7 +721,7 @@
                         <span class="msg">${message}</span>
                     `;
                     alertContainer.appendChild(alertDiv);
-        
+
                     // Auto-hide the alert after 5 seconds
                     setTimeout(() => {
                         if (alertDiv.parentElement) {
@@ -803,15 +732,15 @@
                     }, 5000);
                 });
             }
-        
+
             // Initial fetch and periodic updates
             fetchAllThresholds().then(() => {
                 setInterval(function () {
                     fetchPeopleCount();
                 }, 5000);
             });
-        </script>
-                    
+    </script>
+
 </body>
 
 </html>
