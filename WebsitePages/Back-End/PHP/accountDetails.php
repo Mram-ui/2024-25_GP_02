@@ -223,7 +223,7 @@
             }
             
             .profileLogo {
-                margin-left: 5%;
+                margin-left: 0%;
             }
                 
             .logout {
@@ -459,27 +459,6 @@
                 echo "<script>alert('Company not found.'); window.location.href='../../Front-End/HTML/login.html';</script>";
                 exit();
             }
-
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST['Logout'])) {
-                if (isset($_FILES['logo'])) {
-                    $companyName = $_POST['companyName'];
-                    $email = $_POST['email'];
-
-                    if (file_exists($_FILES['logo']['tmp_name']) && is_uploaded_file($_FILES['logo']['tmp_name'])) {
-                        $path_parts = pathinfo($_FILES["logo"]["name"]);
-                        $extension = $path_parts['extension'];
-                        $filenewname = $companyName . "_" . uniqid() . "." . $extension;
-                        $folder = "../../images/" . $filenewname;
-
-                        if (move_uploaded_file($_FILES['logo']['tmp_name'], $folder)) {
-                            $logo = $filenewname;
-                        } else {
-                            $logo = $row['Logo'];
-                        }
-                    }
-                    $stmt->close();
-                } 
-            }
         ?>
 
         <div class="main">
@@ -538,29 +517,27 @@
                     </svg>  
                 </span>
             </button>
-           
-            <input type="file" id="logo-upload" style="display: none;" name="logo" accept="image/*">
-
-            <div class="profileLogo">
-                <div class="profile">
-                    <?php if (is_null($logo) || empty($logo)): ?>
-                        <img src="../../images/CLogo.png" alt="DLogo" id="user-logo" class="logo">
-                    <?php else: ?>
-                        <img src="../../images/<?php echo $logo ?>" alt="Logo" id="user-logo" class="logo">
-                    <?php endif; ?>
+            
+           <form id='updateCompanyForm' class="form" method="POST" enctype="multipart/form-data" onsubmit="return validateSignUpForm();">
+                <div class="profileLogo">
+                    <div class="profile">
+                        <?php if (is_null($logo) || empty($logo)): ?>
+                            <img src="../../images/CLogo.png" alt="DLogo" id="user-logo" class="logo">
+                        <?php else: ?>
+                            <img src="../../images/<?php echo $logo ?>" alt="Logo" id="user-logo" class="logo">
+                        <?php endif; ?>
+                    </div>
+                    <input type="hidden" name="currentLogo" value="<?php echo $currentLogoPath; ?>">
+                    <input type="file" id="logo-upload" style="display: none;" name="logo" accept="image/png, image/jpeg">
+                    <button type="button" id="uploadButton" class="uploadButton" style="display: none;">
+                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
+                        </svg>
+                    </button>
+                    <h2><?php echo $companyName ?></h2>
                 </div>
-                <input type="hidden" name="currentLogo" value="<?php echo $currentLogoPath; ?>">
+                <div class="errorMessage" id="LogoNotValid"></div>
                 
-                <button type="file" id="uploadButton" class="uploadButton" style="display: none;">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.779 17.779 4.36 19.918 6.5 13.5m4.279 4.279 8.364-8.643a3.027 3.027 0 0 0-2.14-5.165 3.03 3.03 0 0 0-2.14.886L6.5 13.5m4.279 4.279L6.499 13.5m2.14 2.14 6.213-6.504M12.75 7.04 17 11.28"/>
-                    </svg>
-                </button>
-                <h2><?php echo $companyName ?></h2>
-            </div>
-            <div class="errorMessage" id="LogoNotValid"></div>
-
-            <form id='updateCompanyForm' class="form" method="POST" enctype="multipart/form-data" onsubmit="return validateSignUpForm();">
                 <label for="companyName">Company Name</label>
                 <input name="companyName" class="form__input" type="text" value="<?php echo $companyName ?>" required readonly>
                 <label for="email">Company Email</label>
@@ -602,135 +579,136 @@
                 </button>
             </form>
             
-        <div id="logoutModal" style="
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            background-color: white; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-            width: 300px; 
-            z-index: 1000; 
-            padding: 20px;">
-            <div style="text-align: center;">
-              <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Logout?</p>
-              <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to log out?</p>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-              <button id="cancelButton" onclick="cancelLogout()" style="
-                background-color: #f0f0f0; 
-                color: black; 
-                border: none; 
-                padding: 10px 20px; 
-                border-radius: 6px; 
-                cursor: pointer;
-                width: 45%;">Cancel</button>
-              <button id="confirmDeleteButton" onclick="logoutConfirmed()" style="
-                background-color: #e50000; 
-                color: white; 
-                border: none; 
-                padding: 10px 20px; 
-                border-radius: 6px; 
-                cursor: pointer;
-                 width: 45%;">Logout</button>
-            </div>
-            <button id="closePopup" style="
-              position: absolute; 
-              top: 10px; 
-              right: 10px; 
-              background: none; 
-              border: none; 
-              cursor: pointer;">
-              <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
-                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
-              </svg>
-            </button>
-          </div>
-            
-          <div id="overlay" style="
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0, 0, 0, 0.4); 
-            z-index: 999;"></div>
-            
-            <script>
-                const popup = document.getElementById('logoutModal');
-                const overlay = document.getElementById('overlay');            
-                const closePopup = document.getElementById('closePopup');
+            <div id="logoutModal" style="
+                display: none; 
+                position: fixed; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                background-color: white; 
+                border-radius: 10px; 
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+                width: 300px; 
+                z-index: 1000; 
+                padding: 20px;">
+                <div style="text-align: center;">
+                  <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Logout?</p>
+                  <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to log out?</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                  <button id="cancelButton" onclick="cancelLogout()" style="
+                    background-color: #f0f0f0; 
+                    color: black; 
+                    border: none; 
+                    padding: 10px 20px; 
+                    border-radius: 6px; 
+                    cursor: pointer;
+                    width: 45%;">Cancel</button>
+                  <button id="confirmDeleteButton" onclick="logoutConfirmed()" style="
+                    background-color: #e50000; 
+                    color: white; 
+                    border: none; 
+                    padding: 10px 20px; 
+                    border-radius: 6px; 
+                    cursor: pointer;
+                     width: 45%;">Logout</button>
+                </div>
+                <button id="closePopup" style="
+                  position: absolute; 
+                  top: 10px; 
+                  right: 10px; 
+                  background: none; 
+                  border: none; 
+                  cursor: pointer;">
+                  <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
+                    <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+                  </svg>
+                </button>
+              </div>
 
-                const closePopupHandler = () => {
-                  popup.style.display = 'none';
-                  overlay.style.display = 'none';
-                };
-                        
-                closePopup.addEventListener('click', closePopupHandler);
-            </script>
-            
-            <div id="popupCancel" style=" 
-            display: none; 
-            position: fixed; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            background-color: white; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-            width: 300px; 
-            z-index: 1000; 
-            padding: 20px;">
-            <div style="text-align: center;">
-              <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Cancel Changes?</p> 
-              <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to discard the changes?</p> 
+              <div id="overlay" style="
+                display: none; 
+                position: fixed; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 100%; 
+                background: rgba(0, 0, 0, 0.4); 
+                z-index: 999;"></div>
+
+                <script>
+                    const popup = document.getElementById('logoutModal');
+                    const overlay = document.getElementById('overlay');            
+                    const closePopup = document.getElementById('closePopup');
+
+                    const closePopupHandler = () => {
+                      popup.style.display = 'none';
+                      overlay.style.display = 'none';
+                    };
+
+                    closePopup.addEventListener('click', closePopupHandler);
+                </script>
+
+                <div id="popupCancel" style=" 
+                display: none; 
+                position: fixed; 
+                top: 50%; 
+                left: 50%; 
+                transform: translate(-50%, -50%); 
+                background-color: white; 
+                border-radius: 10px; 
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+                width: 300px; 
+                z-index: 1000; 
+                padding: 20px;">
+                <div style="text-align: center;">
+                  <p style="color: black; font-size: 18px; font-weight: bold; margin: 0;">Cancel Changes?</p> 
+                  <p style="color: gray; font-size: 14px; text-align: left; margin-top: 4%; margin-bottom: 2%;">Are you sure you want to discard the changes?</p> 
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                  <button id="cancelButtonForCancel" style=" 
+                    background-color: #f0f0f0; 
+                    color: black; 
+                    border: none; 
+                    padding: 10px 20px; 
+                    border-radius: 6px; 
+                    cursor: pointer;
+                    width: 45%;">Cancel</button>
+                  <button id="confirmRemoveUpdatesButton" style=" 
+                    background-color: #e50000; 
+                    color: white; 
+                    border: none; 
+                    padding: 10px 20px; 
+                    border-radius: 6px; 
+                    cursor: pointer;
+                     width: 45%;">Confirm</button> 
+                </div>
+                <button id="closePopupForCancel" style="
+                  position: absolute; 
+                  top: 10px; 
+                  right: 10px; 
+                  background: none; 
+                  border: none; 
+                  cursor: pointer;">
+                  <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
+                    <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
+                  </svg>
+                </button>
+               </div>
+              <div id="overlayForCancel" style="
+                display: none; 
+                position: fixed; 
+                top: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 100%; 
+                background: rgba(0, 0, 0, 0.4); 
+                z-index: 999;"></div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-              <button id="cancelButtonForCancel" style=" 
-                background-color: #f0f0f0; 
-                color: black; 
-                border: none; 
-                padding: 10px 20px; 
-                border-radius: 6px; 
-                cursor: pointer;
-                width: 45%;">Cancel</button>
-              <button id="confirmRemoveUpdatesButton" style=" 
-                background-color: #e50000; 
-                color: white; 
-                border: none; 
-                padding: 10px 20px; 
-                border-radius: 6px; 
-                cursor: pointer;
-                 width: 45%;">Confirm</button> 
-            </div>
-            <button id="closePopupForCancel" style="
-              position: absolute; 
-              top: 10px; 
-              right: 10px; 
-              background: none; 
-              border: none; 
-              cursor: pointer;">
-              <svg height="20px" viewBox="0 0 384 512" style="fill: #ccc;">
-                <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"></path>
-              </svg>
-            </button>
-           </div>
-          <div id="overlayForCancel" style="
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0, 0, 0, 0.4); 
-            z-index: 999;"></div>
-            
+        
             <!--   EDIT SCRIPT   -->
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
+               document.addEventListener('DOMContentLoaded', function () {
                     const editButton = document.querySelector('#editButton');
                     const saveButton = document.querySelector("#saveButton");
                     const logoutButton = document.querySelector('#LogoutBtn');
@@ -846,15 +824,17 @@
 
                     function isUserOwnEmail(email) {
                         const originalEmail = originalValues['email'];
-                        return email === originalEmail;
+                        return email.toLowerCase() === originalEmail.toLowerCase();
                     }
 
                     function isValidEmail(email) {
                         let isEmailValid = true;
+                        const emailLower = email.toLowerCase(); 
+
                         $.ajax({
                             type: 'POST',
                             url: '../../Back-End/PHP/signup.php',
-                            data: { email: email },
+                            data: { email: emailLower },  
                             dataType: 'json',
                             async: false,
                             success: function (response) {
@@ -969,6 +949,13 @@
             $dbname = "raqeebdb";
 
             $conn = new mysqli($servername, $username, $password, $dbname);
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            if (!isset($_SESSION['CompanyID'])) {
+                die("Unauthorized access.");
+            }
 
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $companyID = $_SESSION['CompanyID'];
@@ -978,35 +965,41 @@
 
                 if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
                     $path_parts = pathinfo($_FILES["logo"]["name"]);
-                    $extension = $path_parts['extension'];
-                    $logoFileName = $companyName . "_" . uniqid() . "." . $extension;
-                    $folder = "../../images/" . $filenewname;
+                    $extension = strtolower($path_parts['extension']);
+                    $allowed_extensions = ['jpg', 'jpeg', 'png'];
 
-                    if (move_uploaded_file($_FILES['logo']['tmp_name'], $folder)) {
-                        $logo = $filenewname;
-                        } else {
-                            $logo = $row['Logo'];
+                    if (in_array($extension, $allowed_extensions)) {
+                        $logoFileName = $companyName . "_" . uniqid() . "." . $extension;
+                        $uploadDir = "../../images/";
+                        $filePath = $uploadDir . $logoFileName;
+
+                        if (move_uploaded_file($_FILES['logo']['tmp_name'], $filePath)) {
+                            $logoPath = $logoFileName;
                         }
-                    $logoPath = str_replace('../../images/', '', $logoPath);
+                    }
                 }
 
-                $updateQuery = "
-                    UPDATE company
-                    SET CompanyName = '$companyName', Email = '$email' 
-                    " . ($logoPath ? ", Logo = '$logoPath'" : "") . "
-                    WHERE CompanyID = '$companyID'
-                ";
+                $updateQuery = "UPDATE company SET CompanyName = ?, Email = ?" . ($logoPath ? ", Logo = ?" : "") . " WHERE CompanyID = ?";
 
-                if ($conn->query($updateQuery) === TRUE) {
-                    echo "<script>window.location.href = '../../Back-End/PHP/accountDetails.php';</script>";
-                    exit;
+                if ($stmt = $conn->prepare($updateQuery)) {
+                    if ($logoPath) {
+                        $stmt->bind_param("sssi", $companyName, $email, $logoPath, $companyID);
+                    } else {
+                        $stmt->bind_param("ssi", $companyName, $email, $companyID);
+                    }
+
+                    if ($stmt->execute()) {
+                        echo "<script>window.location.href = '../../Back-End/PHP/accountDetails.php';</script>";
+                        exit;
+                    } else {
+                        die("Database error: " . $stmt->error);
+                    }
+
+                    $stmt->close();
                 } else {
-                    die("Database error: " . $conn->error);
+                    die("Query preparation failed: " . $conn->error);
                 }
-            } else {
-                die("");
             }
-
             $conn->close();
         ?>
     </body>
