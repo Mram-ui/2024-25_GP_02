@@ -291,6 +291,8 @@ def video_feed(camera_id):
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+from datetime import datetime, timedelta
+from flask import jsonify
 
 @app.route('/latest_people_count', methods=['GET'])
 def latest_people_count():
@@ -325,13 +327,18 @@ def latest_people_count():
                 ON latest_count.SessionID = pc.SessionID 
                 AND latest_count.LatestTime = pc.Time;
         """
-
-        # 1- identifies the latest timestamp (LatestTime) for each SessionID
-        # 2- associate each hall with its corresponding SessionID and the latest timestamp (LatestTime)
-        # 3- Join the results
-
+        
         cursor.execute(query)
         data = cursor.fetchall()
+        
+        current_time = datetime.now()
+        
+        for entry in data:
+            if entry['Time']:
+                latest_time = datetime.strptime(str(entry['Time']), "%Y-%m-%d %H:%M:%S")
+                if (current_time - latest_time) > timedelta(seconds=10):
+                    entry['Count'] = 'No Recent Data'
+        
         return jsonify(data)
     finally:
         cursor.close()

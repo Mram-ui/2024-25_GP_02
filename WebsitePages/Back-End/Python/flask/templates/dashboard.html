@@ -24,135 +24,6 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-    <!-- <script type="text/javascript">
-
-        let hallsThreshold = {}; // Cache for thresholds
-
-        // Function to fetch thresholds for all halls once
-        async function fetchAllThresholds() {
-            try {
-                const response = await fetch('/get_all_thresholds'); // Endpoint to fetch all thresholds
-                const data = await response.json();
-
-
-                // Populate the threshold cache
-                data.forEach(item => {
-                    // console.log(item);
-                    hallsThreshold[item.HallID] = item.Threshold; // Cache the threshold for each HallID
-                });
-
-                console.log("Threshold updated:", hallsThreshold);
-            } catch (error) {
-                console.error("Error fetching thresholds:", error);
-            }
-        }
-
-
-        async function fetchPeopleCount() {
-            try {
-                const response = await fetch('/latest_people_count');
-                const data = await response.json();
-
-                let totalCount = 0;
-                const alertElement = document.getElementById('alert');
-                hallsExceedsThreshold = [];
-                alertMessages = [];
-
-                data.forEach(item => {
-                    const hallElement = document.getElementById(`hall-${item.HallID}`);
-                    if (hallElement) {
-                        // const count = item.Count || 0; // Fallback to 0 if Count is null
-                        const count = 1
-                        hallElement.innerHTML = `Current Visitors: ${count}`;
-
-                        // Use the thresholds
-                        const threshold = hallsThreshold[item.HallID] ?? -1; // Fallback to -1 if threshold not found
-                        //console.log(threshold);
-                        if (threshold !== -1) {
-                            if (count > threshold) {
-                                // alertElement.innerHTML = `Hall ${item.HallName} is above the set people limit! Please take action.`;
-                                // alertElement.style.display = 'block';
-
-
-                                hallsExceedsThreshold.push(`Hall <strong>(${item.HallName})</strong> has exceeded the threshold! Current Visitors: ${count}, Threshold: ${threshold}`);
-                                // alertMessages.push(`Hall <strong>(${item.HallName})</strong> has exceeded the threshold! Current Visitors: ${count}, Threshold: ${threshold}`);
-
-                            } else {
-                                alertElement.style.display = 'none';
-                            }
-                        } else {
-                            console.log(`Threshold not set for HallID ${item.HallID}`);
-                        }
-                        console.log(item.HallName, ': ', count)
-                        totalCount += count; // Add the count to the total
-                    }
-                });
-
-                // Update the totalCountTag with the total count
-                const totalCountTag = document.getElementById('totalCountTag');
-                if (totalCountTag) {
-                    totalCountTag.innerHTML = `${totalCount || 0}`;
-                }
-                // displayAlerts(alertMessages);
-
-                let halls = "";
-                length = hallsExceedsThreshold.length
-                for (let i = 0; i < length; i++) {
-                    if (i == length - 1) {
-                        halls += hallsExceedsThreshold[i];
-                        alertElement.innerHTML = `${halls}`;
-                        alertElement.style.display = 'block';
-                    } else {
-                        halls += hallsExceedsThreshold[i] + '<br>';
-                    }
-                }
-
-
-                // Log totalCount for debugging
-                console.log('Total Visitors:', totalCount);
-            } catch (error) {
-                console.error('Error fetching people count:', error);
-            }
-        }
-
-        // function displayAlerts(alertMessages) {
-        //     const alertContainer = document.getElementById('alertContainer');
-        //     alertContainer.innerHTML = ''; // Clear old alerts
-
-        //     alertMessages.forEach((message, index) => {
-        //         const alertDiv = document.createElement('div');
-        //         alertDiv.className = 'alert alert-danger alert-dismissible fade show';
-        //         alertDiv.setAttribute('role', 'alert');
-        //         alertDiv.innerHTML = `
-        //         <strong>Alert ${index + 1}:</strong> ${message}
-        //         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        //     `;
-        //         alertContainer.appendChild(alertDiv);
-        //     });
-        // }
-
-        // The alert function
-        function alert(threshold, count) {
-            if (threshold < count) {
-                console.log('this is alert')
-                $('.alert').addClass("show");
-                $('.alert').removeClass("hide");
-                $('.alert').addClass("showAlert");
-
-                $('.close-btn').click(function () {
-                    $('.alert').removeClass("show");
-                    $('.alert').addClass("hide");
-                });
-            }
-        }
-
-        // Fetch thresholds once when the page loads
-        fetchAllThresholds().then(() => {
-            // Fetch people count every 5 seconds
-            setInterval(fetchPeopleCount, 5000);
-            fetchPeopleCount(); // Initial call
-        });
-    </script> -->
 
     <!-- Internal CSS -->
     <style>
@@ -464,34 +335,41 @@
                 console.log(numberOfHalls);
                 document.getElementById('numberOfHalls').innerText = numberOfHalls;
             </script>
+
+
+
+
+
+<script>
+
+    check_camera_connection() {
+        let switch = 'off';
+        }
+</script>
+<!-- Div for disconnected cameras -->
+<div id="camera-status" class="allEventInformation">
+    <h3>Alerts</h3><br>
+    <ul id="camera-status-list" style="list-style-type: none; padding: 0; margin: 0;">
+        <!-- List of disconnected cameras will be added here -->
+         <p class="start-in-camera-status" style="color: rgb(188, 186, 186);">checking for alert...</p>
+         <p class="refresh-request-in-camera-status" style="color: rgb(188, 186, 186);"></p>
+         
+    </ul>
+</div>
+
+
         </div>
 
-        <script>
-
-            check_camera_connection() {
-                let switch = 'off';
-                }
-        </script>
-        <!-- Div for disconnected cameras -->
-        <div id="camera-status" style="">
-            <h3>Alerts</h3>
-            <ul id="camera-status-list" style="list-style-type: none; padding: 0; margin: 0;">
-                <!-- List of disconnected cameras will be added here -->
-                 <p class="start-in-camera-status" style="color: rgb(188, 186, 186);">checking for alert...</p>
-                 <p class="refresh-request-in-camera-status" style="color: rgb(188, 186, 186);"></p>
-                 
-            </ul>
-        </div>
 
 
         <div id="cameras" class="camera">
-            <br>
-            <h3>
+            
+            <h4 style="margin-bottom: 1.5%; margin-top: 1%;">
                 <span class="dot"></span> Live Stream
                 <button class="help-icon">
                     <i class="fa-solid fa-question"></i>
                 </button>
-            </h3>
+            </h4>
 
             <div class="popup-container">
                 <div class="popup-box">
@@ -513,12 +391,12 @@
                 {% for camera in cameras %}
                 <div class="cameraFeed">
                     <!-- <h3 style="margin: 0; margin-bottom: 2%;"></h3> -->
-                    <h3 style="margin: 0; margin-bottom: 2%;">{{ camera.HallName }}</h3>
+                    <h5 style="margin: 0; margin-bottom: 0%;">{{ camera.HallName }}</h5>
 
 
-                    <p id="hall-{{ camera.hall_id }}" style="margin: 0; margin-bottom: 6%;">Current Visitors: </p>
+                    <p id="hall-{{ camera.hall_id }}" style="margin: 0; margin-bottom: 0.5%; font-size: 10px;">Visitors: </p>
                     <img class="cameraFeedImg" src="{{ url_for('video_feed', camera_id=camera.CameraID) }}"
-                        alt="No camera connection" style="margin: 1%;">
+                        alt="No camera connection" style="margin: 0%;">
                 </div>
                 <script> </script>
                 {% endfor %}
@@ -592,7 +470,7 @@
         integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
         crossorigin="anonymous"></script>
 
-    <script>
+        <script>
             let hallsThreshold = {}; // Cache for thresholds
             let dismissedAlerts = {}; // Cache for dismissed alerts, tracking HallID and dismissal time
             let hallsDictionary = {}; // Map hall names to HallIDs
@@ -617,7 +495,7 @@
                 try {
                     const response = await fetch('/latest_people_count');
                     const data = await response.json();
-                    let totalCount = 0;
+                    let totalCount;
                     let popupAlertMessages = [];
                     const statusDiv = document.getElementById('camera-status');
                     const statusList = document.getElementById('camera-status-list');
@@ -632,7 +510,8 @@
                             const count = item.Count || 0; // Default to 0 if null
                             hallsDictionary[item.HallName] = item.HallID;
                             hallElement.innerHTML = `Current Visitors: ${count}`;
-                            totalCount += count;
+                            if(count != 'No Recent Data'){
+                            totalCount += count; }
 
                             // Compare with threshold
                             const threshold = hallsThreshold[item.HallID] ?? -1;
@@ -682,10 +561,15 @@
                     // Display popup alerts
                     displayPopupAlerts(popupAlertMessages);
 
-                    // Update total count
+                    // Update total count tag
                     const totalCountTag = document.getElementById('totalCountTag');
                     if (totalCountTag) {
-                        totalCountTag.innerHTML = `${totalCount}`;
+                        if(totalCount === ''){
+                        totalCountTag.innerHTML = `<p style="font-size: 20px">No Recent Data</p>`;
+
+                        }else{
+                        totalCountTag.innerHTML = `${parseInt(totalCount)}`;
+                        }
                     }
                 } catch (error) {
                     console.error("Error fetching people count:", error);

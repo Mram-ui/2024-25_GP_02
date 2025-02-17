@@ -147,14 +147,14 @@ main h2{
 .allEventInformation {
     display: flex;
     justify-content: space-around;
-    margin-top: 5%;
+    margin-top: 3%;
     padding: 0px;
-    margin-bottom: 3%;
+    margin-bottom: 1.5%;
 }
 .eventInformation {
     background-color: white;
     border-radius: 15px;
-    padding: 1% 5%;
+    padding: 1% 4%;
     z-index: 0; 
     position: relative;
     transition: 0.5s;
@@ -276,40 +276,95 @@ main h2{
 .camera{
     background-color: white;
     border-radius: 15px;
-    padding: 1% 6%;
+    padding: 1% 4%;
     padding-bottom: 3%;
 }
 
 #cameraFeeds {
-    width: 95%;
+    max-width: 30%;
     min-height: 250px;
+    max-height: 260px;
     background-color: white;
-    border-radius: 15px;
+    /* border-radius: 15px; */
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: space-between; /* Ensures proper wrapping */
     margin-bottom: 2%;
 }
+
+#cameraFeeds {
+    overflow-y: auto !important; /* Forces scrollbar to appear */
+    /* Bright glowing shadow */
+    /* box-shadow: -1px 4px 12px rgba(10, 60, 255, 0.2); */
+
+}
+
+/* Custom scrollbar for WebKit browsers (Chrome, Edge, Safari) */
+#cameraFeeds::-webkit-scrollbar {
+    width: 5px; /* Controls width of scrollbar */
+}
+
+#cameraFeeds::-webkit-scrollbar-track {
+    background: rgba(220, 216, 216, 0.415); /* Slightly visible track */
+    border-radius: 10px; /* Rounds the track */
+}
+
+#cameraFeeds::-webkit-scrollbar-thumb {
+    background: rgba(30, 74, 251, 0.6); /* Scrollbar color */
+    border-radius: 10px; /* Rounds the scrollbar */
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+/* Hover effect */
+#cameraFeeds::-webkit-scrollbar-thumb:hover {
+    background: rgba(24, 69, 246, 0.8); /* Slightly darker on hover */
+}
+  
+
 
 .cameraFeed {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(33% - 20px);
-    margin-right: 4%;
-    margin-left: 4%;
+    width: calc(50% - 5px); /* Makes sure two items fit in a row */
+
+    /* width: calc(33% - 20px); */
+    /* margin-right: 4%;
+    margin-left: 4%; */
+    /* width: 48%; Ensures two `cameraFeed` elements fit in one row */
     margin-bottom: 2%;
+
 }
 
 .cameraFeed h3 {
     text-align: center;
     margin: 0; 
-    margin-bottom: 2.5%; 
+    margin-bottom: 1.25%; 
 }
 
 
 .cameraFeeds h3 {
     margin: 2.5% 2%;
+}
+
+
+.cameraFeedImg{
+    border: rgba(10, 60, 255, 0.4) 1px solid;
+    width: 100%; /* Adjust to fit the container */
+
+    width: 100%; /* Adjust to fit the container */
+    min-width: 150px;
+    min-height: 90px;
+    border-radius: 5px;
+    /* margin: 5%; */
+}
+
+.cameraFeed img {
+    width: 10%;
+    /* width: 230px;
+    height: 130px;
+    height: auto;  */
+    border-radius: 5px;
 }
 
 .dot {
@@ -323,22 +378,6 @@ main h2{
     transform: translateY(-5px);
 }
 
-.cameraFeedImg{
-    border: rgba(10, 60, 255, 0.4) 1px solid;
-    min-width: 250px;
-    min-height: 200px;
-    margin: 5%;
-}
-
-.cameraFeed img {
-    width: 120%;
-    height: auto; 
-    border-radius: 5px;
-}
-
-#cameraFeedImg{
-    
-}
 
 
 /* ---- Footer Style ---- */
