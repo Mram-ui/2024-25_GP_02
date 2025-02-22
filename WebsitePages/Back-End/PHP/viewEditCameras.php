@@ -343,7 +343,8 @@
                     <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Save</span>
                 </button>
             </div>
-
+            
+            <div class="error-message" id="emptyFilelds"></div>
             <form id='cameraForm' class="form" method="POST" action="" onsubmit="return validateForm();">
                 <label id='lable' for="cameraName">Camera Name:</label>
                 <input name="cameraName" id="cameraName" class="form__input" type="text" value="<?= htmlspecialchars($cameraData['CameraName']); ?>" required readonly>
@@ -858,6 +859,7 @@
          <!--   EDIT SCRIPT   -->
         <script>
             document.addEventListener("DOMContentLoaded", function () {
+                const form = document.getElementById("cameraForm");
                 const editButton = document.querySelector("#editButton");
                 const saveButton = document.querySelector("#saveButton");
                 const deleteButton = document.querySelector("#deleteTrigger");
@@ -874,6 +876,7 @@
                 const portInput = document.querySelector("input[name='portNo']");
                 const ipError = document.getElementById("IPError");
                 const portError = document.getElementById("portError");
+                const emptyFieldsError = document.getElementById("emptyFilelds");
 
                 let isEditing = false;
                 let originalValues = {};
@@ -923,10 +926,9 @@
                     if (isEditing) {
                         validateIP();
                         validatePort();
-                        if (!ipValid || !portValid) {
+                        if (!validateForm() || !ipValid || !portValid) {
                             event.preventDefault();
                         } else {
-                            const form = document.querySelector("form");
                             form.submit();
                         }
                     }
@@ -951,7 +953,7 @@
                     if (!ipPattern.test(ipAddress)) {
                         ipValid = false;
                         ipErrorShown = true;
-                        ipError.innerText = "Please enter a valid IP address (e.g., 000.000.0.000).";
+                        ipError.innerText = "Please enter a valid IP address (e.g., 192.168.1.1).";
                     } else {
                         ipValid = true;
                         ipErrorShown = false;
@@ -983,6 +985,29 @@
                         portErrorShown = false;
                         portError.innerText = "";
                     }
+                }
+
+                function validateForm() {
+                    let allFilled = true;
+                    let errorMessage = "All fields are required.";
+
+                    inputs.forEach(input => {
+                        if (input.value.trim() === "") {
+                            allFilled = false;
+                            input.style.border = "2px solid red";
+                        } else {
+                            input.style.border = "1px solid #ccc";
+                        }
+                    });
+
+                    if (!allFilled) {
+                        emptyFieldsError.innerText = errorMessage;
+                        emptyFieldsError.style.color = "red";
+                        return false; 
+                    }
+
+                    emptyFieldsError.innerText = ""; 
+                    return true; 
                 }
 
                 function showCancelPopup() {
@@ -1040,12 +1065,19 @@
                     });
                     ipError.innerText = ""; 
                     portError.innerText = "";
-                    cameraNameError.innerText = "";
+                    emptyFieldsError.innerText = "";
                     toggleButtons(true);
                     isEditing = false;
                 }
+
+                form.addEventListener("submit", function (event) {
+                    if (!validateForm()) {
+                        event.preventDefault(); 
+                    }
+                });
             });
         </script>
+
 
         
         <?php
