@@ -91,10 +91,11 @@ body {
 
 /* camera-status style */
 #camera-status {
-    margin-bottom: 3%;
-    max-width: 35%;
-
-    margin-top: 20px;
+    /* margin-bottom: 3%; */
+    width: 120%;
+    margin: 0%;
+    margin-top: 0.5%;
+    /* margin-top: 20px; */
     background-color: white;
     border-radius: 15px;
     padding: 1% 2%;
@@ -134,8 +135,8 @@ body {
 
 main{
     display: flex;
-    flex-direction: column;
-    margin: 5% 5%;
+    /* flex-direction: column; */
+    margin: 5% 3%;
 }
 
 main h2{
@@ -147,17 +148,23 @@ main h2{
 .allEventInformation {
     display: flex;
     justify-content: space-around;
+    flex-direction: column;
     margin-top: 3%;
     padding: 0px;
     margin-bottom: 1.5%;
+    height: 10%;
+    margin-right: 4%;
+
 }
 .eventInformation {
     background-color: white;
     border-radius: 15px;
-    padding: 1% 4%;
+    padding: 0.7% 2%;
     z-index: 0; 
     position: relative;
     transition: 0.5s;
+    width: 120%;
+    margin-top: 0.5%;
 }
 .eventInformation h2{
     text-align: center
@@ -278,6 +285,7 @@ main h2{
     border-radius: 15px;
     padding: 1% 4%;
     padding-bottom: 3%;
+    margin-top: 3%;
 }
 
 #cameraFeeds {
@@ -326,7 +334,8 @@ main h2{
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: calc(50% - 5px); /* Makes sure two items fit in a row */
+    /* Makes sure two items fit in a row */
+    width: calc(50% - 5px); 
 
     /* width: calc(33% - 20px); */
     /* margin-right: 4%;
@@ -352,7 +361,6 @@ main h2{
     border: rgba(10, 60, 255, 0.4) 1px solid;
     width: 100%; /* Adjust to fit the container */
 
-    width: 100%; /* Adjust to fit the container */
     min-width: 150px;
     min-height: 90px;
     border-radius: 5px;
@@ -360,7 +368,7 @@ main h2{
 }
 
 .cameraFeed img {
-    width: 10%;
+    /* width: 10%; */
     /* width: 230px;
     height: 130px;
     height: auto;  */
@@ -637,7 +645,7 @@ ul {
 
 /*------------------- camera feed boxes -------------------*/
 
-.video-container {
+#cameraContainer {
     display: flex;
     justify-content: space-around;
 }
@@ -652,4 +660,393 @@ ul {
 header img {
     height: 60px;
     width: auto;
+}
+
+
+/* Dashboard Container */
+#dashboard {
+    display: flex;
+    height: 82vh;
+    width: 100%;
+    gap: 10px; /* Adds spacing between camera feeds and graphs */
+}
+
+/* Camera Feeds Section (30% width) */
+#cameraFeeds {
+    width: 30%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 10px;
+    overflow-y: auto;
+    height: 82vh; /* Fixed height */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Camera Feeds Header */
+#cameraFeeds h4 {
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #ddd; /* Adds a separator line */
+}
+
+/* Camera Feed Container */
+.camera-feed-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Adds spacing between feeds */
+    padding: 10px 0;
+}
+
+/* Individual Camera Feed */
+.cameraFeed {
+    /* Ensures 2 feeds per row with spacing */
+    flex: 0 0 calc(50% - 5px); 
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Graphs Section (70% width) */
+#graphs {
+    width: 70%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 82vh; /* Fixed height */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Controls Section */
+#controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+/* Label Styling */
+#controls label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Dropdown Styling */
+#hall-selector {
+    width: 200px;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: white;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Hover & Focus Effects */
+#hall-selector:hover,
+#hall-selector:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Charts Wrapper */
+#charts {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds spacing between chart rows */
+}
+
+/* Two Rows for Charts */
+.chart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Adds spacing between charts */
+    height: 50%; /* Each row takes 50% of the available height */
+}
+
+/* Individual Chart Styling */
+#chart-area, #bar-chart, #line-chart, #pie-chart {
+    flex: 1;
+    min-width: 48%;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Custom scrollbar for WebKit browsers */
+#cameraFeeds::-webkit-scrollbar {
+    width: 8px; /* Vertical scrollbar thickness */
+}
+
+#cameraFeeds::-webkit-scrollbar-track {
+    background: rgba(220, 216, 216, 0.415);
+    border-radius: 10px;
+}
+
+#cameraFeeds::-webkit-scrollbar-thumb {
+    background: rgba(30, 74, 251, 0.6);
+    border-radius: 10px;
+}
+
+#cameraFeeds::-webkit-scrollbar-thumb:hover {
+    background: rgba(24, 69, 246, 0.8);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*------------------- camera feed boxes -------------------*/
+
+#video-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.video-stream {
+    margin: 10px;
+    border-color: red;
+    width: 25%;
+    height: auto;
+}
+
+header img {
+    height: 60px;
+    width: auto;
+}
+
+/* Dashboard Container */
+#dashboard {
+    display: flex;
+    height: 82vh;
+    width: 100%;
+    gap: 10px; /* Adds spacing between camera feeds and graphs */
+}
+
+/* Camera Feeds Section (30% width) */
+#cameraFeeds {
+    width: 30%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 10px;
+    overflow-y: auto;
+    height: 82vh; /* Fixed height */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Camera Feeds Header */
+#cameraFeeds h4 {
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #ddd; /* Adds a separator line */
+}
+
+/* Camera Feed Container */
+.camera-feed-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Adds spacing between feeds */
+    padding: 10px 0;
+}
+
+/* Individual Camera Feed */
+.camera-feed {
+    /* Ensures 2 feeds per row with spacing */
+    /* flex: 0 0 calc(50% - 5px); */
+    /* background-color: #f5f5f5; */
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Graphs Section (70% width) */
+#graphs {
+    width: 70%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 82vh; /* Fixed height */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+}
+
+/* Controls Section */
+#controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+/* Label Styling */
+#controls label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Dropdown Styling */
+#hall-selector {
+    width: 200px;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: white;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+/* Hover & Focus Effects */
+#hall-selector:hover,
+#hall-selector:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Charts Wrapper */
+#charts {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adds spacing between chart rows */
+}
+
+/* Two Rows for Charts */
+.chart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Adds spacing between charts */
+    height: 50%; /* Each row takes 50% of the available height */
+}
+
+/* Individual Chart Styling */
+#chart-area, #bar-chart, #line-chart, #pie-chart, #integrated-line-chart {
+    flex: 1;
+    min-width: 48%;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
+    height: 100%; /* Ensure consistent height */
+}
+
+/* Ensure charts are always the same size */
+#line-chart, #chart-area {
+    display: none; /* Initially hidden */
+    height: 200px; /* Fixed height for consistency */
+}
+
+/* Custom scrollbar for WebKit browsers */
+#cameraFeeds::-webkit-scrollbar {
+    width: 8px; /* Vertical scrollbar thickness */
+}
+
+#cameraFeeds::-webkit-scrollbar-track {
+    background: rgba(220, 216, 216, 0.415);
+    border-radius: 10px;
+}
+
+#cameraFeeds::-webkit-scrollbar-thumb {
+    background: rgba(30, 74, 251, 0.6);
+    border-radius: 10px;
+}
+
+#cameraFeeds::-webkit-scrollbar-thumb:hover {
+    background: rgba(24, 69, 246, 0.8);
 }

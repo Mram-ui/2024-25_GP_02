@@ -32,9 +32,6 @@ latest_session_id={} # key: hall_id, value: session_id
 
 
 
-# Initialize shared camera_data
-#camera_data = get_shared_camera_data()
-
 # Initialize the YOLO model
 model = YOLO(MODEL_PATH)
 
@@ -490,159 +487,158 @@ def rename_last_file(event_id, person_id, session_id, enterance_time, exit_time,
             print(f"Renamed file to: {new_file_path}")
             break
 
-def frame_handler(frame, session_id, hall_id, event_id):
-    """
-    Process a frame to detect, count people, save cropped images, and merge IDs.
-    """
-    global id_mapping, person_tracking
-    results = model.track(frame, conf=0.5, classes=0, persist=True, tracker="botsort.yaml")
-    people_count = 0  # Initialize people count
-
-    # Load saved embeddings for the current event and session
-    saved_embeddings = load_embeddings(event_id, session_id)
-
-    # Track currently detected persons in this frame
-    current_detections = set()
-
-    # Process detections to count people and save cropped images
-    for result in results:
-        for box in result.boxes:
-            if int(box.cls) == 0:  # 'person' class detected (class ID 0: person)
-                people_count += 1
-                if box.id is not None:
-                    # Extract bounding box coordinates
-                    x1, y1, x2, y2 = map(int, box.xyxy[0])
-                    person_id = str(int(box.id.item()))  # Convert tensor to int, then to string
-                    current_detections.add(person_id)  # Add to current detections
-
-                    # Crop the detected person from the frame
-                    crop = frame[y1:y2, x1:x2]
-                    
-                    # Capture timestamp for image naming
-                    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                    
-                    # Extract features (embeddings) from the cropped image
-                    new_embedding = extract_features(crop)
-
-                    # Compare the new embedding with saved embeddings
-                    matched_person_id = compare_embeddings(new_embedding, saved_embeddings)
-
-                    if matched_person_id:
-                        # Merge IDs
-                        print(f"Person {person_id} matched with previously detected person {matched_person_id}")
-                        id_mapping[person_id] = matched_person_id  # Update the global ID mapping
-                        merged_id = matched_person_id
-                    else:
-                        merged_id = person_id
-
-                    # Update tracking for the person
-                    if merged_id not in person_tracking:
-                        person_tracking[merged_id] = {}
-                    if session_id not in person_tracking[merged_id]:
-                        # New entrance: Initialize tracking data
-                        person_tracking[merged_id][session_id] = {
-                            "EnteranceTime": timestamp,
-                            "LastDetectionTime": timestamp,
-                            "ExitTime": None,
-                            "Counter": 0,
-                            "DetectionCount": 0,  # Initialize detection count
-                        }
-                        print(f"New person detected: {merged_id}")
-
-                    # Increment the detection count and counter
-                    person_tracking[merged_id][session_id]["DetectionCount"] += 1
-                    person_tracking[merged_id][session_id]["Counter"] += 1
-                    counter = person_tracking[merged_id][session_id]["Counter"]
-
-                    # Update the last detection time
-                    person_tracking[merged_id][session_id]["LastDetectionTime"] = timestamp
-
-                    # Save the cropped image and embedding
-                    save_cropped_image(crop, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"], person_tracking[merged_id][session_id]["ExitTime"], counter)
-                    save_embedding(new_embedding, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"], person_tracking[merged_id][session_id]["ExitTime"], counter)
-
-                    # Draw bounding box with the merged ID
-                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                    cv2.putText(frame, f"ID: {merged_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-    # Update ExitTime for persons no longer detected
-    for person_id in list(person_tracking.keys()):
-        if person_id not in current_detections and session_id in person_tracking[person_id]:
-            if person_tracking[person_id][session_id]["ExitTime"] is None:
-                # Check if the person has not been detected for a while (e.g., 5 seconds)
-                last_detection_time = datetime.datetime.strptime(person_tracking[person_id][session_id]["LastDetectionTime"], "%Y%m%d_%H%M%S")
-                current_time = datetime.datetime.now()
-                if (current_time - last_detection_time).total_seconds() > 5:  # 5 seconds threshold
-                    person_tracking[person_id][session_id]["ExitTime"] = person_tracking[person_id][session_id]["LastDetectionTime"]
-                    print(f"Person {person_id} exited at {person_tracking[person_id][session_id]['ExitTime']}")
-
-                    # Rename the last saved image and embedding to include the ExitTime
-                    rename_last_file(event_id, person_id, session_id, person_tracking[person_id][session_id]["EnteranceTime"], person_tracking[person_id][session_id]["ExitTime"], person_tracking[person_id][session_id]["Counter"])
-        elif person_id in current_detections and session_id in person_tracking[person_id]:
-            # Update the last detection time
-            person_tracking[person_id][session_id]["LastDetectionTime"] = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    # Capture the current timestamp for the frame processing
-    log_timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    # Initialize the session_id key in the `camera_data` dictionary if not already present
-    if session_id not in camera_data:
-        camera_data[session_id] = []
-
-    # Append the processed data to the session's list
-    camera_data[session_id].append((people_count, log_timestamp, session_id, hall_id))
-
-    print(f"DEBUG: Updated camera_data[{session_id}] = {camera_data[session_id]}")
-
 # def frame_handler(frame, session_id, hall_id, event_id):
 #     """
-#     Process a frame to detect and count people, draw bounding boxes, and log results
-
-#     Parameters:
-#     - frame: The image frame to process (received from the camera stream).
-#     - session_id: The unique identifier for the current session.
-#     - hall_id: The identifier for the hall associated with the camera.
-
-#     Steps:
-#     1. Receives a frame every 5 seconds from the `generate_frames()` function.
-#     2. Counts the number of people detected in the received frame using the `model.track()` method.
-#     3. Saves the timestamp of the detection for future analysis.
-#     4. Logs the results (people_count, timestamp, session_id, hall_id) in the `camera_data` dictionary for database storage.
-
+#     Process a frame to detect, count people, save cropped images, and merge IDs.
 #     """
-#     # Use the model to detect objects and track them
-#     results = model.track(frame, conf=0.3, classes=0, persist=True, tracker="botsort.yaml")
-#     people_count = 0 # Initialize people count
+#     global id_mapping, person_tracking
+#     results = model.track(frame, conf=0.5, classes=0, persist=True, tracker="botsort.yaml")
+#     people_count = 0  # Initialize people count
 
-#     # Process detections to count people
+#     # Load saved embeddings for the current event and session
+#     saved_embeddings = load_embeddings(event_id, session_id)
+
+#     # Track currently detected persons in this frame
+#     current_detections = set()
+
+#     # Process detections to count people and save cropped images
 #     for result in results:
 #         for box in result.boxes:
-#             if int(box.cls) == 0:  # 'person' class detected (class ID 0: person, class ID 1: head)
+#             if int(box.cls) == 0:  # 'person' class detected (class ID 0: person)
 #                 people_count += 1
 #                 if box.id is not None:
 #                     # Extract bounding box coordinates
 #                     x1, y1, x2, y2 = map(int, box.xyxy[0])
-#                     # Draw bounding box
-#                     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-#                     person_id = box.id[0] # Add a label with the person's ID
-#                     cv2.putText(frame, f"ID: {person_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+#                     person_id = str(int(box.id.item()))  # Convert tensor to int, then to string
+#                     current_detections.add(person_id)  # Add to current detections
 
+#                     # Crop the detected person from the frame
+#                     crop = frame[y1:y2, x1:x2]
+                    
+#                     # Capture timestamp for image naming
+#                     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                    
+#                     # Extract features (embeddings) from the cropped image
+#                     new_embedding = extract_features(crop)
+
+#                     # Compare the new embedding with saved embeddings
+#                     matched_person_id = compare_embeddings(new_embedding, saved_embeddings)
+
+#                     if matched_person_id:
+#                         # Merge IDs
+#                         print(f"Person {person_id} matched with previously detected person {matched_person_id}")
+#                         id_mapping[person_id] = matched_person_id  # Update the global ID mapping
+#                         merged_id = matched_person_id
+#                     else:
+#                         merged_id = person_id
+
+#                     # Update tracking for the person
+#                     if merged_id not in person_tracking:
+#                         person_tracking[merged_id] = {}
+#                     if session_id not in person_tracking[merged_id]:
+#                         # New entrance: Initialize tracking data
+#                         person_tracking[merged_id][session_id] = {
+#                             "EnteranceTime": timestamp,
+#                             "LastDetectionTime": timestamp,
+#                             "ExitTime": None,
+#                             "Counter": 0,
+#                             "DetectionCount": 0,  # Initialize detection count
+#                         }
+#                         print(f"New person detected: {merged_id}")
+
+#                     # Increment the detection count and counter
+#                     person_tracking[merged_id][session_id]["DetectionCount"] += 1
+#                     person_tracking[merged_id][session_id]["Counter"] += 1
+#                     counter = person_tracking[merged_id][session_id]["Counter"]
+
+#                     # Update the last detection time
+#                     person_tracking[merged_id][session_id]["LastDetectionTime"] = timestamp
+
+#                     # Save the cropped image and embedding
+#                     save_cropped_image(crop, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"], person_tracking[merged_id][session_id]["ExitTime"], counter)
+#                     save_embedding(new_embedding, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"], person_tracking[merged_id][session_id]["ExitTime"], counter)
+
+#                     # Draw bounding box with the merged ID
+#                     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+#                     cv2.putText(frame, f"ID: {merged_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+#     # Update ExitTime for persons no longer detected
+#     for person_id in list(person_tracking.keys()):
+#         if person_id not in current_detections and session_id in person_tracking[person_id]:
+#             if person_tracking[person_id][session_id]["ExitTime"] is None:
+#                 # Check if the person has not been detected for a while (e.g., 5 seconds)
+#                 last_detection_time = datetime.datetime.strptime(person_tracking[person_id][session_id]["LastDetectionTime"], "%Y%m%d_%H%M%S")
+#                 current_time = datetime.datetime.now()
+#                 if (current_time - last_detection_time).total_seconds() > 5:  # 5 seconds threshold
+#                     person_tracking[person_id][session_id]["ExitTime"] = person_tracking[person_id][session_id]["LastDetectionTime"]
+#                     print(f"Person {person_id} exited at {person_tracking[person_id][session_id]['ExitTime']}")
+
+#                     # Rename the last saved image and embedding to include the ExitTime
+#                     rename_last_file(event_id, person_id, session_id, person_tracking[person_id][session_id]["EnteranceTime"], person_tracking[person_id][session_id]["ExitTime"], person_tracking[person_id][session_id]["Counter"])
+#         elif person_id in current_detections and session_id in person_tracking[person_id]:
+#             # Update the last detection time
+#             person_tracking[person_id][session_id]["LastDetectionTime"] = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 
 #     # Capture the current timestamp for the frame processing
-#     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#     log_timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 #     # Initialize the session_id key in the `camera_data` dictionary if not already present
 #     if session_id not in camera_data:
-#             camera_data[session_id] = []
+#         camera_data[session_id] = []
 
 #     # Append the processed data to the session's list
-#     camera_data[session_id].append((people_count, timestamp, session_id, hall_id))
+#     camera_data[session_id].append((people_count, log_timestamp, session_id, hall_id))
 
 #     print(f"DEBUG: Updated camera_data[{session_id}] = {camera_data[session_id]}")
 
+def frame_handler(frame, session_id, hall_id, event_id):
+    """
+    Process a frame to detect and count people, draw bounding boxes, and log results
+
+    Parameters:
+    - frame: The image frame to process (received from the camera stream).
+    - session_id: The unique identifier for the current session.
+    - hall_id: The identifier for the hall associated with the camera.
+
+    Steps:
+    1. Receives a frame every 5 seconds from the `generate_frames()` function.
+    2. Counts the number of people detected in the received frame using the `model.track()` method.
+    3. Saves the timestamp of the detection for future analysis.
+    4. Logs the results (people_count, timestamp, session_id, hall_id) in the `camera_data` dictionary for database storage.
+
+    """
+    # Use the model to detect objects and track them
+    results = model.track(frame, conf=0.3, classes=0, persist=True, tracker="botsort.yaml")
+    people_count = 0 # Initialize people count
+
+    # Process detections to count people
+    for result in results:
+        for box in result.boxes:
+            if int(box.cls) == 0:  # 'person' class detected (class ID 0: person, class ID 1: head)
+                people_count += 1
+                if box.id is not None:
+                    # Extract bounding box coordinates
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    # Draw bounding box
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    person_id = box.id[0] # Add a label with the person's ID
+                    cv2.putText(frame, f"ID: {person_id}", (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+
+    # Capture the current timestamp for the frame processing
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Initialize the session_id key in the `camera_data` dictionary if not already present
+    if session_id not in camera_data:
+            camera_data[session_id] = []
+
+    # Append the processed data to the session's list
+    camera_data[session_id].append((people_count, timestamp, session_id, hall_id))
+
+    print(f"DEBUG: Updated camera_data[{session_id}] = {camera_data[session_id]}")
+
 
 if __name__ == '__main__':
-    #camera_data = get_shared_camera_data()
 
     scheduler()
     time.sleep(0.5)

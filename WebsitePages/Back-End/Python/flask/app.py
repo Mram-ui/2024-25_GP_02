@@ -19,8 +19,6 @@ latest_session_id={} # key: hall_id, value: session_id
 # Global dictionary to store camera status
 camera_status = {}
 
-data={}
-
 # Define database configuration
 db_config = {
     'host': 'localhost',
@@ -338,7 +336,10 @@ def latest_people_count():
                 latest_time = datetime.strptime(str(entry['Time']), "%Y-%m-%d %H:%M:%S")
                 if (current_time - latest_time) > timedelta(seconds=10):
                     entry['Count'] = 'No Recent Data'
-        
+                # else:
+                #     # Update global dictionary with latest count
+                #     bar_chart_data[entry['HallName']] = entry['Count']
+
         return jsonify(data)
     finally:
         cursor.close()
@@ -365,8 +366,149 @@ def get_camera_status():
     """Endpoint to fetch the current status of all cameras."""
     return jsonify(camera_status)
 
+
+
+#this function will send the hall names + current count
+@app.route('/graph_data', methods=['GET'])
+def graphs_data():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    event_id = 101
+
+    halls = retrieve_halls(event_id, cursor)
+
+    # Initialize dictionaries to store the results
+    bar_chart_data = {}
+    brush_chart_data = {}
+    hall_thresholds = {}
+    pie_chart_data = {}
+    line_chart_data = {}
+    try:
+        for hall in halls:
+            print(f"Processing hall: {hall['HallName']} (ID: {hall['HallID']})")
+
+            # Query to get the latest people count for the session along with the hall name
+            current_time = datetime.now()
+            query = """
+            SELECT count, Time
+            FROM PeopleCount
+            WHERE SessionID = (
+                SELECT SessionID
+                FROM monitoredsession
+                WHERE hallID = %s
+                ORDER BY SessionID DESC
+                LIMIT 1
+            )
+            ORDER BY Time DESC
+            LIMIT 1            
+            """
+            brush_chart_query = '''
+            SELECT Time, count
+            FROM PeopleCount
+            WHERE SessionID IN (
+                SELECT SessionID
+                FROM monitoredsession
+                WHERE hallID = %s
+            )
+            ORDER BY Time
+            '''
+
+            cursor.execute(query, (hall['HallID'],))
+            bar_chart_result = cursor.fetchone()
+
+            cursor.execute(brush_chart_query, (hall['HallID'],))
+            brush_chart_result = cursor.fetchall()
+            bar_chart_data[hall['HallName']] = bar_chart_result['count']
+            # Store the threshold for the hall
+            if hall['EventID'] == event_id:
+                hall_thresholds[hall['HallName']] = hall['HallThreshold']
+
+
+            # # Debug: Print query results
+            # print(f"Latest count query result: {result}")
+            # print(f"Brush chart query result: {brush_chart_result}")
+            print("Hall thresholds:", hall_thresholds)
+
+            # Format brush chart data: convert Time to milliseconds and pair with count
+            if brush_chart_result:
+                brush_chart_data[hall['HallName']] = [
+                    [int(row['Time'].timestamp() * 1000), row['count']]  # Convert datetime to timestamp in milliseconds
+                    for row in brush_chart_result
+                ]
+            else:
+                brush_chart_data[hall['HallName']] = []
+
+            # # If data was older than 10 seconds ago, it will be 0 in the bar chart
+            # if bar_chart_result and 'Time' in bar_chart_result:
+            #     latest_time = datetime.strptime(str(bar_chart_result['Time']), "%Y-%m-%d %H:%M:%S")
+            #     if (current_time - latest_time) > timedelta(seconds=10):
+            #         bar_chart_data[hall['HallName']] = 0
+            #         brush_chart_data[hall['HallName']] = 0
+            #     else:
+            #         bar_chart_data[hall['HallName']] = bar_chart_result['count']
+            # else:
+            #     bar_chart_data[hall['HallName']] = 0
+
+        pie_chart_data['Main Hall'] = {'Female': 20, 'Male':10}
+        pie_chart_data['VIP'] = {'Female': 30, 'Male':10}
+        
+
+        line_chart_query = '''
+        SELECT Time, SUM(count) as total_count
+        FROM PeopleCount
+        GROUP BY Time
+        ORDER BY Time
+        '''
+        cursor.execute(line_chart_query)
+        line_chart_result = cursor.fetchall()
+
+        # Format the data for the line chart
+        line_chart_data = [
+            [int(row['Time'].timestamp() * 1000), row['total_count']]  # Convert datetime to milliseconds
+            for row in line_chart_result
+        ]
+
+        # print("Line chart data:", line_chart_data)
+
+        # print("Bar chart data:", bar_chart_data)
+        # print("Brush chart data:", brush_chart_data)
+
+
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        cursor.close()
+        connection.close()
+    # print('line_chart_data: ', line_chart_data)
+    return jsonify({
+        'bar_chart_data': bar_chart_data,
+        'brush_chart_data': brush_chart_data,
+        'hall_thresholds': hall_thresholds, # Include thresholds in the response
+        'pie_chart_data': pie_chart_data,
+        'line_chart_data': line_chart_data,
+    })
+
+
 if __name__ == '__main__':
     #camera_data = get_shared_camera_data()
     # Start background thread to monitor camera connections
     threading.Thread(target=monitor_camera_connections, daemon=True).start()
     app.run(debug=True, port=5000)
+
+
+
+# DO NOT DELETE IT -->
+# This query retreives the total count of each hall, from the strat of the event
+# It needs to be integrated with the tracker (for persistence in each frame for each person detected)
+# query = f'''
+# SELECT
+#     h.HallID,
+#     h.HallName,
+#     COALESCE(SUM(pc.Count), 0) AS TotalVisitors
+# FROM hall h
+# LEFT JOIN monitoredsession ms ON h.HallID = ms.HallID
+# LEFT JOIN peoplecount pc ON ms.SessionID = pc.SessionID
+# WHERE h.HallID = "{hall['HallID']}"
+# GROUP BY h.HallID, h.HallName
+# '''

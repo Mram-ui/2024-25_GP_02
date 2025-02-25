@@ -1,182 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather Timeline</title>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f4f4f9;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Timeline</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
 
-    h1 {
-      text-align: center;
-      color: #333;
-    }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
 
-    .container {
-      width: 80%;
-      margin: 0 auto;
-      text-align: center;
-    }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    select {
-      padding: 8px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
 
-    #chart {
-      width: 100%;
-      height: 400px;
-      margin-top: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #fff;
-    }
-  </style>
+        #chart {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        #bar-chart,
+        #line-chart {
+            max-width: 350px;
+            margin: 35px auto;
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Line Chart of Visitors</h1>
-    <label for="hall">Select Hall:</label>
-    <select id="hall">
-      <option value="Hall A">Hall A</option>
-      <option value="Hall B">Hall B</option>
-      <option value="All">All</option>
-    </select>
-    <div id="chart"></div>
-  </div>
+    <div class="container">
+        <h1>Line Chart of Visitors</h1>
+        <label for="hall">Select Hall:</label>
+        <select id="hall">
+            <option value="Hall A">Hall A</option>
+            <option value="Hall B">Hall B</option>
+            <option value="All">All</option>
+        </select>
+        <div id="chart"></div>
 
-  <script>
-const hallSelect = document.getElementById("hall");
-let currentHall = hallSelect.value;
+        <div id="line-chart">
+        </div>
 
-// Initialize the chart
-const chartOptions = {
-  series: [{ data: [] }], //The data series for the chart. Initially empty
-  chart: { //Configuration for the chart type, height, animations, and toolbar
-    id: "realtime",
-    height: 350,
-    type: "line",
-    animations: {
-      enabled: true,
-      easing: "linear",
-      dynamicAnimation: { speed: 1000 },
-    },
-    toolbar: { show: false },
-    zoom: { enabled: false },
-  },
-  dataLabels: { enabled: false },
-  stroke: { curve: "smooth" }, //Sets the line curve to "smooth"
-  title: { text: `Visitors for ${currentHall}`, align: "left" },
-  markers: { size: 0 },
-  xaxis: {
-    type: "datetime",
-    labels: { //Formats the x-axis labels to display time in MM:SS format
-      formatter: (value) => {
-        const date = new Date(value);
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        const seconds = date.getSeconds().toString().padStart(2, "0");
-        return `${minutes}:${seconds}`; // MM:SS format
-      },
-    },
-    range: 10 * 60 * 1000, // 10 minutes range
-  },
-  yaxis: {
-    max: 100,
-    labels: {
-      formatter: (value) => {
-        return Math.round(value); // Round to the nearest whole number
-      },
-    },
-  },
-  legend: { show: false },
-  colors: ["#008FFB", "#00E396"], // Different colors for Hall A and Hall B
 
-};
+        <div id="wrapper" style="height: 50%; width: 50%;">
+            <label for="hall-selector">Select Hall:</label>
+            <select id="hall-selector">
+                <option value="hallA">Hall A</option>
+                <option value="hallB">Hall B</option>
+                <option value="all">All</option>
+            </select>
+        
+            <div id="chart-area"></div>
+            <div id="chart-bar"></div>
 
-const chart = new ApexCharts(document.querySelector("#chart"), chartOptions);
-chart.render(); //Renders the chart inside the <div> with the ID chart
+        </div>
 
-// Fetch data and update the chart
-const fetchData = async () => {
-  try {
-    let seriesData = [];
 
-    if (currentHall === "All") {
-      // Fetch data for both Hall A and Hall B
-      const [responseA, responseB] = await Promise.all([
-        fetch("/data/Hall A").then((res) => res.json()),
-        fetch("/data/Hall B").then((res) => res.json()),
-      ]);
 
-      // Map data for Hall A
-      const dataA = responseA.map((entry) => ({
-        x: new Date(entry.time).getTime(),
-        y: entry.count,
-      }));
+    </div>
 
-      // Map data for Hall B
-      const dataB = responseB.map((entry) => ({
-        x: new Date(entry.time).getTime(),
-        y: entry.count,
-      }));
 
-      // Add both series to the chart
-      seriesData = [
-        { name: "Hall A", data: dataA },
-        { name: "Hall B", data: dataB },
-      ];
-    } else {
-      // Fetch data for the selected city
-      const response = await fetch(`/data/${currentHall}`);
-      const data = await response.json();
+    <!-- this is brush -->
+    <script>
+        // Function to generate random data
+        function generateDayWiseTimeSeries(baseval, count, yrange) {
+            var i = 0;
+            var series = [];
+            while (i < count) {
+                var x = baseval;
+                var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+                series.push([x, y]);
+                baseval += 86400000;
+                i++;
+            }
+            return series;
+        }
+    
+        // Initial data for Hall A and Hall B
+        var hallAData = generateDayWiseTimeSeries(new Date("22 Apr 2017").getTime(), 115, { min: 30, max: 90 });
+        var hallBData = generateDayWiseTimeSeries(new Date("22 Apr 2017").getTime(), 115, { min: 50, max: 110 });
+    
+        // Chart options
+        var options1 = {
+            chart: {
+                id: "chart2",
+                type: "line",
+                height: 230,
+                foreColor: "#ccc",
+                toolbar: {
+                    autoSelected: "pan",
+                    show: false
+                }
+            },
+            colors: ["#00BAEC"],
+            stroke: {
+                width: 2,
+                curve: 'straight',
+            },
+            annotations: {
+                yaxis: [{
+                    y: 60,
+                    borderColor: '#00E396',
+                    label: {
+                        borderColor: '#00E396',
+                        style: {
+                            color: '#fff',
+                            background: '#00E396',
+                        },
+                        text: 'Support',
+                    }
+                }]
+            },
+            grid: {
+                borderColor: "#555",
+                clipMarkers: false,
+                yaxis: {
+                    lines: {
+                        show: false
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            fill: {
+                gradient: {
+                    enabled: true,
+                    opacityFrom: 0.55,
+                    opacityTo: 0
+                }
+            },
+            series: [{
+                data: hallAData // Initial data for Hall A
+            }],
+            tooltip: {
+                theme: "dark"
+            },
+            xaxis: {
+                type: "datetime"
+            },
+            yaxis: {
+                min: 0,
+                tickAmount: 4
+            },
+            plotOptions: {
+                line: {
+                    colors: {
+                        threshold: 60,
+                        colorAboveThreshold: '#0088ee',
+                        colorBelowThreshold: '#ff0000',
+                    },
+                },
+            }
+        };
+    
+        var options2 = {
+            chart: {
+                id: "chart1",
+                height: 130,
+                type: "bar",
+                foreColor: "#ccc",
+                brush: {
+                    target: "chart2",
+                    enabled: true
+                },
+                selection: {
+                    enabled: true,
+                    fill: {
+                        color: "#fff",
+                        opacity: 0.4
+                    },
+                    xaxis: {
+                        min: new Date("27 Jul 2017 10:00:00").getTime(),
+                        max: new Date("14 Aug 2017 10:00:00").getTime()
+                    }
+                }
+            },
+            colors: ["#FF0080"],
+            series: [{
+                data: hallAData // Initial data for Hall A
+            }],
+            stroke: {
+                width: 2,
+            },
+            grid: {
+                borderColor: "#444"
+            },
+            markers: {
+                size: 0
+            },
+            xaxis: {
+                type: "datetime",
+                tooltip: {
+                    enabled: false
+                }
+            },
+            yaxis: {
+                tickAmount: 2
+            }
+        };
+    
+        // Initialize charts
+        var chart1 = new ApexCharts(document.querySelector("#chart-area"), options1);
+        var chart2 = new ApexCharts(document.querySelector("#chart-bar"), options2);
+        chart1.render();
+        chart2.render();
+    
+        // Handle dropdown change event
+        document.getElementById("hall-selector").addEventListener("change", function() {
+            var selectedHall = this.value;
+            var newData = selectedHall === "hallA" ? hallAData : hallBData;
+    
+            // Update both charts with the new data
+            chart1.updateSeries([{
+                data: newData
+            }]);
+            chart2.updateSeries([{
+                data: newData
+            }]);
+        });
+    </script>
+    
 
-      // Map data for the selected city
-      const newData = data.map((entry) => ({
-        x: new Date(entry.time).getTime(),
-        y: entry.count,
-      }));
 
-      // Add single series to the chart
-      seriesData = [{ name: currentHall, data: newData }];
-    }
 
-    // Update the chart with new data
-    chart.updateSeries(seriesData);
 
-    // Set the x-axis range to the last 10 minutes
-    const now = new Date().getTime();
-    chart.updateOptions({
-      xaxis: {
-        min: now - 10 * 60 * 1000, // Start from 10 minutes ago
-        max: now, // End at the current time
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
+    <script>
+        // this is the line-chart script
 
-// Handle city change
-hallSelect.addEventListener("change", () => {
-  currentHall = hallSelect.value;
-  chart.updateOptions({ title: { text: `Visitors for ${currentHall}` } });
-  fetchData();
-});
+        var lineChart = {
+            chart: {
+                type: 'line',
+                stacked: false,
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            colors: ["#FF1654", "#247BA0"],
+            series: [
+                {
+                    name: 'VisitorsCount',
+                    data: [20, 29, 37, 36, 44, 45, 50, 58],
+                },
+            ],
+            stroke: {
+                width: [4, 4]
+            },
+            plotOptions: {
+                bar: {
+                    columnWidth: "20%",
+                },
+            },
+            xaxis: {
+                categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+            },
+            yaxis: [
+                {
+                    axisTicks: {
+                        show: true,
+                    },
+                    axisBorder: {
+                        show: true,
+                        colors: "#FF1654"
+                    },
+                    labels: {
+                        style: {
+                            colors: "#FF1654"
+                        }
+                    },
+                    title: {
+                        text: "Visitors Count",
+                        style: {
+                            colors: "#247BA0"
+                        }
+                    }
+                }
+            ],
+            tooltip: {
+                shared: false,
+                intersect: true,
+                x: {
+                    show: false
+                }
+            },
+            legend: {
+                horizontalAlign: "left",
+                offsetX: 40
+            }
+        };
 
-// Fetch data immediately on page load
-fetchData();
+        var chart = new ApexCharts(document.querySelector("#line-chart"), lineChart);
 
-// Fetch data every 10 seconds
-setInterval(fetchData, 10000);
-</script>
+        chart.render();
+
+    </script>
+
+
+
+
+    <script>
+        const hallSelect = document.getElementById("hall");
+        let currentHall = hallSelect.value;
+
+        // Initialize the chart
+        const chartOptions = {
+            series: [{ data: [] }], //The data series for the chart. Initially empty
+            chart: { //Configuration for the chart type, height, animations, and toolbar
+                id: "realtime",
+                height: 350,
+                type: "line",
+                animations: {
+                    enabled: true,
+                    easing: "linear",
+                    dynamicAnimation: { speed: 1000 },
+                },
+                toolbar: { show: false },
+                zoom: { enabled: false },
+            },
+            dataLabels: { enabled: false },
+            stroke: { curve: "smooth" }, //Sets the line curve to "smooth"
+            title: { text: `Visitors for ${currentHall}`, align: "left" },
+            markers: { size: 0 },
+            xaxis: {
+                type: "datetime",
+                labels: { //Formats the x-axis labels to display time in MM:SS format
+                    formatter: (value) => {
+                        const date = new Date(value);
+                        const minutes = date.getMinutes().toString().padStart(2, "0");
+                        const seconds = date.getSeconds().toString().padStart(2, "0");
+                        return `${minutes}:${seconds}`; // MM:SS format
+                    },
+                },
+                range: 10 * 60 * 1000, // 10 minutes range
+            },
+            yaxis: {
+                max: 100,
+                labels: {
+                    formatter: (value) => {
+                        return Math.round(value); // Round to the nearest whole number
+                    },
+                },
+            },
+            legend: { show: false },
+            colors: ["#008FFB", "#00E396"], // Different colors for Hall A and Hall B
+
+        };
+
+        const chart = new ApexCharts(document.querySelector("#chart"), chartOptions);
+        chart.render(); //Renders the chart inside the <div> with the ID chart
+
+        // Fetch data and update the chart
+        const fetchData = async () => {
+            try {
+                let seriesData = [];
+
+                if (currentHall === "All") {
+                    // Fetch data for both Hall A and Hall B
+                    const [responseA, responseB] = await Promise.all([
+                        fetch("/data/Hall A").then((res) => res.json()),
+                        fetch("/data/Hall B").then((res) => res.json()),
+                    ]);
+
+                    // Map data for Hall A
+                    const dataA = responseA.map((entry) => ({
+                        x: new Date(entry.time).getTime(),
+                        y: entry.count,
+                    }));
+
+                    // Map data for Hall B
+                    const dataB = responseB.map((entry) => ({
+                        x: new Date(entry.time).getTime(),
+                        y: entry.count,
+                    }));
+
+                    // Add both series to the chart
+                    seriesData = [
+                        { name: "Hall A", data: dataA },
+                        { name: "Hall B", data: dataB },
+                    ];
+                } else {
+                    // Fetch data for the selected city
+                    const response = await fetch(`/data/${currentHall}`);
+                    const data = await response.json();
+
+                    // Map data for the selected city
+                    const newData = data.map((entry) => ({
+                        x: new Date(entry.time).getTime(),
+                        y: entry.count,
+                    }));
+
+                    // Add single series to the chart
+                    seriesData = [{ name: currentHall, data: newData }];
+                }
+
+                // Update the chart with new data
+                chart.updateSeries(seriesData);
+
+                // Set the x-axis range to the last 10 minutes
+                const now = new Date().getTime();
+                chart.updateOptions({
+                    xaxis: {
+                        min: now - 10 * 60 * 1000, // Start from 10 minutes ago
+                        max: now, // End at the current time
+                    },
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        // Handle city change
+        hallSelect.addEventListener("change", () => {
+            currentHall = hallSelect.value;
+            chart.updateOptions({ title: { text: `Visitors for ${currentHall}` } });
+            fetchData();
+        });
+
+        // Fetch data immediately on page load
+        fetchData();
+
+        // Fetch data every 10 seconds
+        setInterval(fetchData, 10000);
+    </script>
 </body>
+
 </html>
