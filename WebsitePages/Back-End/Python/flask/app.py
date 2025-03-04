@@ -449,8 +449,31 @@ def graphs_data():
             # else:
             #     bar_chart_data[hall['HallName']] = 0
 
-        pie_chart_data['Main Hall'] = {'Female': 20, 'Male':10}
-        pie_chart_data['VIP'] = {'Female': 30, 'Male':10}
+        # pie_chart_data['Main Hall'] = {'Female': 20, 'Male':10}
+        # pie_chart_data['VIP'] = {'Female': 30, 'Male':10}
+
+        pie_chart_query= '''
+        SELECT Gender, COUNT(Gender) AS count
+        FROM PersonTrack
+        WHERE Gender IN ('male', 'female')
+        GROUP BY Gender;
+        '''
+
+        cursor.execute(pie_chart_query)
+        pie_chart_result = cursor.fetchall()
+
+        pie_chart_data = { "Female": 0, "Male": 0 }
+
+        for row in pie_chart_result:
+            gender = row[0]
+            count = row[1]
+            if gender == "female":
+                pie_chart_data["Female"] = count
+            elif gender == "male":
+                pie_chart_data["Male"] = count
+
+
+
         
 
         line_chart_query = '''

@@ -22,6 +22,7 @@ MODEL_PATH = '../../Yolo/best.pt'
 MODEL_PATH = '../../../../Yolo/best.pt'
 
 model = YOLO(MODEL_PATH)
+gender_model=YOLO('../../../../Yolo/gender_classification.pt')  # Using YOLOv8 nano for classification
 
 # Global dictionary to track merged IDs
 id_mapping = {}
@@ -327,7 +328,7 @@ def save_to_database():
                     # Check if the detection count meets the minimum threshold (e.g., 3 frames)
                     if tracking_data["DetectionCount"] >= 3:
                         query = """
-                            INSERT INTO PersonTrack (ID, EntranceTime, ExitTime, SessionID)
+                            INSERT INTO PersonTrack (ID, EntranceTime, ExitTime, SessionID, Gender)
                             VALUES (%s, %s, %s, %s)
                         """
                         try:
@@ -338,8 +339,11 @@ def save_to_database():
                             # Debug log: Print the data being inserted
                             print(f"Inserting tracking data: ID={person_id}, EntranceTime={entrance_time}, ExitTime={exit_time}, SessionID={session_id}")
 
+                            gender=tracking_data["Gender"]
+
+
                             # Execute the query
-                            cursor.execute(query, (person_id, entrance_time, exit_time, session_id))
+                            cursor.execute(query, (person_id, entrance_time, exit_time, session_id, gender))
                             db_connection.commit()
                             print("##################################TRACKER_SAVED_INTO_DB#####################")
                         except mysql.connector.Error as err:
@@ -531,6 +535,9 @@ def rename_last_file(event_id, person_id, session_id, enterance_time, exit_time,
 #                         merged_id = matched_person_id
 #                     else:
 #                         merged_id = person_id
+#                         gender_results=gender_model.predict(crop)
+#                         pred_class = gender_results[0].probs.top1  # returns class 0 or 1
+#                         gender = "male" if pred_class == 1 else "female"  # get gender based on class index
 
 #                     # Update tracking for the person
 #                     if merged_id not in person_tracking:
@@ -543,7 +550,7 @@ def rename_last_file(event_id, person_id, session_id, enterance_time, exit_time,
 #                             "ExitTime": None,
 #                             "Counter": 0,
 #                             "DetectionCount": 0,  # Initialize detection count
-#                         }
+#                             "Gender": gender                         }
 #                         print(f"New person detected: {merged_id}")
 
 #                     # Increment the detection count and counter
