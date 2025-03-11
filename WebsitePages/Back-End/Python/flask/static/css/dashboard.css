@@ -666,7 +666,8 @@ header img {
 /* Dashboard Container */
 #dashboard {
     display: flex;
-    height: 82vh;
+    /* height: 82vh; */
+    height: 130vh;
     width: 100%;
     gap: 10px; /* Adds spacing between camera feeds and graphs */
 }
@@ -720,7 +721,7 @@ header img {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    height: 82vh; /* Fixed height */
+    /* height: 82vh; Fixed height */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
 }
 
@@ -903,7 +904,7 @@ header img {
 /* Dashboard Container */
 #dashboard {
     display: flex;
-    height: 82vh;
+    /* height: 82vh; */
     width: 100%;
     gap: 10px; /* Adds spacing between camera feeds and graphs */
 }
@@ -957,7 +958,9 @@ header img {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    height: 82vh; /* Fixed height */
+    /* height: 82vh; Fixed height */
+    height: 100vh; /* Fixed height */
+
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
 }
 

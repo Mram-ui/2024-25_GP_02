@@ -383,6 +383,7 @@ def graphs_data():
     hall_thresholds = {}
     pie_chart_data = {}
     line_chart_data = {}
+    halls_pie_chart_data= {}
     try:
         for hall in halls:
             print(f"Processing hall: {hall['HallName']} (ID: {hall['HallID']})")
@@ -424,11 +425,6 @@ def graphs_data():
                 hall_thresholds[hall['HallName']] = hall['HallThreshold']
 
 
-            # # Debug: Print query results
-            # print(f"Latest count query result: {result}")
-            # print(f"Brush chart query result: {brush_chart_result}")
-            print("Hall thresholds:", hall_thresholds)
-
             # Format brush chart data: convert Time to milliseconds and pair with count
             if brush_chart_result:
                 brush_chart_data[hall['HallName']] = [
@@ -448,6 +444,34 @@ def graphs_data():
             #         bar_chart_data[hall['HallName']] = bar_chart_result['count']
             # else:
             #     bar_chart_data[hall['HallName']] = 0
+
+
+
+            halls_pie_chart = '''
+                SELECT 
+                    h.HallName,
+                    ms.hallID, 
+                    AVG(TIMESTAMPDIFF(SECOND, pt.EntranceTime, pt.ExitTime)) AS avg_duration_seconds
+                FROM 
+                    persontrack pt
+                JOIN 
+                    monitoredsession ms ON pt.SessionID = ms.SessionID
+                JOIN
+                    hall h ON ms.hallID = h.hallID
+                GROUP BY 
+                    ms.hallID, h.HallName;  
+            '''
+
+        cursor.execute(halls_pie_chart)
+
+        # Fetch the results
+        halls_pie_chart_results = cursor.fetchall()
+
+        for row in halls_pie_chart_results:
+            halls_pie_chart_data[row['HallName']] = row['avg_duration_seconds']
+            print(f"Hall {row['HallName']}: Average Duration = {row['avg_duration_seconds']} seconds")
+            
+
 
         pie_chart_data['Main Hall'] = {'Female': 20, 'Male':10}
         pie_chart_data['VIP'] = {'Female': 30, 'Male':10}
@@ -482,11 +506,12 @@ def graphs_data():
         connection.close()
     # print('line_chart_data: ', line_chart_data)
     return jsonify({
+        'hall_thresholds': hall_thresholds, # Include thresholds in the response
         'bar_chart_data': bar_chart_data,
         'brush_chart_data': brush_chart_data,
-        'hall_thresholds': hall_thresholds, # Include thresholds in the response
         'pie_chart_data': pie_chart_data,
         'line_chart_data': line_chart_data,
+        'halls_pie_chart_data': halls_pie_chart_data,
     })
 
 
