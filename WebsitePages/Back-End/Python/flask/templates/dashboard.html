@@ -334,6 +334,13 @@
                 text-align: center;
                 font-size: xx-large;"></h2>
             </div>
+
+            <div id="averageTimeSpent" class="eventInformation">
+                <p style="margin-top: 4%;">Average Time Spent in Event</p>
+                <h2 id="averageTimeSpentTag" style="font-size: 40px; font-weight: 500; text-align: center; font-size: xx-large;"></h2>
+            </div>
+
+
             <script>
                 let numberOfHalls = '{{ numOfHalls }}';
                 console.log(numberOfHalls);
@@ -1521,7 +1528,6 @@
                         async function updateCharts() {
                             const data = await fetchData();
                             const selectedHall = document.getElementById("hall-selector").value || "All";
-                
                             // Update line chart or chart area
                             if (selectedHall === "All") {
                                 const brushChartData = data.brush_chart_data;
@@ -1612,7 +1618,7 @@
 
 
             </div>
-        </div>
+        </div>    
 
 
     </main>
@@ -1831,10 +1837,29 @@
             });
         }
 
+        async function updateAverageTimeSpent() {
+    try {
+        const response = await fetch('/average_time_spent');
+        const data = await response.json();
+        console.log('Average Time Spent Data:', data);  // Debugging
+
+        // Update the average time spent
+        const avgTimeSpentMinutes = data.avg_time_spent_minutes;
+        const avgTimeSpentTag = document.getElementById('averageTimeSpentTag');
+        if (avgTimeSpentTag) {
+            avgTimeSpentTag.innerText = `${avgTimeSpentMinutes} minutes`;
+        }
+    } catch (error) {
+        console.error('Error fetching average time spent:', error);
+    }
+}
+
         // Initial fetch and periodic updates
+        updateAverageTimeSpent();
         fetchAllThresholds().then(() => {
             setInterval(function () {
                 fetchPeopleCount();
+                updateAverageTimeSpent();
             }, 5000);
         });
     </script>

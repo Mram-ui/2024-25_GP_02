@@ -155,6 +155,10 @@
             #show_item {
                 display: block;
             }
+            
+            .error-messageForCamera {
+                color: red;
+            }
         </style>
     </head>
 
@@ -245,7 +249,7 @@
                         </div>
                         <div style="margin-right: 1%;" class="mb-3">
                             <label for="hallCamera">Hall Camera:</label>
-                            <select name="hallCamera[]" required>
+                            <select class="cameraSelection" name="hallCamera[]" required>
                                 <option value="" disabled selected>Select your camera</option>
                                 <?php
                                     include '../../Back-End/PHP/session.php';
@@ -281,6 +285,7 @@
                 </div>
                 <div>
                     <br>
+                    <div class="error-messageForCamera"></div>
                     <button type="submit" class="form__button button submit">ADD EVENT</button>
                 </div>
             </form>
@@ -298,7 +303,7 @@
                                 </div>
                                 <div style="margin-right: 1%;" class="mb-3">
                                     <label for="hallCamera">Hall Camera:</label>
-                                    <select name="hallCamera[]" required>
+                                    <select class="cameraSelection" name="hallCamera[]" required>
                                         <option value="" disabled selected>Select your camera</option>
                                         <?php
                                             include '../../Back-End/PHP/session.php';
@@ -349,6 +354,7 @@
                 const startDateInput = form.elements.startDate;
                 const endDateInput = form.elements.endDate;
                 const startTimeError = document.getElementById('startTimeError');
+                const cameraError = document.querySelector('.error-messageForCamera');
 
                 let lastStartDate = startDateInput.value;
                 let lastEndDate = endDateInput.value;
@@ -438,6 +444,32 @@
                     }
                 }
 
+                function validateCameraSelection() {
+                    const cameraSelects = document.querySelectorAll('.cameraSelection');
+                    const selectedCameras = new Set();
+                    let hasDuplicate = false;
+
+                    cameraSelects.forEach(select => {
+                        if (selectedCameras.has(select.value)) {
+                            hasDuplicate = true;
+                        } else {
+                            selectedCameras.add(select.value);
+                        }
+                    });
+
+                    if (hasDuplicate) {
+                        cameraError.innerText = "The same camera cannot be selected for multiple halls!";
+                        return false;
+                    } else {
+                        cameraError.innerText = "";
+                        return true;
+                    }
+                }
+
+                document.querySelectorAll('select[name="hallCamera[]"]').forEach(select => {
+                    select.addEventListener('change', validateCameraSelection);
+                });
+
                 loadEventData();
                 loadHallData();
 
@@ -446,12 +478,16 @@
                     saveHallData();
                 });
 
-                form.addEventListener('submit', () => {
-                    localStorage.removeItem('eventData');
-                    localStorage.removeItem('hallData');
+                form.addEventListener('submit', (event) => {
+                    if (!validateCameraSelection()) {
+                        event.preventDefault();
+                    } else {
+                        localStorage.removeItem('eventData');
+                        localStorage.removeItem('hallData');
+                    }
                 });
             });
-        </script>
+        </script> 
 
         <?php
             include '../../Back-End/PHP/session.php';
@@ -523,7 +559,7 @@
                             throw new Exception("Error inserting hall(s): " . $stmt->error);
                         }
 
-                        }
+                    }
                     
                     $conn->commit();
 
@@ -644,12 +680,20 @@
                     notificationsContainer.appendChild(successNotification);
     
     
-                    localStorage.removeItem('eventData');
-                    localStorage.removeItem('hallData');
+                   closeButton.addEventListener('click', () => {
+                        localStorage.removeItem('eventData');
+                        localStorage.removeItem('hallData');
+
+                        setTimeout(() => {
+                            window.location.href = '../../Back-End/PHP/userHome.php';
+                        }, 100);    
+                    });
+
                     document.body.appendChild(overlay);
                     document.body.appendChild(notificationsContainer);
                     </script>";
-
+                    
+            
                 } catch (Exception $e) {
                     $conn->rollback();
                     echo "<script>alert('Failed to add event: " . $e->getMessage() . ". Please check the event details and try again.');</script>";
