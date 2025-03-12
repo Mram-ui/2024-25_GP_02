@@ -1220,7 +1220,7 @@
                                                 color: '#fff',
                                                 background: '#FF0C0C',
                                             },
-                                            text: `Threshold: ${threshold}`,
+                                            text: `Capacity: ${threshold}`,
                                         }
                                     }],
                                 }
@@ -1744,7 +1744,7 @@
                             // Check if alert is already active or recently dismissed
                             const isDismissedRecently = checkDismissedRecently(item.HallID);
                             if (!isDismissedRecently && !activeThresholdAlerts[item.HallID]) {
-                                popupAlertMessages.push(`Hall <strong>${item.HallName}</strong> has exceeded the threshold! Visitors: ${count}, Threshold: ${threshold}`);
+                                popupAlertMessages.push(`Hall <strong>${item.HallName}</strong> has exceeded the capacity! Visitors: ${count}, Capacity: ${threshold}`);
 
                                 // Add alert to the camera-status div if not already present
                                 if (!document.getElementById(`threshold-alert-${item.HallID}`)) {
@@ -1752,7 +1752,7 @@
                                     listItem.className = 'threshold-alert';
                                     listItem.id = `threshold-alert-${item.HallID}`; // Unique ID for each hall's alert
                                     listItem.style.color = 'red'; // Red text for threshold alerts
-                                    listItem.textContent = `Threshold exceeded: Hall (${item.HallName})`;
+                                    listItem.textContent = `Capacity exceeded: Hall (${item.HallName})`;
                                     statusList.appendChild(listItem);
                                 }
 
