@@ -263,13 +263,6 @@
              .error-messageForCamera {
                  color: red; 
                  font-size: 14px; 
-                 margin-top: 5px; 
-                 width: 200%; 
-                 position: absolute; 
-                 top: 100%; 
-                 left: 0; 
-                 margin-right: 200%;
-                 visibility: hidden; 
              }
 
              .error-messageForCamera.active {
@@ -277,24 +270,30 @@
              }
              
             #capacityError {
-                 margin-top: 12%;
+                 margin-top: 17%;
              }
              
             .capacity-error {
                  color: red; 
                  font-size: 14px; 
-                 margin-top: 5px; 
                  width: 200%; 
                  position: absolute; 
-                 top: 100%; 
-                 left: 0; 
-                 margin-right: 200%;
                  visibility: hidden; 
             }
             .capacity-error.active {
                 visibility: visible !important;
             }
-
+            
+            .capacity-error2 {
+                 color: red; 
+                 font-size: 14px; 
+                 width: 200%; 
+                 position: absolute; 
+                 visibility: hidden; 
+            }
+            .capacity-error.active {
+                visibility: visible !important;
+            }
 
             #hall {
                 margin-top: 1%;
@@ -534,6 +533,12 @@
                 margin-bottom: 5%;
                 margin-right: 13%;
             } 
+            
+            #emptyFilelds {
+                color: red;
+                font-size: 0.9em;
+                text-align: center;
+            }   
         </style>
         <script>
             function validateDates() {
@@ -621,7 +626,8 @@
                     </button>
                 <?php endif; ?>
             </div>
-
+            
+            <div class="error-message" id="emptyFilelds"></div>
             <form id="viewEvent" class="form" method="POST" action="#" onsubmit="return validateDates()" style="align-items: center;">
 
                 <h3 style="margin-right: 50.6%;">Event information</h3> 
@@ -654,6 +660,7 @@
                 <div class="error-message" id="startTimeError"></div>
                 <div class="error-message" id="endDayError"></div>
                 <div class="error-message" id="startDayError"></div>
+                <div class="error-messageForCamera"></div>
                 
                  <!--   Upcoming events:   -->
                  <?php 
@@ -711,7 +718,6 @@
                                     $conn->close();
                                 ?>
                             </select><br>
-                            <div class="error-messageForCamera"></div>
                             <label id="HMAX" for="hallThreshold">Hall Max Capacity:</label><br>
                             <input id="HInput" name="hallThreshold[]" class="form__input capacity" type="text" placeholder="ex:100" value="<?php echo htmlspecialchars($hall['HallThreshold']); ?>" min="0" required readonly><br>
                             <div class="error-messageForCamera capacity-error" id="capacityError"></div>
@@ -916,7 +922,6 @@
             if (isSafari()) {
                 document.body.classList.add('safari-browser');
             }
-
         </script>
         
         <div id="popup" style="
@@ -1351,14 +1356,17 @@
                 const inputs = document.querySelectorAll(".form__input");
                 const errorMessageDiv = document.querySelector(".error-messageForCamera");
                 const halls = document.querySelectorAll(".hall");
-                const capacityInputs = document.querySelectorAll(".capacity"); 
-                const capacityErrorDiv = document.getElementById("capacityError"); 
+                const capacityInputs = document.querySelectorAll(".capacity");
+                const newCapacityInputs = document.querySelectorAll(".new-hall-capacity");
+                const capacityErrorDiv = document.getElementById("capacityError");
+                const capacityErrorNewDiv = document.getElementById("capacity-error2");
+                const emptyFieldsErrorDiv = document.getElementById("emptyFilelds");
 
                 let isEditing = false;
                 let originalValues = {};
 
                 function validateCameras() {
-                    const cameraSelects = document.querySelectorAll(".update-camera");
+                    const cameraSelects = document.querySelectorAll(".update-camera, .cameraNewHall");
                     const selectedCameras = [];
 
                     cameraSelects.forEach((select) => {
@@ -1371,23 +1379,30 @@
 
                     if (hasDuplicates) {
                         errorMessageDiv.textContent = "The same camera cannot be selected for multiple halls!";
-                        errorMessageDiv.classList.add("active"); 
+                        errorMessageDiv.classList.add("active");
                         return false;
                     } else {
                         errorMessageDiv.textContent = "";
-                        errorMessageDiv.classList.remove("active"); 
+                        errorMessageDiv.classList.remove("active");
                         return true;
                     }
                 }
 
                 function addCameraValidationListeners() {
-                    document.querySelectorAll(".update-camera").forEach((select) => {
-                        select.addEventListener("change", function() {
+                    document.querySelectorAll(".update-camera, .cameraNewHall").forEach((select) => {
+                        select.addEventListener("change", function () {
                             validateCameras();
-                            checkFormValidity();  
+                            checkFormValidity();
                         });
                     });
                 }
+
+                document.querySelector('.form').addEventListener('change', function (event) {
+                    if (event.target.classList.contains('update-camera') || event.target.classList.contains('cameraNewHall')) {
+                        validateCameras();
+                        checkFormValidity();
+                    }
+                });
 
                 function enableEditing() {
                     inputs.forEach((input) => {
@@ -1434,17 +1449,35 @@
                 function validateCapacity(event) {
                     const input = event.target;
                     const value = input.value.trim();
-                    const errorDiv = input.closest(".hall").querySelector(".capacity-error"); 
+                    const errorDiv = input.closest(".hall").querySelector(".capacity-error");
 
                     if (isNaN(value) || value < 0 || value === "") {
                         errorDiv.textContent = "Please enter a valid number greater than or equal to 0!";
                         errorDiv.classList.add("active");
-                        errorDiv.style.display = "block"; 
+                        errorDiv.style.display = "block";
                         return false;
                     } else {
                         errorDiv.textContent = "";
                         errorDiv.classList.remove("active");
                         errorDiv.style.display = "none";
+                        return true;
+                    }
+                }
+
+                function validateNewCapacity(event) {
+                    const input = event.target;
+                    const value = input.value.trim();
+                    const errorDiv2 = input.closest(".hall").querySelector(".capacity-error2");
+
+                    if (isNaN(value) || value < 0 || value === "") {
+                        errorDiv2.textContent = "Please enter a valid number greater than or equal to 0!";
+                        errorDiv2.classList.add("active");
+                        errorDiv2.style.display = "block";
+                        return false;
+                    } else {
+                        errorDiv2.textContent = "";
+                        errorDiv2.classList.remove("active");
+                        errorDiv2.style.display = "none";
                         return true;
                     }
                 }
@@ -1456,29 +1489,58 @@
                             allValid = false;
                         }
                     });
+                    newCapacityInputs.forEach((input) => {
+                        if (!validateNewCapacity({ target: input })) {
+                            allValid = false;
+                        }
+                    });
                     return allValid;
                 }
 
+                function checkEmptyFields() {
+                    let allValid = true;
+                    const requiredFields = [...inputs];
+
+                    requiredFields.forEach((input) => {
+                        if (!input.value.trim()) {
+                            input.style.border = "2px solid red";
+                            allValid = false;
+                        } else {
+                            input.style.border = "none";
+                        }
+                    });
+
+                    if (!allValid) {
+                        emptyFieldsErrorDiv.textContent = "All fields are required.";
+                        emptyFieldsErrorDiv.style.display = "block";
+                    } else {
+                        emptyFieldsErrorDiv.textContent = "";
+                        emptyFieldsErrorDiv.style.display = "none";
+                    }
+
+                    return allValid;
+                }
 
                 function checkFormValidity() {
                     const camerasValid = validateCameras();
                     const capacitiesValid = validateAllCapacities();
+                    const emptyFieldsValid = checkEmptyFields();
 
-                    if (camerasValid && capacitiesValid) {
+                    if (camerasValid && capacitiesValid && emptyFieldsValid) {
                         saveButton.disabled = false;
                     } else {
                         saveButton.disabled = true;
                     }
                 }
 
-                capacityInputs.forEach((input) => {
-                    input.addEventListener("blur", function(event) {
-                        validateCapacity(event);
-                        checkFormValidity(); 
+                inputs.forEach((input) => {
+                    input.addEventListener("blur", function (event) {
+                        checkEmptyFields();
+                        checkFormValidity();
                     });
 
-                    input.addEventListener("input", function(event) {
-                        validateCapacity(event);
+                    input.addEventListener("input", function (event) {
+                        checkEmptyFields();
                         checkFormValidity();
                     });
                 });
@@ -1503,20 +1565,20 @@
 
                     toggleButtons(true);
                     isEditing = false;
-                    checkFormValidity();  
+                    checkFormValidity();
                 });
 
                 saveButton.addEventListener("click", function (e) {
                     e.preventDefault();
-                    if (validateCameras() && validateAllCapacities()) {
+                    if (validateCameras() && validateAllCapacities() && checkEmptyFields()) {
                         document.querySelector("form").submit();
                     }
                 });
 
-                setTimeout(checkFormValidity, 200); 
+                setTimeout(checkFormValidity, 200);
             });
         </script>
-              
+
         <?php
             include '../../Back-End/PHP/session.php';
 
@@ -1578,15 +1640,21 @@
                 $validationPassed = true;
 
                 if ($eventStartDate == $today && $eventStartTime <= $now) {
-                    echo "<script> document.getElementById('startTimeError').innerText= 'For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.';</script>";
+                    // As text: 
+                    // echo "<script> document.getElementById('startTimeError').innerText= 'For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.';</script>";
+                    echo "<script> alert('For events scheduled today, the start time cannot be in the past! Please choose a valid time for today\'s event.');</script>";
                     $validationPassed = false;
                 } elseif ($eventStartDate < $today) {
-                    echo "<script> document.getElementById('startDayError').innerText ='The event cannot start in the past! Please select a future start date and time.';</script>";
+                    // As text: 
+                    // echo "<script> document.getElementById('startDayError').innerText ='The event cannot start in the past! Please select a future start date and time.';</script>";
+                    echo "<script> alert('The event cannot start in the past! Please select a future start date and time.');</script>";
                     $validationPassed = false;
                 }
 
                 if ($eventStartDate > $eventEndDate || ($eventStartDate == $eventEndDate && $eventStartTime >= $eventEndTime)) {
-                    echo "<script> document.getElementById('endDayError').innerText = 'The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.';</script>";
+                    // As text: 
+                    // echo "<script> document.getElementById('endDayError').innerText = 'The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.';</script>";
+                    echo "<script> alert('The event end date and time cannot be earlier than the start date and time! Please ensure the end date and time are after the start date and time.');</script>";
                     $validationPassed = false;
                 }
 
