@@ -377,6 +377,12 @@
                 margin-top: 0%;
                 margin-bottom: 2%;
             }
+            
+            #emptyFilelds {
+                color: red;
+                font-size: 0.9em;
+                text-align: center;
+            }   
         </style>
 
         <script>
@@ -537,9 +543,9 @@
                     <h2><?php echo $companyName ?></h2>
                 </div>
                 <div class="errorMessage" id="LogoNotValid"></div>
-                
+                <div class="error-message" id="emptyFilelds"></div>
                 <label for="companyName">Company Name</label>
-                <input name="companyName" class="form__input" type="text" value="<?php echo $companyName ?>" required readonly>
+                <input name="companyName" id="companyName" class="form__input" type="text" value="<?php echo $companyName ?>" required readonly>
                 <label for="email">Company Email</label>
                 <input name="email" id="email" class="form__input" type="email" value="<?php echo $email ?>" required readonly>
                 <div class="errorMessage" id="EmailNotValid"></div>
@@ -708,7 +714,7 @@
         
             <!--   EDIT SCRIPT   -->
             <script>
-               document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('DOMContentLoaded', function () {
                     const editButton = document.querySelector('#editButton');
                     const saveButton = document.querySelector("#saveButton");
                     const logoutButton = document.querySelector('#LogoutBtn');
@@ -723,7 +729,9 @@
                     const logoErrorMessage = document.getElementById("LogoNotValid");
                     const emailErrorMessage = document.getElementById('EmailNotValid');
                     const emailExistsMessage = document.getElementById('EmailExsit');
+                    const emptyFieldsMessage = document.getElementById('emptyFilelds');  
                     const emailInput = document.getElementById('email');
+                    const companyNameInput = document.getElementById('companyName');
 
                     const popupCancel = document.querySelector('#popupCancel');
                     const overlayForCancel = document.querySelector('#overlayForCancel');
@@ -809,14 +817,32 @@
                         let isValid = true;
                         emailErrorMessage.innerText = "";
                         emailExistsMessage.innerText = "";
+                        emptyFieldsMessage.innerText = ""; 
 
                         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
                         if (!emailPattern.test(emailInput.value)) {
                             emailErrorMessage.innerText = "Please enter a valid email address!";
                             isValid = false;
-                        } else if (!isUserOwnEmail(emailInput.value) && !isValidEmail(emailInput.value)) {
+                        }
+
+                        if (!isUserOwnEmail(emailInput.value) && !isValidEmail(emailInput.value)) {
                             emailExistsMessage.innerText = "This email is already being used!";
                             isValid = false;
+                        }
+
+                        if (!companyNameInput.value.trim()) {
+                            emptyFieldsMessage.innerText = "All fields are required.";
+                            isValid = false;
+                            companyNameInput.style.border = "2px solid red";  
+                        } else {
+                            companyNameInput.style.border = ""; 
+                        }
+
+                        if (!emailInput.value.trim()) {
+                            emptyFieldsMessage.innerText = "All fields are required.";
+                            isValid = false;
+                            emailInput.style.border = "2px solid red"; 
                         }
 
                         return isValid;
@@ -901,6 +927,7 @@
                         logoErrorMessage.innerText = ""; 
                         emailErrorMessage.innerText = ""; 
                         emailExistsMessage.innerText = "";
+                        emptyFieldsMessage.innerText = ""; 
                     }
 
                     function showCancelPopup() {
