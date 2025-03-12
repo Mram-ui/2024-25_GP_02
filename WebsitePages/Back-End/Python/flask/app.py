@@ -384,6 +384,7 @@ def graphs_data():
     pie_chart_data = {}
     line_chart_data = {}
     halls_pie_chart_data= {}
+    avg_time_spent_event_minutes = 0
     try:
         for hall in halls:
             print(f"Processing hall: {hall['HallName']} (ID: {hall['HallID']})")
@@ -522,6 +523,22 @@ def graphs_data():
 
 
 
+        # Query to calculate the average time spent in the whole event (in minutes)
+        avg_time_spent_query = """
+        SELECT AVG(total_time_spent) / 60 AS avg_time_spent_minutes
+        FROM (
+            SELECT ID, SUM(TIMESTAMPDIFF(SECOND, EntranceTime, ExitTime)) AS total_time_spent
+            FROM PersonTrack
+            WHERE ExitTime IS NOT NULL
+            GROUP BY ID
+        ) AS individual_times;
+        """
+        cursor.execute(avg_time_spent_query)
+        avg_time_spent_result = cursor.fetchone()
+        avg_time_spent_event_minutes = round(avg_time_spent_result['avg_time_spent_minutes'], 2) if avg_time_spent_result['avg_time_spent_minutes'] else 0
+
+
+
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:
@@ -535,6 +552,7 @@ def graphs_data():
         'pie_chart_data': pie_chart_data,
         'line_chart_data': line_chart_data,
         'halls_pie_chart_data': halls_pie_chart_data,
+        'avg_time_spent_event_minutes': avg_time_spent_event_minutes,
     })
 
 
