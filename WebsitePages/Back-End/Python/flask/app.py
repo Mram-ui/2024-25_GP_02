@@ -331,14 +331,16 @@ def latest_people_count():
         
         current_time = datetime.now()
         
-        for entry in data:
-            if entry['Time']:
-                latest_time = datetime.strptime(str(entry['Time']), "%Y-%m-%d %H:%M:%S")
-                if (current_time - latest_time) > timedelta(seconds=10):
-                    entry['Count'] = 'No Recent Data'
-                # else:
-                #     # Update global dictionary with latest count
-                #     bar_chart_data[entry['HallName']] = entry['Count']
+
+        #This checks if the data is older than 10 seconds, if so it will be marked as 'No Recent Data'
+        # for entry in data:
+        #     if entry['Time']:
+        #         latest_time = datetime.strptime(str(entry['Time']), "%Y-%m-%d %H:%M:%S")
+        #         if (current_time - latest_time) > timedelta(seconds=10):
+        #             entry['Count'] = 'No Recent Data'
+        #         # else:
+        #         #     # Update global dictionary with latest count
+        #         #     bar_chart_data[entry['HallName']] = entry['Count']
 
         return jsonify(data)
     finally:
@@ -476,27 +478,75 @@ def graphs_data():
         # pie_chart_data['Main Hall'] = {'Female': 20, 'Male':10}
         # pie_chart_data['VIP'] = {'Female': 30, 'Male':10}
 
-        pie_chart_query= '''
-        SELECT Gender, COUNT(Gender) AS count
-        FROM PersonTrack
-        WHERE Gender IN ('male', 'female')
-        GROUP BY Gender;
+        # pie_chart_query= '''
+        # SELECT Gender, COUNT(Gender) AS count
+        # FROM PersonTrack
+        # WHERE Gender IN ('male', 'female')
+        # GROUP BY Gender;
+        # '''
+
+        # cursor.execute(pie_chart_query)
+        # pie_chart_result = cursor.fetchall()
+
+        # pie_chart_data = { "Female": 0, "Male": 0 }
+
+        # for row in pie_chart_result:
+        #     gender = row[0]
+        #     count = row[1]
+        #     if gender == "female":
+        #         pie_chart_data["Female"] = count
+        #     elif gender == "male":
+        #         pie_chart_data["Male"] = count
+
+
+        # Query to get gender counts per hall
+        pie_chart_query = '''
+        SELECT 
+            h.HallName,
+            pt.Gender,
+            COUNT(pt.Gender) AS count
+        FROM 
+            PersonTrack pt
+        JOIN 
+            MonitoredSession ms ON pt.SessionID = ms.SessionID
+        JOIN 
+            Hall h ON ms.HallID = h.HallID
+        WHERE 
+            pt.Gender IN ('male', 'female')
+        GROUP BY 
+            h.HallName, pt.Gender;
         '''
 
         cursor.execute(pie_chart_query)
         pie_chart_result = cursor.fetchall()
 
-        pie_chart_data = { "Female": 0, "Male": 0 }
+        # Initialize pie_chart_data with hall names
+        pie_chart_data = {}
 
+        # Process the query results
         for row in pie_chart_result:
-            gender = row[0]
-            count = row[1]
-            if gender == "female":
-                pie_chart_data["Female"] = count
-            elif gender == "male":
-                pie_chart_data["Male"] = count
+            try:
+                hall_name = row['HallName']  # Access HallName from the dictionary
+                gender = row['Gender']       # Access Gender from the dictionary
+                count = row['count']         # Access count from the dictionary
 
+                # Initialize the hall in pie_chart_data if it doesn't exist
+                if hall_name not in pie_chart_data:
+                    pie_chart_data[hall_name] = { "Female": 0, "Male": 0 }
 
+                # Update the count for the corresponding gender
+                if gender == "female":
+                    pie_chart_data[hall_name]["Female"] = count
+                elif gender == "male":
+                    pie_chart_data[hall_name]["Male"] = count
+            except Exception as e:
+                print(f"Error processing row: {row}. Error: {e}")
+
+        # If no data is found, ensure pie_chart_data has at least one hall
+        if not pie_chart_data:
+            pie_chart_data = { "Main Hall": { "Female": 0, "Male": 0 } }
+
+        print("Pie Chart Data:", pie_chart_data)
 
         
 

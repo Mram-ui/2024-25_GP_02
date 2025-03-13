@@ -285,7 +285,7 @@
         <div id="allEventInformation" class="allEventInformation">
             <div class="eventInformation" style="padding: 5% 8%;">
                 {% for event in eventData %}
-                <h3><span id="EventName" style="margin-left: 2%; font-size: medium;">{{ event.EventName }}</span></h3>
+                <h3><span id="EventName" style="font-size: medium;">{{ event.EventName }}</span></h3>
                 <p style="white-space: nowrap; font-size: small;"><strong>Event Date:</strong><span id="EventDate"
                         style="margin-left: 2%; font-size: smaller;"></span></p>
                 <p style="font-size: small;"><strong>Event Time: </strong><span id="EventTime"
@@ -332,12 +332,15 @@
                 <h2 id="totalCountTag" style="font-size: 40px;       
                 font-weight: 500;
                 text-align: center;
-                font-size: xx-large;"></h2>
+                font-size: xx-large;
+                min-height: 50px;"></h2>
             </div>
 
             <div id="averageTimeSpent" class="eventInformation">
                 <p style="margin-top: 4%;">Average Time Spent in Event</p>
-                <h2 id="averageTimeSpentTag" style="font-size: 40px; font-weight: 500; text-align: center; font-size: xx-large;"></h2>
+                <h2 id="averageTimeSpentTag"
+                    style="font-size: 40px; font-weight: 500; text-align: center; font-size: x-large; min-height: 50px;">
+                </h2>
             </div>
 
 
@@ -357,11 +360,12 @@
                 //     }
             </script>
             <!-- Div for disconnected cameras -->
-            <div id="camera-status" class="allEventInformation" class="eventInformation">
-                <h3 style="font-size: small;">Alerts</h3><br>
+            <div id="camera-status" class="allEventInformation" class="eventInformation"
+                style="min-height: 100px; padding: 5% 8%;">
+                <h3 style="font-size: medium;">Alerts</h3><br>
                 <ul id="camera-status-list" style="list-style-type: none; padding: 0; margin: 0;">
                     <!-- List of disconnected cameras will be added here -->
-                    <p class="start-in-camera-status" style="color: rgb(188, 186, 186);">checking for alert...</p>
+                    <p class="start-in-camera-status" style="color: rgb(188, 186, 186);"></p>
                     <p class="refresh-request-in-camera-status" style="color: rgb(188, 186, 186);"></p>
 
                 </ul>
@@ -371,9 +375,7 @@
         </div>
 
 
-
         <div id="cameras" class="camera">
-
             <h4 style="margin-bottom: 1.5%; margin-top: 1%;">
                 <span class="dot"></span> Live Stream
                 <button class="help-icon">
@@ -396,6 +398,7 @@
                     <button class="close-btn">OK</button>
                 </div>
             </div>
+
             <div id="cameraContainer">
                 <div id="dashboard">
                     <!-- Camera Feeds Section -->
@@ -403,16 +406,12 @@
                         <h4>Live Camera Feeds</h4>
                         {% for camera in cameras %}
                         <div class="cameraFeed">
-                            <!-- <h3 style="margin: 0; margin-bottom: 2%;"></h3> -->
                             <h5 style="margin: 0; margin-bottom: 0%;">{{ camera.HallName }}</h5>
-
-
                             <p id="hall-{{ camera.hall_id }}" style="margin: 0; margin-bottom: 0.5%; font-size: 10px;">
                                 Visitors: </p>
                             <img class="cameraFeedImg" src="{{ url_for('video_feed', camera_id=camera.CameraID) }}"
                                 alt="No camera connection" style="margin: 0%;">
                         </div>
-                        <script> </script>
                         {% endfor %}
                     </div>
 
@@ -421,7 +420,7 @@
                         <div id="controls">
                             <label for="hall-selector">Select Hall:</label>
                             <select id="hall-selector">
-                                <option value="All">All</option> <!-- Add "All" option -->
+                                <option value="All">All</option>
                                 {% for camera in cameras %}
                                 <option value="{{ camera.HallName }}">{{ camera.HallName }}</option>
                                 {% endfor %}
@@ -433,1193 +432,665 @@
                             <div class="chart-row">
                                 <div id="line-chart"></div>
                                 <div id="chart-area"></div>
-                                <div id="bar-chart"></div>
-                            </div>
-                            <div class="chart-row">
-                                <div id="pie-chart"></div>
                                 <div id="integrated-line-chart"></div>
                             </div>
                             <div class="chart-row">
+                                <div id="pie-chart"></div>
                                 <div id="halls-pie-chart"></div>
+                                <div id="bar-chart"></div>
                             </div>
-                            <!-- <div class="chart-row">
-                                <div id="halls-pie-chart"></div>
-                            </div> -->
-                            
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- integrated scripts -->
+        <script>
+            document.addEventListener("DOMContentLoaded", async function () {
+                // Store chart instances for updates
+                let lineChart, chartArea, barChart, pieChart, integratedLineChart, hallsPieChart;
 
-                <!-- this is integrated-line-chart script -->
-                <!-- <script>
-                    document.addEventListener("DOMContentLoaded", async function () {
-                        async function fetchData() {
-                            const response = await fetch('/graph_data');
-                            const data = await response.json();
-                            return data.line_chart_data;
-                        }
+                // Fetch data from the backend
+                async function fetchData() {
+                    const response = await fetch('/graph_data');
+                    const data = await response.json();
+                    console.log("Graphs Data: ", data);
 
-                        async function renderLineChart() {
-                            const lineChartData = await fetchData();
-                            console.log("Line Chart Data:", lineChartData);
+                    return data;
+                }
 
-                            // Chart options
-                            const options = {
-                                chart: {
-                                    type: 'line',
-                                    height: 200,
-                                    foreColor: '#ccc',
-                                    toolbar: {
-                                        show: false
-                                    }
-                                },
-                                series: [{
-                                    name: 'Total Count',
-                                    data: lineChartData // Use the fetched data
-                                }],
-                                stroke: {
-                                    width: 2,
-                                    curve: 'smooth'
-                                },
-                                xaxis: {
-                                    type: 'datetime',
-                                    title: {
-                                        text: 'Time',
-                                        style: {
-                                            color: '#ccc'
-                                        }
-                                    }
-                                },
-                                yaxis: {
-                                    title: {
-                                        text: 'Count',
-                                        style: {
-                                            color: '#ccc'
-                                        }
-                                    }
-                                },
-                                tooltip: {
-                                    theme: 'dark',
-                                    x: {
-                                        format: 'dd MMM yyyy HH:mm'
-                                    }
-                                },
-                                grid: {
-                                    borderColor: '#555'
-                                },
-                                colors: ['#00BAEC']
-                            };
+                // Function to initialize all charts
+                async function initializeCharts(data) {
+                    // Initialize the line chart for all halls
+                    const brushChartData = data.brush_chart_data;
+                    const series = Object.keys(brushChartData).map(hallName => ({
+                        name: hallName,
+                        data: brushChartData[hallName] || []
+                    }));
 
-                            // Render the chart
-                            const chart = new ApexCharts(document.querySelector("#integrated-line-chart"), options);
-                            chart.render();
-                        }
-
-                        renderLineChart();
-                    });
-
-                </script> -->
-
-
-                <!-- this is line chart script -->
-                <!-- <script>
-                    document.addEventListener("DOMContentLoaded", async function () {
-                        async function fetchData() {
-                            const response = await fetch('/graph_data');
-                            const data = await response.json();
-                            return data;
-                        }
-
-                        async function renderLineChart() {
-                            const data = await fetchData();
-                            console.log("Fetched Data:", data);
-
-                            const brushChartData = data.brush_chart_data; // Contains time series data for each hall
-                            const series = [];
-
-                            // Convert data into ApexCharts series format
-                            Object.keys(brushChartData).forEach(hallName => {
-                                series.push({
-                                    name: hallName,
-                                    data: brushChartData[hallName] || [] // Ensure it's an array
-                                });
-                            });
-
-                            // Chart options
-                            const options = {
-                                chart: {
-                                    type: "line",
-                                    height: 200,
-                                    foreColor: "#ccc",
-                                    toolbar: { show: true },
-                                    zoom: { enabled: true }
-                                },
-                                title: {
-                                    text: 'Visitors in ',
-                                    align: 'Center',
-                                    style: {
-                                        fontSize: '14px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                xaxis: {
-                                    type: "datetime",
-                                    labels: { format: "HH:mm:ss" }
-                                },
-                                yaxis: {
-                                    title: { text: "People Count" }
-                                },
-                                stroke: {
-                                    width: 2,
-                                    curve: "smooth"
-                                },
-                                colors: ["#004AAD", "#DBAE58", "#488A99", "#F3FF33", "#6AB187", "#4CB5F5"], // Different colors for different halls
-                                series: series,
-                                tooltip: {
-                                    theme: "dark",
-                                    x: { format: "HH:mm:ss" }
-                                }
-                            };
-
-                            // Render chart
-                            const chart = new ApexCharts(document.querySelector("#line-chart"), options);
-                            chart.render();
-                        }
-
-                        renderLineChart();
-                    });
-                </script> -->
-
-                <!-- this is pie chart script -->
-                <!-- <script>
-                    document.addEventListener("DOMContentLoaded", async function () {
-                        async function fetchData() {
-                            const response = await fetch('/graph_data');
-                            const data = await response.json();
-                            return data;
-                        }
-                
-                        let pieChart; // Store the chart instance for updates
-                
-                        async function renderPieChart(selectedHall) {
-                            const data = await fetchData();
-                            console.log("PIE:", data);
-                
-                            let pieChartData;
-                
-                            if (selectedHall === "All") {
-                                // Aggregate data for all halls
-                                pieChartData = { Female: 0, Male: 0 };
-                
-                                Object.values(data.pie_chart_data).forEach(hallData => {
-                                    pieChartData.Female += hallData.Female || 0;
-                                    pieChartData.Male += hallData.Male || 0;
-                                });
-                            } else {
-                                // Get data for the selected hall
-                                pieChartData = data.pie_chart_data[selectedHall];
-                            }
-                
-                            if (!pieChartData) {
-                                console.error("No pie chart data found for the selected hall:", selectedHall);
-                                return;
-                            }
-                
-                            // Convert data into ApexCharts series format
-                            const series = Object.values(pieChartData); // Array of values for the pie chart
-                            const labels = Object.keys(pieChartData); // Array of labels for the pie chart
-                
-                            // Chart options
-                            const pieChartOptions = {
-                                series: series,
-                                chart: {
-                                    type: 'donut',
-                                    height: 250
-                                },
-                                labels: labels,
-                                colors: ['#EDB8C7', '#ACD6EA'],
-                                plotOptions: {
-                                    pie: {
-                                        startAngle: -90,
-                                        endAngle: 90,
-                                        offsetY: 2,
-                                        expandOnClick: false,
-                                        donut: {
-                                            size: '55%',
-                                            labels: {
-                                                show: true
-                                            }
-                                        }
-                                    }
-                                },
-                                legend: {
-                                    position: 'top',
-                                    horizontalAlign: 'center',
-                                    offsetY: 10,
-                                    markers: {
-                                        width: 10,
-                                        height: 10
-                                    },
-                                    fontSize: '12px',
-                                    itemMargin: {
-                                        horizontal: 5,
-                                        vertical: 0
-                                    }
-                                },
-                                grid: {
-                                    padding: {
-                                        bottom: -10
-                                    }
-                                },
-                                responsive: [{
-                                    breakpoint: 480,
-                                    options: {
-                                        chart: {
-                                            width: 200
-                                        },
-                                        legend: {
-                                            position: 'bottom'
-                                        }
-                                    }
-                                }]
-                            };
-                
-                            // Render or update the chart
-                            if (pieChart) {
-                                pieChart.updateOptions(pieChartOptions);
-                            } else {
-                                pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieChartOptions);
-                                pieChart.render();
-                            }
-                        }
-                
-                        // Handle dropdown change event
-                        document.getElementById("hall-selector").addEventListener("change", function () {
-                            const selectedHall = this.value;
-                            renderPieChart(selectedHall);
-                        });
-                
-                        // Initialize the pie chart with the first hall
-                        const initialHall = document.getElementById("hall-selector").value;
-                        renderPieChart(initialHall);
-                    });
-                </script> -->
-
-
-                <!-- this is brush -->
-                <!-- <script>
-                    // Fetch data from the backend
-                    async function fetchData() {
-                        const response = await fetch('/graph_data');
-                        const data = await response.json();
-                        return data;
-                    }
-
-                    // Initialize charts with empty data (line and bar chart)
-                    let chart1, chart2;
-                    let hallThresholds = {}; // Store thresholds for all halls
-
-                    function initializeCharts(initialData, threshold) {
-                        const options1 = {
-                            chart: {
-                                id: "chart2",
-                                type: "line",
-                                height: 130,
-                                foreColor: "#ccc",
-                                toolbar: {
-                                    autoSelected: "pan",
-                                    show: false
-                                }
-                            },
-                            title: {
-                                text: 'Visitors in ',
-                                align: 'Center',
-                                style: {
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    fontFamily: 'Poppins',
-                                    color: '#263238'
-                                },
-                            },
-                            colors: ["#004AAD"],
-                            stroke: {
-                                width: 2,
-                                curve: 'smooth',
-                            },
-                            grid: {
-                                borderColor: "#555",
-                                clipMarkers: false,
-                                yaxis: {
-                                    lines: {
-                                        show: false
-                                    }
-                                }
-                            },
-                            dataLabels: {
-                                enabled: false
-                            },
-                            fill: {
-                                gradient: {
-                                    enabled: true,
-                                    opacityFrom: 0.55,
-                                    opacityTo: 0
-                                }
-                            },
-                            series: [{
-                                data: initialData // Initial data for the chart
-                            }],
-                            tooltip: {
-                                theme: "dark"
-                            },
-                            xaxis: {
-                                type: "datetime"
-                            },
-                            yaxis: {
-                                min: 0,
-                                tickAmount: 4
-                            },
-                            annotations: {
-                                yaxis: [{
-                                    y: threshold, // Use the threshold value
-                                    borderColor: '#ff0000',
-                                    label: {
-                                        borderColor: '#ff0000',
-                                        style: {
-                                            color: '#fff',
-                                            background: '#FF0C0C',
-                                        },
-                                    }
-                                }],
-                            },
-                            plotOptions: {
-                                line: {
-                                    colors: {
-                                        threshold: threshold,
-                                        colorAboveThreshold: '#ff0000',
-                                        colorBelowThreshold: '#004AAD',
-                                    },
-                                },
-                            }
-
-                        };
-
-                        const options2 = {
-                            chart: {
-                                id: "chart1",
-                                height: 130,
-                                type: "bar",
-                                foreColor: "#ccc",
-                                brush: {
-                                    target: "chart2",
-                                    enabled: true
-                                },
-                                selection: {
-                                    enabled: true,
-                                    fill: {
-                                        color: "#fff",
-                                        opacity: 0.4
-                                    }
-                                }
-                            },
-                            colors: ["#FF0080"],
-                            series: [{
-                                data: initialData // Initial data for the chart
-                            }],
-                            stroke: {
-                                width: 2,
-                            },
-                            grid: {
-                                borderColor: "#444"
-                            },
-                            markers: {
-                                size: 0
-                            },
-                            xaxis: {
-                                type: "datetime",
-                                tooltip: {
-                                    enabled: false
-                                }
-                            },
-                            yaxis: {
-                                tickAmount: 2
-                            }
-                        };
-
-                        chart1 = new ApexCharts(document.querySelector("#chart-area"), options1);
-                        chart2 = new ApexCharts(document.querySelector("#chart-bar"), options2);
-                        chart1.render();
-                        chart2.render();
-                    }
-
-                    // Handle dropdown change event
-                    document.getElementById("hall-selector").addEventListener("change", async function () {
-                        const selectedHall = this.value;
-                        const data = await fetchData();
-                        const newData = data.brush_chart_data[selectedHall] || [];
-                        const threshold = data.hall_thresholds[selectedHall] ?? 0;
-
-                        // Update both charts with the new data and threshold
-                        chart1.updateOptions({
-                            series: [{
-                                data: newData
-                            }],
-                            title: {
-                                text: 'Visitors in ' + selectedHall,
-                                align: 'Center',
-                                style: {
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    fontFamily: 'Poppins',
-                                    color: '#263238'
-                                },
-                            },
-                            // annotations: {
-                            //     yaxis: [{
-                            //         y: threshold,
-                            //         borderColor: '#f44336',
-                            //         label: {
-                            //             borderColor: '#f44336',
-                            //             style: {
-                            //                 color: '#fff',
-                            //                 background: '#f44336',
-                            //                 opacity: '#f7F44336'
-
-                            //             },
-                            //             text: 'Threshold ' + threshold,
-                            //         }
-                            //     }],
-                            // },
-                        });
-                        chart2.updateSeries([{
-                            data: newData
-                        }]);
-                    });
-
-                    // Fetch data and initialize the charts
-                    fetchData().then(data => {
-                        const hallSelector = document.getElementById("hall-selector");
-                        const initialHall = document.getElementById("hall-selector").value; // Get the first hall
-                        const initialData = data.brush_chart_data[initialHall] || []; // Get data for the first hall
-                        const initialThreshold = data.hall_thresholds[initialHall] || 0; // Get threshold for the first hall
-
-                        // Initialize the charts with data for the first hall
-                        initializeCharts(initialData, initialThreshold);
-                        // Trigger the "change" event programmatically to update charts
-                        hallSelector.dispatchEvent(new Event("change"));
-
-                    });
-                </script> -->
-                <!-- this is barchart script -->
-                <!-- <script>
-                    //this is barchart script
-                    var options = {
+                    const lineChartOptions = {
                         chart: {
-                            type: 'bar',
+                            type: "line",
+                            height: 170,
+                            foreColor: "#333",
+                            toolbar: { show: false },
+                            zoom: { enabled: true }
                         },
                         title: {
-                            text: `Total Visitors`,
-                            align: 'Center',
+                            text: 'Visitors in All Halls Over Time',
+                            align: 'center',
                             style: {
-                                fontSize: '14px',
+                                fontSize: '12px',
                                 fontWeight: 'bold',
                                 fontFamily: 'Poppins',
                                 color: '#263238'
                             },
                         },
-                        yaxis: {
-                            title: { text: "People Count" }
-                        },
-
-                        series: [{
-                            name: 'hallCount',
-                            //IMPORT data of count
-                            data: [],
-                        }],
                         xaxis: {
-                            //IMPORT the hall names
-                            categories: [],
+                            type: "datetime",
+                            title: {
+                                text: 'Time',
+                                offsetY: 2,
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                format: "HH:mm",
+                                rotate: -45,
+                                datetimeUTC: false,
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
                         },
+                        yaxis: {
+                            title: {
+                                text: "People Count",
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        },
+                        stroke: {
+                            width: 2,
+                            curve: "smooth"
+                        },
+                        colors: ["#004AAD", "#DBAE58", "#488A99", "#F3FF33", "#6AB187", "#4CB5F5"],
+                        series: series,
+                        tooltip: {
+                            theme: "light",
+                            x: { format: "HH:mm" }
+                        },
+                        grid: {
+                            borderColor: '#e0e0e0',
+                            strokeDashArray: 4
+                        }
+                    };
+
+                    lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
+                    lineChart.render();
+
+                    // Initialize the chart area for the first hall
+                    const initialHall = document.getElementById("hall-selector").value;
+                    renderChartArea(data, initialHall);
+
+                    // Initialize the bar chart
+                    initializeBarChart(data);
+
+                    // Initialize the pie chart
+                    initializePieChart(data, initialHall);
+
+                    // Initialize the integrated line chart
+                    initializeIntegratedLineChart(data);
+
+                    // Initialize the halls pie chart
+                    initializeHallsPieChart(data);
+                }
+
+                // Function to render the chart area for a specific hall
+                function renderChartArea(data, selectedHall) {
+                    const brushChartData = data.brush_chart_data[selectedHall] || [];
+                    const threshold = data.hall_thresholds[selectedHall] || 0;
+
+                    const chartAreaOptions = {
+                        chart: {
+                            id: "chart2",
+                            type: "line",
+                            height: 170,
+                            foreColor: "#333",
+                            toolbar: { show: false }
+                        },
+                        title: {
+                            text: `Visitors in ${selectedHall} Over Time`,
+                            align: 'center',
+                            style: {
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Poppins',
+                                color: '#263238'
+                            },
+                        },
+                        colors: ["#004AAD"],
+                        stroke: {
+                            width: 2,
+                            curve: 'smooth',
+                        },
+                        grid: {
+                            borderColor: "#e0e0e0",
+                            strokeDashArray: 4,
+                            yaxis: {
+                                lines: {
+                                    show: false
+                                }
+                            }
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        fill: {
+                            gradient: {
+                                enabled: true,
+                                opacityFrom: 0.55,
+                                opacityTo: 0
+                            }
+                        },
+                        series: [{
+                            name: selectedHall,
+                            data: brushChartData
+                        }],
+                        tooltip: {
+                            theme: "light",
+                            x: { format: "HH:mm" }
+                        },
+                        xaxis: {
+                            type: "datetime",
+                            title: {
+                                offsetY: 2,
+                                text: 'Time',
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                format: "HH:mm",
+                                datetimeUTC: false,
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: "People Count",
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            min: 0,
+                            tickAmount: 4
+                        },
+                        annotations: {
+                            yaxis: [{
+                                y: threshold,
+                                borderColor: '#ff0000',
+                                label: {
+                                    borderColor: '#ff0000',
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF0C0C',
+                                    },
+                                    text: `Capacity: ${threshold}`,
+                                }
+                            }],
+                        }
+                    };
+
+                    if (chartArea) {
+                        chartArea.updateOptions(chartAreaOptions);
+                        chartArea.updateSeries([{
+                            name: selectedHall,
+                            data: brushChartData
+                        }]);
+                    } else {
+                        chartArea = new ApexCharts(document.querySelector("#chart-area"), chartAreaOptions);
+                        chartArea.render();
+                    }
+                }
+
+                // Function to initialize the bar chart
+                function initializeBarChart(data) {
+                    const hallNames = Object.keys(data.bar_chart_data);
+                    const hallCount = Object.values(data.bar_chart_data);
+
+                    const barChartOptions = {
+                        chart: {
+                            type: 'bar',
+                            height: 177,
+                            width: '100%',
+                            foreColor: "#333",
+                            toolbar: { show: false }
+                        },
+                        colors: ['#004aad'],
+                        title: {
+                            text: 'Visitors per Hall',
+                            align: 'center',
+                            style: {
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Poppins',
+                                color: '#263238'
+                            },
+                        },
+                        xaxis: {
+                            categories: hallNames,
+                            title: {
+                                text: 'Hall Name',
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: "People Count",
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Visitors',
+                            data: hallCount,
+                        }],
                         plotOptions: {
                             bar: {
                                 columnWidth: '35%',
                             }
                         },
+                        grid: {
+                            borderColor: '#e0e0e0',
+                            strokeDashArray: 4
+                        }
                     };
 
-                    function updateBarChart() {
-                        fetch('/graph_data')
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('GRAPHS: ', data)
-
-                                const hallNames = Object.keys(data.bar_chart_data);
-                                const hallCount = Object.values(data.bar_chart_data);
-
-                                barChart.updateOptions({
-                                    xaxis: {
-                                        categories: hallNames,
-                                    }
-                                });
-                                barChart.updateSeries([{
-                                    name: 'Visitors',
-                                    data: hallCount,
-                                }]);
+                    barChart = new ApexCharts(document.querySelector("#bar-chart"), barChartOptions);
+                    barChart.render();
+                }
 
 
-                            })
-                            .catch(error => console.error('Error fetching graph data:', error));
+                function initializePieChart(data, selectedHall) {
+                    console.log("Initializing Pie Chart for:", selectedHall);
+
+                    let pieChartData;
+
+                    if (selectedHall === "All") {
+                        pieChartData = { Female: 0, Male: 0 };
+                        Object.values(data.pie_chart_data).forEach(hallData => {
+                            pieChartData.Female += hallData.Female || 0; // Ensure hallData is an object
+                            pieChartData.Male += hallData.Male || 0; // Ensure hallData is an object
+                        });
+                    } else {
+                        pieChartData = data.pie_chart_data[selectedHall];
                     }
 
-                    setInterval(updateBarChart, 5000);
-                    updateBarChart();
+                    console.log("Pie Chart Data:", pieChartData);
 
-
-                    var barChart = new ApexCharts(document.querySelector('#bar-chart'), options);
-                    barChart.render();
-
-                    var intervalRuns = 0;
-                    var interval = window.setInterval(function () {
-                        intervalRuns++
-                        getNewSeries(lastDate, {
-                            min: 10,
-                            max: 90,
-                        })
-                        chart.updateSeries([{
-                            data: data
-                        }])
-
-                        if (intervalRuns === 2 && window.isATest === true) {
-                            clearInterval(interval)
-                        }
-                    }, 1000)
-                </script> -->
-
-
-
-                <!-- integrated scripts -->
-                <script>
-                    document.addEventListener("DOMContentLoaded", async function () {
-                        // Store chart instances for updates
-                        let lineChart, chartArea, barChart, pieChart, integratedLineChart, hallsPieChart;
-                
-                        // Fetch data from the backend
-                        async function fetchData() {
-                            const response = await fetch('/graph_data');
-                            const data = await response.json();
-                            return data;
-                        }
-                
-                        // Function to initialize all charts
-                        async function initializeCharts(data) {
-                            // Initialize the line chart for all halls
-                            const brushChartData = data.brush_chart_data;
-                            const series = Object.keys(brushChartData).map(hallName => ({
-                                name: hallName,
-                                data: brushChartData[hallName] || []
-                            }));
-                
-                            const lineChartOptions = {
-                                chart: {
-                                    type: "line",
-                                    height: 200,
-                                    foreColor: "#333",
-                                    toolbar: { show: false },
-                                    zoom: { enabled: true }
-                                },
-                                title: {
-                                    text: 'Visitors in All Halls Over Time',
-                                    align: 'center',
-                                    style: {
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                xaxis: {
-                                    type: "datetime",
-                                    title: {
-                                        text: 'Time',
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        format: "HH:mm:ss",
-                                        rotate: -45,
-                                        datetimeUTC: false,
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                yaxis: {
-                                    title: {
-                                        text: "People Count",
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                stroke: {
-                                    width: 2,
-                                    curve: "smooth"
-                                },
-                                colors: ["#004AAD", "#DBAE58", "#488A99", "#F3FF33", "#6AB187", "#4CB5F5"],
-                                series: series,
-                                tooltip: {
-                                    theme: "light",
-                                    x: { format: "HH:mm:ss" }
-                                },
-                                grid: {
-                                    borderColor: '#e0e0e0',
-                                    strokeDashArray: 4
+                    const pieChartOptions = {
+                        series: Object.values(pieChartData),
+                        chart: {
+                            type: 'donut',
+                            height: 160,
+                            foreColor: "#333"
+                        },
+                        title: {
+                            text: 'Gender Distribution in ' + selectedHall,
+                            align: 'center',
+                            style: {
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Poppins',
+                                color: '#263238'
+                            },
+                        },
+                        labels: Object.keys(pieChartData),
+                        colors: ['#EDB8C7', '#ACD6EA'],
+                        plotOptions: {
+                            pie: {
+                                startAngle: -90,
+                                endAngle: 90,
+                                offsetY: 2,
+                                expandOnClick: false,
+                                donut: {
+                                    size: '55%',
+                                    // labels: {
+                                    //     show: true
+                                    // }
                                 }
-                            };
-                
-                            lineChart = new ApexCharts(document.querySelector("#line-chart"), lineChartOptions);
-                            lineChart.render();
-                
-                            // Initialize the chart area for the first hall
-                            const initialHall = document.getElementById("hall-selector").value;
-                            renderChartArea(data, initialHall);
-                
-                            // Initialize the bar chart
-                            initializeBarChart(data);
-                
-                            // Initialize the pie chart
-                            initializePieChart(data, initialHall);
-                
-                            // Initialize the integrated line chart
-                            initializeIntegratedLineChart(data);
-                
-                            // Initialize the halls pie chart
-                            initializeHallsPieChart(data);
-                        }
-                
-                        // Function to render the chart area for a specific hall
-                        function renderChartArea(data, selectedHall) {
-                            const brushChartData = data.brush_chart_data[selectedHall] || [];
-                            const threshold = data.hall_thresholds[selectedHall] || 0;
-                
-                            const chartAreaOptions = {
-                                chart: {
-                                    id: "chart2",
-                                    type: "line",
-                                    height: 200,
-                                    foreColor: "#333",
-                                    toolbar: { show: false }
-                                },
-                                title: {
-                                    text: `Visitors in ${selectedHall} Over Time`,
-                                    align: 'center',
-                                    style: {
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                colors: ["#004AAD"],
-                                stroke: {
-                                    width: 2,
-                                    curve: 'smooth',
-                                },
-                                grid: {
-                                    borderColor: "#e0e0e0",
-                                    strokeDashArray: 4,
-                                    yaxis: {
-                                        lines: {
-                                            show: false
-                                        }
-                                    }
-                                },
-                                dataLabels: {
-                                    enabled: false
-                                },
-                                fill: {
-                                    gradient: {
-                                        enabled: true,
-                                        opacityFrom: 0.55,
-                                        opacityTo: 0
-                                    }
-                                },
-                                series: [{
-                                    name: selectedHall,
-                                    data: brushChartData
-                                }],
-                                tooltip: {
-                                    theme: "light",
-                                    x: { format: "HH:mm:ss" }
-                                },
-                                xaxis: {
-                                    type: "datetime",
-                                    title: {
-                                        text: 'Time',
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        format: "HH:mm:ss",
-                                        datetimeUTC: false,
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                yaxis: {
-                                    title: {
-                                        text: "People Count",
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    min: 0,
-                                    tickAmount: 4
-                                },
-                                annotations: {
-                                    yaxis: [{
-                                        y: threshold,
-                                        borderColor: '#ff0000',
-                                        label: {
-                                            borderColor: '#ff0000',
-                                            style: {
-                                                color: '#fff',
-                                                background: '#FF0C0C',
-                                            },
-                                            text: `Capacity: ${threshold}`,
-                                        }
-                                    }],
+                            },
+                            pie: {
+                                donut: {
+                                    size: '65%'
                                 }
-                            };
-                
-                            if (chartArea) {
-                                chartArea.updateOptions(chartAreaOptions);
-                                chartArea.updateSeries([{
-                                    name: selectedHall,
-                                    data: brushChartData
-                                }]);
-                            } else {
-                                chartArea = new ApexCharts(document.querySelector("#chart-area"), chartAreaOptions);
-                                chartArea.render();
                             }
-                        }
-                
-                        // Function to initialize the bar chart
-                        function initializeBarChart(data) {
-                            const hallNames = Object.keys(data.bar_chart_data);
-                            const hallCount = Object.values(data.bar_chart_data);
-                
-                            const barChartOptions = {
-                                chart: {
-                                    type: 'bar',
-                                    height: 200,
-                                    foreColor: "#333"
-                                },
-                                title: {
-                                    text: 'Visitors per Hall',
-                                    align: 'center',
-                                    style: {
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                xaxis: {
-                                    categories: hallNames,
-                                    title: {
-                                        text: 'Hall Name',
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                yaxis: {
-                                    title: {
-                                        text: "People Count",
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: 'Visitors',
-                                    data: hallCount,
-                                }],
-                                plotOptions: {
-                                    bar: {
-                                        columnWidth: '35%',
-                                    }
-                                },
-                                grid: {
-                                    borderColor: '#e0e0e0',
-                                    strokeDashArray: 4
-                                }
-                            };
-                
-                            barChart = new ApexCharts(document.querySelector("#bar-chart"), barChartOptions);
-                            barChart.render();
-                        }
-                
-                        // Function to initialize the pie chart
-                        function initializePieChart(data, selectedHall) {
-                            let pieChartData;
-                
-                            if (selectedHall === "All") {
-                                pieChartData = { Female: 0, Male: 0 };
-                                Object.values(data.pie_chart_data).forEach(hallData => {
-                                    pieChartData.Female += hallData.Female || 0;
-                                    pieChartData.Male += hallData.Male || 0;
-                                });
-                            } else {
-                                pieChartData = data.pie_chart_data[selectedHall];
+
+                        },
+                        legend: {
+                            position: 'top',
+                            horizontalAlign: 'center',
+                            offsetY: 10,
+                            markers: {
+                                width: 10,
+                                height: 10
+                            },
+                            fontSize: '10px',
+                            itemMargin: {
+                                horizontal: 5,
+                                vertical: 0
                             }
-                
-                            const pieChartOptions = {
-                                series: Object.values(pieChartData),
+                        },
+                        grid: {
+                            padding: {
+                                bottom: -10
+                            }
+                        },
+                    };
+
+                    if (pieChart) {
+                        pieChart.updateOptions(pieChartOptions); // Update existing chart
+                    } else {
+                        pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieChartOptions); // Initialize new chart
+                        pieChart.render();
+                    }
+                }
+                // Function to initialize the integrated line chart
+                function initializeIntegratedLineChart(data) {
+                    const lineChartData = data.line_chart_data;
+
+                    const integratedLineChartOptions = {
+                        chart: {
+                            type: 'line',
+                            height: 170,
+                            foreColor: '#333',
+
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        title: {
+                            text: 'Total Visitors Over Time',
+                            offsetY: 0,
+                            align: 'center',
+                            style: {
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Poppins',
+                                color: '#263238'
+                            },
+                        },
+                        series: [{
+                            name: 'Total Count',
+                            data: lineChartData
+                        }],
+                        stroke: {
+                            width: 2,
+                            curve: 'smooth'
+                        },
+                        xaxis: {
+                            type: 'datetime',
+
+                            title: {
+                                text: 'Time',
+                                offsetY: 2,
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                format: "HH:mm",
+                                datetimeUTC: false,
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        },
+                        yaxis: {
+                            title: {
+                                text: 'Count',
+                                style: {
+                                    color: '#333',
+                                    fontSize: '8px',
+                                    fontWeight: 'bold',
+                                    fontFamily: 'Poppins'
+                                }
+                            },
+                            labels: {
+                                style: {
+                                    colors: '#333',
+                                    fontSize: '8px',
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            theme: 'light',
+                            x: {
+                                format: 'HH:mm'
+                            }
+                        },
+                        grid: {
+                            borderColor: '#e0e0e0',
+                            strokeDashArray: 4
+                        },
+                        colors: ['#00BAEC']
+                    };
+
+                    integratedLineChart = new ApexCharts(document.querySelector("#integrated-line-chart"), integratedLineChartOptions);
+                    integratedLineChart.render();
+                }
+
+                // Function to initialize the halls pie chart
+                function initializeHallsPieChart(data) {
+                    const hallsPieChartOptions = {
+                        series: [], // Empty series initially
+                        chart: {
+                            type: 'donut',
+                            height: 160,
+                            foreColor: "#333"
+                        },
+                        labels: [], // Empty labels initially
+                        colors: ['#72B2C9', '#D4F1F4', '#189AB4', '#123064', '#75E6DA'],
+                        title: {
+                            text: 'Average Time Spent in Halls',
+                            align: 'center',
+                            style: {
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: 'Poppins',
+                                color: '#263238'
+                            },
+                        },
+                        legend: {
+                            position: 'top',
+                            horizontalAlign: 'center',
+                            offsetY: 10,
+                            markers: {
+                                width: 10,
+                                height: 10
+                            },
+                            fontSize: '10px',
+                            itemMargin: {
+                                horizontal: 5,
+                                vertical: 0
+                            }
+                        },
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
                                 chart: {
-                                    type: 'donut',
-                                    height: 300,
-                                    foreColor: "#333"
-                                },
-                                title: {
-                                    text: 'Gender Distribution in ' + selectedHall,
-                                    align: 'center',
-                                    style: {
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                labels: Object.keys(pieChartData),
-                                colors: ['#EDB8C7', '#ACD6EA'],
-                                plotOptions: {
-                                    pie: {
-                                        startAngle: -90,
-                                        endAngle: 90,
-                                        offsetY: 2,
-                                        expandOnClick: false,
-                                        donut: {
-                                            size: '55%',
-                                            labels: {
-                                                show: true
-                                            }
-                                        }
-                                    }
+                                    width: 200
                                 },
                                 legend: {
-                                    position: 'top',
-                                    horizontalAlign: 'center',
-                                    offsetY: 10,
-                                    markers: {
-                                        width: 10,
-                                        height: 10
-                                    },
-                                    fontSize: '8px',
-                                    itemMargin: {
-                                        horizontal: 5,
-                                        vertical: 0
-                                    }
-                                },
-                                grid: {
-                                    padding: {
-                                        bottom: -10
-                                    }
-                                },
-                            };
-                
-                            pieChart = new ApexCharts(document.querySelector("#pie-chart"), pieChartOptions);
-                            pieChart.render();
-                        }
-                
-                        // Function to initialize the integrated line chart
-                        function initializeIntegratedLineChart(data) {
-                            const lineChartData = data.line_chart_data;
-                
-                            const integratedLineChartOptions = {
-                                chart: {
-                                    type: 'line',
-                                    height: 200,
-                                    foreColor: '#333',
-                                    toolbar: {
-                                        show: false
-                                    }
-                                },
-                                title: {
-                                    text: 'Total Visitors Over Time',
-                                    align: 'center',
-                                    style: {
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                series: [{
-                                    name: 'Total Count',
-                                    data: lineChartData
-                                }],
-                                stroke: {
-                                    width: 2,
-                                    curve: 'smooth'
-                                },
-                                xaxis: {
-                                    type: 'datetime',
-                                    title: {
-                                        text: 'Time',
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                yaxis: {
-                                    title: {
-                                        text: 'Count',
-                                        style: {
-                                            color: '#333',
-                                            fontSize: '8px',
-                                            fontWeight: 'bold',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    },
-                                    labels: {
-                                        style: {
-                                            colors: '#333',
-                                            fontSize: '8px',
-                                            fontFamily: 'Poppins'
-                                        }
-                                    }
-                                },
-                                tooltip: {
-                                    theme: 'light',
-                                    x: {
-                                        format: 'dd MMM yyyy HH:mm'
-                                    }
-                                },
-                                grid: {
-                                    borderColor: '#e0e0e0',
-                                    strokeDashArray: 4
-                                },
-                                colors: ['#00BAEC']
-                            };
-                
-                            integratedLineChart = new ApexCharts(document.querySelector("#integrated-line-chart"), integratedLineChartOptions);
-                            integratedLineChart.render();
-                        }
-                
-                        // Function to initialize the halls pie chart
-                        function initializeHallsPieChart(data) {
-                            const hallsPieChartOptions = {
-                                series: [], // Empty series initially
-                                chart: {
-                                    type: 'donut',
-                                    height: 200,
-                                    foreColor: "#333"
-                                },
-                                labels: [], // Empty labels initially
-                                colors: ['#72B2C9', '#D4F1F4', '#189AB4', '#123064', '#75E6DA'],
-                                title: {
-                                    text: 'Average Time Spent in Halls',
-                                    align: 'center',
-                                    style: {
-                                        fontSize: '12px',
-                                        fontWeight: 'bold',
-                                        fontFamily: 'Poppins',
-                                        color: '#263238'
-                                    },
-                                },
-                                legend: {
-                                    position: 'top',
-                                    horizontalAlign: 'center',
-                                    offsetY: 10,
-                                    markers: {
-                                        width: 10,
-                                        height: 10
-                                    },
-                                    fontSize: '8px',
-                                    itemMargin: {
-                                        horizontal: 5,
-                                        vertical: 0
-                                    }
-                                },
-                                responsive: [{
-                                    breakpoint: 480,
-                                    options: {
-                                        chart: {
-                                            width: 200
-                                        },
-                                        legend: {
-                                            position: 'bottom'
-                                        }
-                                    }
-                                }]
-                            };
-                
-                            hallsPieChart = new ApexCharts(document.querySelector("#halls-pie-chart"), hallsPieChartOptions);
-                            hallsPieChart.render();
-                        }
-                
-                        // Function to update all charts dynamically
-                        async function updateCharts() {
-                            const data = await fetchData();
-                            const selectedHall = document.getElementById("hall-selector").value || "All";
-                            // Update line chart or chart area
-                            if (selectedHall === "All") {
-                                const brushChartData = data.brush_chart_data;
-                                const series = Object.keys(brushChartData).map(hallName => ({
-                                    name: hallName,
-                                    data: brushChartData[hallName] || []
-                                }));
-                
-                                lineChart.updateSeries(series);
-                                document.querySelector("#chart-area").style.display = "none";
-                                document.querySelector("#line-chart").style.display = "block";
-                            } else {
-                                renderChartArea(data, selectedHall);
-                                document.querySelector("#line-chart").style.display = "none";
-                                document.querySelector("#chart-area").style.display = "block";
-                            }
-                
-                            // Update bar chart
-                            const hallNames = Object.keys(data.bar_chart_data);
-                            const hallCount = Object.values(data.bar_chart_data);
-                            barChart.updateOptions({
-                                xaxis: {
-                                    categories: hallNames,
+                                    position: 'bottom'
                                 }
-                            });
-                            barChart.updateSeries([{
-                                name: 'Visitors',
-                                data: hallCount,
-                            }]);
-                
-                            // Update pie chart
-                            let pieChartData;
-                            if (selectedHall === "All") {
-                                pieChartData = { Female: 0, Male: 0 };
-                                Object.values(data.pie_chart_data).forEach(hallData => {
-                                    pieChartData.Female += hallData.Female || 0;
-                                    pieChartData.Male += hallData.Male || 0;
-                                });
-                            } else {
-                                pieChartData = data.pie_chart_data[selectedHall];
                             }
-                
-                            pieChart.updateOptions({
-                                series: Object.values(pieChartData),
-                                labels: Object.keys(pieChartData),
-                                title: {
-                                    text: 'Gender Distribution in ' + selectedHall,
-                                }
-                            });
-                
-                            // Update integrated line chart
-                            integratedLineChart.updateSeries([{
-                                name: 'Total Count',
-                                data: data.line_chart_data
-                            }]);
-                
-                            // Update halls pie chart
-                            const hallsPieChartData = data.halls_pie_chart_data;
-                            const hallNamesPie = Object.keys(hallsPieChartData);
-                            const avgDurations = Object.values(hallsPieChartData).map(duration => parseFloat(duration));
-                
-                            hallsPieChart.updateOptions({
-                                series: avgDurations,
-                                labels: hallNamesPie,
-                            });
+                        }],
+                        plotOptions: {
+                            pie: {
+                                size: '65%'
+                            }
                         }
-                
-                        // Handle dropdown change event
-                        const hallSelector = document.getElementById("hall-selector");
-                        hallSelector.addEventListener("change", function () {
-                            const selectedHall = this.value || "All";
-                            updateCharts();
-                        });
-                
-                        // Set default value to "All" and trigger the change event
-                        hallSelector.value = "All";
-                        hallSelector.dispatchEvent(new Event("change"));
-                
-                        // Initialize the charts
-                        const data = await fetchData();
-                        initializeCharts(data);
-                
-                        // Update charts every 2000ms (2 seconds)
-                        setInterval(updateCharts, 2000);
+
+                    };
+
+                    hallsPieChart = new ApexCharts(document.querySelector("#halls-pie-chart"), hallsPieChartOptions);
+                    hallsPieChart.render();
+                }
+
+                async function updateCharts() {
+                    const data = await fetchData();
+                    const selectedHall = document.getElementById("hall-selector").value || "All";
+
+                    // Update line chart or chart area
+                    if (selectedHall === "All") {
+                        const brushChartData = data.brush_chart_data;
+                        const series = Object.keys(brushChartData).map(hallName => ({
+                            name: hallName,
+                            data: brushChartData[hallName] || []
+                        }));
+
+                        lineChart.updateSeries(series);
+                        document.querySelector("#chart-area").style.display = "none";
+                        document.querySelector("#line-chart").style.display = "block";
+                    } else {
+                        renderChartArea(data, selectedHall);
+                        document.querySelector("#line-chart").style.display = "none";
+                        document.querySelector("#chart-area").style.display = "block";
+                    }
+
+                    // Update bar chart
+                    const hallNames = Object.keys(data.bar_chart_data);
+                    const hallCount = Object.values(data.bar_chart_data);
+                    barChart.updateOptions({
+                        xaxis: {
+                            categories: hallNames,
+                        }
                     });
-                </script>
+                    barChart.updateSeries([{
+                        name: 'Visitors',
+                        data: hallCount,
+                    }]);
 
+                    // Update pie chart
+                    let pieChartData;
+                    if (selectedHall === "All") {
+                        pieChartData = { Female: 0, Male: 0 };
+                        Object.values(data.pie_chart_data).forEach(hallData => {
+                            pieChartData.Female += hallData.Female || 0; // Ensure hallData is an object
+                            pieChartData.Male += hallData.Male || 0; // Ensure hallData is an object
+                        });
+                    } else {
+                        pieChartData = data.pie_chart_data[selectedHall];
+                    }
 
+                    pieChart.updateOptions({
+                        series: Object.values(pieChartData),
+                        labels: Object.keys(pieChartData),
+                        animate: false,
+                        title: {
+                            text: 'Gender Distribution in ' + selectedHall,
+                        }
+                    });
 
-            </div>
-        </div>    
+                    // Update integrated line chart
+                    integratedLineChart.updateSeries([{
+                        name: 'Total Count',
+                        data: data.line_chart_data
+                    }]);
 
+                    // Update halls pie chart
+                    const hallsPieChartData = data.halls_pie_chart_data;
+                    const hallNamesPie = Object.keys(hallsPieChartData);
+                    const avgDurations = Object.values(hallsPieChartData).map(duration => parseFloat(duration));
+
+                    hallsPieChart.updateOptions({
+                        series: avgDurations,
+                        labels: hallNamesPie,
+                    });
+                }                // Handle dropdown change event
+                const hallSelector = document.getElementById("hall-selector");
+                hallSelector.addEventListener("change", function () {
+                    const selectedHall = this.value || "All";
+                    updateCharts();
+                });
+
+                // Set default value to "All" and trigger the change event
+                hallSelector.value = "All";
+                hallSelector.dispatchEvent(new Event("change"));
+
+                // Initialize the charts
+                const data = await fetchData();
+                initializeCharts(data);
+
+                // Update charts every 2000ms (2 seconds)
+                setInterval(updateCharts, 2000);
+            });
+        </script>
 
     </main>
 
@@ -1714,7 +1185,7 @@
             try {
                 const response = await fetch('/latest_people_count');
                 const data = await response.json();
-                let totalCount;
+                let totalCount = 0;
                 let popupAlertMessages = [];
                 const statusDiv = document.getElementById('camera-status');
                 const statusList = document.getElementById('camera-status-list');
@@ -1729,9 +1200,11 @@
                         const count = item.Count || 0; // Default to 0 if null
                         hallsDictionary[item.HallName] = item.HallID;
                         hallElement.innerHTML = `Current Visitors: ${count}`;
-                        if (count != 'No Recent Data') {
-                            totalCount += count;
-                        }
+                        totalCount += count
+                        console.log("totalCount", totalCount);
+                        // if (count != 'No Recent Data') {
+                        //     totalCount += count;
+                        // }
 
                         // Compare with threshold
                         const threshold = hallsThreshold[item.HallID] ?? -1;
@@ -1784,12 +1257,14 @@
                 // Update total count tag
                 const totalCountTag = document.getElementById('totalCountTag');
                 if (totalCountTag) {
-                    if (totalCount === '') {
-                        totalCountTag.innerHTML = `<p style="font-size: 20px">No Recent Data</p>`;
+                    totalCountTag.innerHTML = totalCount;
+                    console.log("totalCount", totalCount);
+                    // if (totalCount === '') {
+                    //     totalCountTag.innerHTML = `<p style="font-size: 20px">No Recent Data</p>`;
 
-                    } else {
-                        totalCountTag.innerHTML = `${parseInt(totalCount)}`;
-                    }
+                    // } else {
+                    //     totalCountTag.innerHTML = `${parseInt(totalCount)}`;
+                    // }
                 }
             } catch (error) {
                 console.error("Error fetching people count:", error);
@@ -1838,21 +1313,21 @@
         }
 
         async function updateAverageTimeSpent() {
-    try {
-        const response = await fetch('/average_time_spent');
-        const data = await response.json();
-        console.log('Average Time Spent Data:', data);  // Debugging
+            try {
+                const response = await fetch('/average_time_spent');
+                const data = await response.json();
+                console.log('Average Time Spent Data:', data);  // Debugging
 
-        // Update the average time spent
-        const avgTimeSpentMinutes = data.avg_time_spent_minutes;
-        const avgTimeSpentTag = document.getElementById('averageTimeSpentTag');
-        if (avgTimeSpentTag) {
-            avgTimeSpentTag.innerText = `${avgTimeSpentMinutes} minutes`;
+                // Update the average time spent
+                const avgTimeSpentMinutes = data.avg_time_spent_minutes;
+                const avgTimeSpentTag = document.getElementById('averageTimeSpentTag');
+                if (avgTimeSpentTag) {
+                    avgTimeSpentTag.innerText = `${avgTimeSpentMinutes} minutes`;
+                }
+            } catch (error) {
+                console.error('Error fetching average time spent:', error);
+            }
         }
-    } catch (error) {
-        console.error('Error fetching average time spent:', error);
-    }
-}
 
         // Initial fetch and periodic updates
         updateAverageTimeSpent();
