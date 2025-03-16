@@ -661,6 +661,7 @@
                 <div class="error-message" id="endDayError"></div>
                 <div class="error-message" id="startDayError"></div>
                 <div class="error-messageForCamera"></div>
+                <div class="error-messageForRemoveHall"></div>
                 
                  <!--   Upcoming events:   -->
                  <?php 
@@ -750,11 +751,11 @@
                 $(document).ready(function () {
                     const originalState = $("#show_item").html();
                     let hallCounter = $("#show_item .hall").length; 
-                    
+
                     $("#addHall").click(function (e) {
                         e.preventDefault();
                         hallCounter++; 
-                        
+
                         const newHallId = "new_" + Date.now();
                         const newHallRow = `
                             <div id="${newHallId}" class="hall">
@@ -799,6 +800,13 @@
                     $(document).on("click", ".remove_item_btn, #removeOrignalHall", function (e) {
                         e.preventDefault();
 
+                        if ($(".hall").length === 1) {
+                            $(".error-messageForRemoveHall").html('<p style="color: red; font-size: 0.9em;">At least one hall must remain!</p>');
+                            return;
+                        } else {
+                            $(".error-messageForRemoveHall").html("");
+                        }
+
                         const hallElement = $(this).closest(".hall");
                         const hallName = hallElement.find("h3").text() || "A Hall";
                         hallElement.replaceWith(`<p style="margin-left: -30%; margin-bottom: 7%; color: #cc0000;" class="hall-removed-msg"><b>${hallName}</b> has been removed.</p>`);
@@ -809,9 +817,11 @@
                         location.reload();
                     });
                 });
-                
+
                 function markForRemoval(button, hallID) {
                     let hiddenInput = button.previousElementSibling;
+                    let allMarkedForRemoval = true;
+
                     if (hiddenInput.value === "") {
                         hiddenInput.value = hallID;  
                         button.style.backgroundColor = "red";  
@@ -821,9 +831,23 @@
                         button.style.backgroundColor = "";  
                         button.innerText = "Remove Hall";
                     }
+
+                    $(".hall input[type='hidden']").each(function () {
+                        if ($(this).val() === "") {
+                            allMarkedForRemoval = false;
+                        }
+                    });
+
+                    if (allMarkedForRemoval) {
+                        $(".error-messageForRemoveHall").html('<p style="color: red; font-size: 0.9em; margin-top: 2%;">At least one hall must remain!</p>');
+                        button.previousElementSibling.value = ""; 
+                        button.style.backgroundColor = "";  
+                        button.innerText = "Remove Hall";
+                    } else {
+                        $(".error-messageForRemoveHall").html("");
+                    }
                 }
             </script>
-
 
             <!-- Past and Upcoming events:   -->
             <?php 
