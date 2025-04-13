@@ -518,9 +518,9 @@
                 <span 
                     class="button__icon" 
                     style="position: absolute; transform: translateX(109px); height: 100%; width: 39px; background-color: #226740; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                           <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
-                    </svg>  
+                    <svg class="w-[33px] h-[33px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M5 11.917 9.724 16.5 19 7.5"/>
+                    </svg>   
                 </span>
             </button>
             
