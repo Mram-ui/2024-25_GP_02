@@ -443,10 +443,10 @@
                         <form class="form" id="a-form" method="POST" >
                             <h2 class="form_title title">Contact Us</h2>
                             <h4 style="text-align:center">Get in touch</h4>
-                            <input name="cname" class="form__input" id="cname" type="text" placeholder="Company Name" required>
-                            <input name="email" class="form__input" id="email"  type="email" placeholder="Email" required>
-                            <input name="phone" class="form__input" id="phone"  type="tel" placeholder="Phone Number" required>
-                            <textarea name="message" class="form__input" id="msg"  type="text" placeholder="Message" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
+                            <input name="cname" class="form__input" id="cname" type="text" placeholder="Company Name *" required>
+                            <input name="email" class="form__input" id="email"  type="email" placeholder="Email *" required>
+                            <input name="phone" class="form__input" id="phone"  type="tel" placeholder="Phone Number *" required>
+                            <textarea name="message" class="form__input" id="msg"  type="text" placeholder="Message *" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
                             <input type="submit" name="submit" class="form__button button submit" id="button" value="Send Message">
                             <div id="msgSent" style="color: #003f91;"></div>
                         </form>
