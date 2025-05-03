@@ -1370,7 +1370,7 @@
             if ($startDate > $now):
         ?>            
         <!--   EDIT SCRIPT for Upcoming Events  -->
-        <script>
+<script>
             document.addEventListener("DOMContentLoaded", function () {
                 const editButton = document.querySelector("#editButton");
                 const saveButton = document.querySelector(".saveButton");
@@ -1385,6 +1385,14 @@
                 const capacityErrorDiv = document.getElementById("capacityError");
                 const capacityErrorNewDiv = document.getElementById("capacity-error2");
                 const emptyFieldsErrorDiv = document.getElementById("emptyFilelds");
+
+                const startDateInput = document.querySelector("input[name='startDate']");
+                const startTimeInput = document.querySelector("input[name='startTime']");
+                const endDateInput = document.querySelector("input[name='endDate']");
+                const endTimeInput = document.querySelector("input[name='endTime']");
+                const startTimeErrorDiv = document.getElementById("startTimeError");
+                const startDayErrorDiv = document.getElementById("startDayError");
+                const endDayErrorDiv = document.getElementById("endDayError");
 
                 let isEditing = false;
                 let originalValues = {};
@@ -1545,25 +1553,98 @@
                     return allValid;
                 }
 
+                function getCurrentRiyadhDateTime() {
+                    const formatter = new Intl.DateTimeFormat('en-GB', {
+                        timeZone: 'Asia/Riyadh',
+                        hour12: false,
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const parts = formatter.formatToParts(new Date());
+                    const dateParts = {};
+                    parts.forEach(({ type, value }) => {
+                        dateParts[type] = value;
+                    });
+
+                    const date = `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
+                    const time = `${dateParts.hour}:${dateParts.minute}`;
+
+                    return { date, time };
+                }
+
+
+                function validateTimes() {
+                    const startDate = startDateInput.value;
+                    const startTime = startTimeInput.value;
+                    const endDate = endDateInput.value;
+                    const endTime = endTimeInput.value;
+
+                    let validationPassed = true;
+
+                    const { date: today, time: now } = getCurrentRiyadhDateTime();
+
+                    startTimeErrorDiv.textContent = "";
+                    startDayErrorDiv.textContent = "";
+                    endDayErrorDiv.textContent = "";
+
+                    if (startDate === today && startTime <= now) {
+                        startTimeErrorDiv.textContent = "For events scheduled today, the start time cannot be in the past!";
+                        validationPassed = false;
+                    }
+
+                    if (startDate < today) {
+                        startDayErrorDiv.textContent = "The event cannot start in the past! Please select a future start date.";
+                        validationPassed = false;
+                    }
+
+                    if (startDate > endDate || (startDate === endDate && startTime >= endTime)) {
+                        endDayErrorDiv.textContent = "The event end date and time cannot be earlier than the start date and time!";
+                        validationPassed = false;
+                    }
+
+                    return validationPassed;
+                }
+
                 function checkFormValidity() {
                     const camerasValid = validateCameras();
                     const capacitiesValid = validateAllCapacities();
                     const emptyFieldsValid = checkEmptyFields();
+                    const timeValid = validateTimes();
 
-                    if (camerasValid && capacitiesValid && emptyFieldsValid) {
+                    if (camerasValid && capacitiesValid && emptyFieldsValid && timeValid) {
                         saveButton.disabled = false;
                     } else {
                         saveButton.disabled = true;
                     }
                 }
 
+                [startDateInput, startTimeInput, endDateInput, endTimeInput].forEach(input => {
+                    input.addEventListener("blur", () => {
+                        validateTimes();
+                        checkFormValidity();
+                    });
+
+                    input.addEventListener("input", () => {
+                        if (input === startTimeInput) startTimeErrorDiv.textContent = "";
+                        if (input === startDateInput) startDayErrorDiv.textContent = "";
+                        if (input === endDateInput || input === endTimeInput) endDayErrorDiv.textContent = "";
+
+                        validateTimes();
+                        checkFormValidity();
+                    });
+                });
+
                 inputs.forEach((input) => {
-                    input.addEventListener("blur", function (event) {
+                    input.addEventListener("blur", function () {
                         checkEmptyFields();
                         checkFormValidity();
                     });
 
-                    input.addEventListener("input", function (event) {
+                    input.addEventListener("input", function () {
                         checkEmptyFields();
                         checkFormValidity();
                     });
@@ -1594,7 +1675,12 @@
 
                 saveButton.addEventListener("click", function (e) {
                     e.preventDefault();
-                    if (validateCameras() && validateAllCapacities() && checkEmptyFields()) {
+                    if (
+                        validateCameras() &&
+                        validateAllCapacities() &&
+                        checkEmptyFields() &&
+                        validateTimes()
+                    ) {
                         document.querySelector("form").submit();
                     }
                 });
