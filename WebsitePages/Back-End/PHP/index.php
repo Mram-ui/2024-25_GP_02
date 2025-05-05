@@ -534,7 +534,7 @@
                                </div>
                                <div class="cta-text" style="padding: 0; ">
                                     <h4 style="margin-top: 25%; ">Mail us</h4>
-                                    <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    <span id="mail"><a href="mailto:Contact@RaqeebAI.com">Contact@RaqeebAI.com</a></span>
                                 </div>
                            </div>
                        </div>
