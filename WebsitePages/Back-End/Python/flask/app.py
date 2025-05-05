@@ -542,7 +542,7 @@ def graphs_data():
             except Exception as e:
                 print(f"Error processing row: {row}. Error: {e}")
 
-        # If no data is found, ensure pie_chart_data has at least one hall
+        # ??? If no data is found, ensure pie_chart_data has at least one hall
         if not pie_chart_data:
             pie_chart_data = { "Main Hall": { "Female": 0, "Male": 0 } }
 

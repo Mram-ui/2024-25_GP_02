@@ -703,7 +703,7 @@
                         },
                         colors: ['#004aad'],
                         title: {
-                            text: 'Visitors per Hall',
+                            text: 'Current Visitors per Hall',
                             align: 'center',
                             style: {
                                 fontSize: '12px',
@@ -779,9 +779,12 @@
                         Object.values(data.pie_chart_data).forEach(hallData => {
                             pieChartData.Female += hallData.Female || 0; // Ensure hallData is an object
                             pieChartData.Male += hallData.Male || 0; // Ensure hallData is an object
+                            selectedHall_name = "The Event";
+                            console.log("Selected Hall Name:", selectedHall);
                         });
                     } else {
                         pieChartData = data.pie_chart_data[selectedHall];
+                        selectedHall_name = selectedHall;
                     }
 
                     console.log("Pie Chart Data:", pieChartData);
@@ -794,7 +797,7 @@
                             foreColor: "#333"
                         },
                         title: {
-                            text: 'Gender Distribution in ' + selectedHall,
+                            text: 'Gender Distribution In ' + selectedHall_name,
                             align: 'center',
                             style: {
                                 fontSize: '12px',
@@ -868,7 +871,7 @@
                             }
                         },
                         title: {
-                            text: 'Total Visitors Over Time',
+                            text: 'Event Attendance Over Time',
                             offsetY: 0,
                             align: 'center',
                             style: {
@@ -1005,7 +1008,6 @@
                 async function updateCharts() {
                     const data = await fetchData();
                     const selectedHall = document.getElementById("hall-selector").value || "All";
-
                     // Update line chart or chart area
                     if (selectedHall === "All") {
                         const brushChartData = data.brush_chart_data;
@@ -1039,21 +1041,28 @@
                     // Update pie chart
                     let pieChartData;
                     if (selectedHall === "All") {
+                    console.log("-------if all-------Selected Hall:", selectedHall);
                         pieChartData = { Female: 0, Male: 0 };
                         Object.values(data.pie_chart_data).forEach(hallData => {
                             pieChartData.Female += hallData.Female || 0; // Ensure hallData is an object
                             pieChartData.Male += hallData.Male || 0; // Ensure hallData is an object
                         });
                     } else {
+                        console.log("--else------------Selected Hall:", selectedHall);
                         pieChartData = data.pie_chart_data[selectedHall];
                     }
 
+                    if (selectedHall === "All") {
+                        selectedHall_name = "The Event";
+                    } else {
+                        selectedHall_name = selectedHall;
+                    }
                     pieChart.updateOptions({
                         series: Object.values(pieChartData),
                         labels: Object.keys(pieChartData),
                         animate: false,
                         title: {
-                            text: 'Gender Distribution in ' + selectedHall,
+                            text: 'Gender Distribution In ' + selectedHall_name,
                         }
                     });
 
@@ -1225,7 +1234,7 @@
                                     listItem.className = 'threshold-alert';
                                     listItem.id = `threshold-alert-${item.HallID}`; // Unique ID for each hall's alert
                                     listItem.style.color = 'red'; // Red text for threshold alerts
-                                    listItem.textContent = `Capacity exceeded: Hall (${item.HallName})`;
+                                    listItem.textContent = `Capacity exceeded In ${item.HallName}`;
                                     statusList.appendChild(listItem);
                                 }
 

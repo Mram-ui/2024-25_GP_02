@@ -165,6 +165,8 @@ main h2{
     transition: 0.5s;
     width: 120%;
     margin-top: 0.5%;
+    margin-bottom: 5%;
+
 }
 .eventInformation h2{
     text-align: center
