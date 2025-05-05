@@ -1,5 +1,5 @@
-#import datetime
-from flask import Flask, render_template, Response, jsonify, send_from_directory, request
+import datetime
+from flask import Flask, render_template, Response, jsonify, send_from_directory, request, send_file
 import mysql.connector
 import cv2
 import os
@@ -7,6 +7,10 @@ import time
 from datetime import datetime
 from datetime import timedelta
 import threading
+from report_generator import generate_pdf_report
+from database_connection import get_db_connection
+
+
 
 
 '''
@@ -19,23 +23,7 @@ latest_session_id={} # key: hall_id, value: session_id
 # Global dictionary to store camera status
 camera_status = {}
 
-# Define database configuration
-db_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'root',
-    'database': 'raqeebdb'
-}
 
-# Function to establish a database connection
-def get_db_connection():
-    connection = mysql.connector.connect(
-        host=db_config['host'],
-        user=db_config['user'],
-        password=db_config['password'],
-        database=db_config['database']
-    )
-    return connection
 
 def retrieve_halls(event_id, cursor):
     cursor.execute(f'SELECT * FROM hall WHERE EventID={event_id}')
@@ -375,7 +363,7 @@ def get_camera_status():
 def graphs_data():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    event_id = 101
+    event_id = 101 ##is this ok?
 
     halls = retrieve_halls(event_id, cursor)
 
@@ -446,10 +434,7 @@ def graphs_data():
             #         bar_chart_data[hall['HallName']] = bar_chart_result['count']
             # else:
             #     bar_chart_data[hall['HallName']] = 0
-
-
-
-            halls_pie_chart = '''
+            halls_pie_chart_query = '''
                 SELECT 
                     h.HallName,
                     ms.hallID, 
@@ -464,7 +449,9 @@ def graphs_data():
                     ms.hallID, h.HallName;  
             '''
 
-        cursor.execute(halls_pie_chart)
+
+
+        cursor.execute(halls_pie_chart_query)
 
         # Fetch the results
         halls_pie_chart_results = cursor.fetchall()
@@ -618,6 +605,67 @@ def average_time_spent():
     return jsonify({
         'avg_time_spent_minutes': avg_time_spent_minutes,
     })
+
+
+@app.route('/event_status', methods=['GET'])
+def event_status():
+    event_id = request.args.get('eventID')    
+
+    connection = get_db_connection()
+    try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM events WHERE EventID = %s", (event_id,))
+        event = cursor.fetchone()
+
+        if event:
+            end_time_delta = event['EventEndTime']
+            end_time = (datetime.min + end_time_delta).time()
+            end_datetime = datetime.combine(event['EventEndDate'], end_time)
+            if(datetime.now() > end_datetime):
+                report_path = generate_pdf_report(event_id)
+                print("report generated")
+                print("report_path:", report_path, type(report_path))
+                print("event_id:", event_id, type(event_id))
+
+                return jsonify(True)  
+        return jsonify(False)  
+
+    except Exception as e:
+         import traceback
+         print(f"Error in event_status: {str(e)}")
+         traceback.print_exc()
+         return jsonify("exception babes exception")
+    finally:
+         cursor.close()
+         connection.close()
+
+
+def generate_report(event_id):
+    try:
+        pdf_path = generate_pdf_report(event_id)
+        return send_file(pdf_path, as_attachment=True)
+    except Exception as e:
+        return f"Error generating report: {str(e)}", 500
+
+
+
+@app.route('/get_report_path')
+def get_report_path():
+    event_id = request.args.get('eventID')
+    if not event_id:
+        return jsonify({'error': 'Missing eventID'}), 400
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT report_path FROM events WHERE EventID = %s", (event_id,))
+    result = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    if result and result['report_path']:
+        return jsonify({'reportPath': result['report_path']})
+    else:
+        return jsonify({'reportPath': None})
 
 
 if __name__ == '__main__':

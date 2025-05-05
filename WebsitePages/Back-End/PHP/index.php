@@ -443,10 +443,10 @@
                         <form class="form" id="a-form" method="POST" >
                             <h2 class="form_title title">Contact Us</h2>
                             <h4 style="text-align:center">Get in touch</h4>
-                            <input name="cname" class="form__input" id="cname" type="text" placeholder="Company Name" required>
-                            <input name="email" class="form__input" id="email"  type="email" placeholder="Email" required>
-                            <input name="phone" class="form__input" id="phone"  type="tel" placeholder="Phone Number" required>
-                            <textarea name="message" class="form__input" id="msg"  type="text" placeholder="Message" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
+                            <input name="cname" class="form__input" id="cname" type="text" placeholder="Company Name *" required>
+                            <input name="email" class="form__input" id="email"  type="email" placeholder="Email *" required>
+                            <input name="phone" class="form__input" id="phone"  type="tel" placeholder="Phone Number *" required>
+                            <textarea name="message" class="form__input" id="msg"  type="text" placeholder="Message *" required id="result" onchange="auto_grow(this)" oninput="auto_grow(this)"></textarea> <br>
                             <input type="submit" name="submit" class="form__button button submit" id="button" value="Send Message">
                             <div id="msgSent" style="color: #003f91;"></div>
                         </form>
@@ -534,7 +534,7 @@
                                </div>
                                <div class="cta-text" style="padding: 0; ">
                                     <h4 style="margin-top: 25%; ">Mail us</h4>
-                                    <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                    <span id="mail"><a href="mailto:Contact@RaqeebAI.com">Contact@RaqeebAI.com</a></span>
                                 </div>
                            </div>
                        </div>
@@ -545,7 +545,7 @@
                        <div class="row">
                            <div class="col-xl-6 col-lg-6 text-center text-lg-left">
                                <div class="copyright-text">
-                                   <p>Copyright &copy; 2024 Raqeeb. All Right Reserved </p>
+                                   <p>Copyright &copy; 2025 Raqeeb. All Right Reserved </p>
                                </div>
                            </div>
                        </div>

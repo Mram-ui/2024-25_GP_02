@@ -5,4 +5,4 @@
 - [Mram Aljardan](https://github.com/Mram-ui)     |  443200489
 
 
-**SUPERVISED BY:** Dr. Nailah Alhassoun
+**SUPERVISED BY:** Dr. Hessah Alsaaran and Dr. Nailah Alhassoun

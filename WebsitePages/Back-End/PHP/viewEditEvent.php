@@ -68,6 +68,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="icon" type="image/x-icon" href="../../images/LogoIconURL.png">
+
         
         <style>           
             .header {
@@ -618,9 +620,9 @@
                       onmousedown="this.style.border = '1px solid #194f31'; this.querySelector('.button__icon').style.backgroundColor = '#194f31';"
                       onmouseup="this.style.border = '1px solid #2e8b57'; this.querySelector('.button__icon').style.backgroundColor = '#226740'; ">
                       <span class="button__icon" style="position: absolute; left: 0; height: 100%; width: 39px; background-color: #226740; display: flex; align-items: center; justify-content: center; transition: width 0.3s, transform 0.3s;">
-                       <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
-                       </svg>
+                        <svg class="w-[33px] h-[33px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M5 11.917 9.724 16.5 19 7.5"/>
+                        </svg>
                       </span>
                       <span id="edit" class="button__text" style="transform: translateX(35px); color: #fff; font-weight: 600; transition: color 0.3s; margin-left: 5px;">Save</span>
                     </button>
@@ -661,6 +663,7 @@
                 <div class="error-message" id="endDayError"></div>
                 <div class="error-message" id="startDayError"></div>
                 <div class="error-messageForCamera"></div>
+                <div class="error-messageForRemoveHall"></div>
                 
                  <!--   Upcoming events:   -->
                  <?php 
@@ -687,7 +690,7 @@
                         $hallNumber = 1;
                         foreach ($halls as $hall):
                     ?>
-                    <h3 id="hallName">Hall  <?php echo $hallNumber; ?></h3>
+                    <h3 id="hallName" class="hallName">Hall  <?php echo $hallNumber; ?></h3>
                         <div id="hall" class="hall">
                             <label id="HMAX" for="hallName">Hall Name:</label><br>
                             <input style="margin-bottom: 3%;" name="hallName[]" class="form__input" type="text" placeholder="Main hall" value="<?php echo htmlspecialchars($hall['HallName']); ?>" required readonly><br>
@@ -750,20 +753,20 @@
                 $(document).ready(function () {
                     const originalState = $("#show_item").html();
                     let hallCounter = $("#show_item .hall").length; 
-                    
+
                     $("#addHall").click(function (e) {
                         e.preventDefault();
                         hallCounter++; 
-                        
+
                         const newHallId = "new_" + Date.now();
                         const newHallRow = `
                             <div id="${newHallId}" class="hall">
                                 <h3 style="margin-bottom: 4%;">New Hall ${hallCounter}</h3>
                                 <label for="hallName">Hall Name:</label><br>
-                                <input style="margin-bottom: 3%; border: 1px solid white; background-color: #f4f7ff;" name="newHallName[]" class="form__input" type="text" placeholder="Main hall" required><br>
+                                <input style="margin-bottom: 3%; border: 1px solid white; background-color: #f4f7ff; max-width: 610px;" name="newHallName[]" class="form__input" type="text" placeholder="Main hall" required><br>
                                 <label style="margin-bottom: -1%;" for="cameraName">Camera:</label><br>
                                 <input style="display: none; border: 1px solid white; background-color: #f4f7ff;" id="cameraName" name="cameraName" class="form__input camera-name" type="text" placeholder="No camera connected" readonly required><br>
-                                <select style="margin-top: -4%; border: 1px solid white; background-color: #f4f7ff;" name="newHallCamera[]" class="form__input update-camera cameraNewHall" required>
+                                <select style="margin-top: -4%; border: 1px solid white; background-color: #f4f7ff; max-width: 610px;" name="newHallCamera[]" class="form__input update-camera cameraNewHall" required>
                                     <option value="" disabled selected>Select a camera</option>
                                     <?php
                                         include '../../Back-End/PHP/session.php';
@@ -787,7 +790,7 @@
                                     ?>
                                 </select><br><br>
                                 <label for="hallThreshold">Hall Max Capacity:</label><br>
-                                <input style="border: 1px solid white; background-color: #f4f7ff;" name="newHallThreshold[]" class="form__input capacity new-hall-capacity" type="number" placeholder="ex:100" min="0" required><br>
+                                <input style="border: 1px solid white; background-color: #f4f7ff; max-width: 610px;" name="newHallThreshold[]" class="form__input capacity new-hall-capacity" type="number" placeholder="ex:100" min="0" required><br>
                                 <div class="capacity-error2" id="capacityError2"></div>
                                 <button style="display: inline-block; margin-bottom: 7%; margin-top: 3%;" class="button2 remove_item_btn" type="button">Remove New Hall ${hallCounter}</button>
                             </div>
@@ -799,9 +802,20 @@
                     $(document).on("click", ".remove_item_btn, #removeOrignalHall", function (e) {
                         e.preventDefault();
 
+                        if ($(".hall").length === 1) {
+                            $(".error-messageForRemoveHall").html('<p style="color: red; font-size: 0.9em;">At least one hall must remain!</p>');
+                            return;
+                        } else {
+                            $(".error-messageForRemoveHall").html("");
+                        }
+
                         const hallElement = $(this).closest(".hall");
                         const hallName = hallElement.find("h3").text() || "A Hall";
-                        hallElement.replaceWith(`<p style="margin-left: -30%; margin-bottom: 7%; color: #cc0000;" class="hall-removed-msg"><b>${hallName}</b> has been removed.</p>`);
+                        hallElement.replaceWith(`<p style="margin-left: -26%; margin-bottom: 7%; color: #cc0000;" class="hall-removed-msg"><b>${hallName}</b> has been removed.</p>`);
+                        
+                        $('.hall').css('margin-left', '-26%');
+                        $('.hallName').css('margin-left', '-26%');
+
                     });
 
                     $("#cancel").click(function (e) {
@@ -809,9 +823,11 @@
                         location.reload();
                     });
                 });
-                
+
                 function markForRemoval(button, hallID) {
                     let hiddenInput = button.previousElementSibling;
+                    let allMarkedForRemoval = true;
+
                     if (hiddenInput.value === "") {
                         hiddenInput.value = hallID;  
                         button.style.backgroundColor = "red";  
@@ -821,9 +837,23 @@
                         button.style.backgroundColor = "";  
                         button.innerText = "Remove Hall";
                     }
-                }
-            </script>
 
+                    $(".hall input[type='hidden']").each(function () {
+                        if ($(this).val() === "") {
+                            allMarkedForRemoval = false;
+                        }
+                    });
+
+                    if (allMarkedForRemoval) {
+                        $(".error-messageForRemoveHall").html('<p style="color: red; font-size: 0.9em; margin-top: 2%;">At least one hall must remain!</p>');
+                        button.previousElementSibling.value = ""; 
+                        button.style.backgroundColor = "";  
+                        button.innerText = "Remove Hall";
+                    } else {
+                        $(".error-messageForRemoveHall").html("");
+                    }
+                }
+            </script>   
 
             <!-- Past and Upcoming events:   -->
             <?php 
@@ -1362,6 +1392,17 @@
                 const capacityErrorNewDiv = document.getElementById("capacity-error2");
                 const emptyFieldsErrorDiv = document.getElementById("emptyFilelds");
 
+                const startDateInput = document.querySelector("input[name='startDate']");
+                const startTimeInput = document.querySelector("input[name='startTime']");
+                const endDateInput = document.querySelector("input[name='endDate']");
+                const endTimeInput = document.querySelector("input[name='endTime']");
+                const startTimeErrorDiv = document.getElementById("startTimeError");
+                const startDayErrorDiv = document.getElementById("startDayError");
+                const endDayErrorDiv = document.getElementById("endDayError");
+                
+                const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                const isEdge = /Edg/.test(navigator.userAgent);
+
                 let isEditing = false;
                 let originalValues = {};
 
@@ -1409,14 +1450,29 @@
                         input.removeAttribute("readonly");
                         input.style.border = "1px solid white";
                         input.style.backgroundColor = "#f4f7ff";
+                        input.style.maxWidth = "610px"; 
                     });
+                    
+                    if (isChrome || isEdge) {
+                        inputs.forEach((input) => {
+                            input.removeAttribute("readonly");
+                            input.style.border = "1px solid white";
+                            input.style.backgroundColor = "#f4f7ff";
+                            input.style.maxWidth = "610px"; 
+                        });
+                        
+                         halls.forEach((hall) => {
+                            hall.querySelector(".update-camera").style.maxWidth = "610px"; 
+                            hall.querySelector(".update-camera").style.marginRight = "-20px";  
+                        });
+                    }
 
                     halls.forEach((hall) => {
                         hall.querySelector(".camera-name").style.display = "none";
                         hall.querySelector(".update-camera").style.display = "";
                         hall.querySelector(".button2").style.display = "inline-block";
                     });
-
+                    
                     addCameraValidationListeners();
                     checkFormValidity();
                 }
@@ -1521,25 +1577,98 @@
                     return allValid;
                 }
 
+                function getCurrentRiyadhDateTime() {
+                    const formatter = new Intl.DateTimeFormat('en-GB', {
+                        timeZone: 'Asia/Riyadh',
+                        hour12: false,
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    const parts = formatter.formatToParts(new Date());
+                    const dateParts = {};
+                    parts.forEach(({ type, value }) => {
+                        dateParts[type] = value;
+                    });
+
+                    const date = `${dateParts.year}-${dateParts.month}-${dateParts.day}`;
+                    const time = `${dateParts.hour}:${dateParts.minute}`;
+
+                    return { date, time };
+                }
+
+
+                function validateTimes() {
+                    const startDate = startDateInput.value;
+                    const startTime = startTimeInput.value;
+                    const endDate = endDateInput.value;
+                    const endTime = endTimeInput.value;
+
+                    let validationPassed = true;
+
+                    const { date: today, time: now } = getCurrentRiyadhDateTime();
+
+                    startTimeErrorDiv.textContent = "";
+                    startDayErrorDiv.textContent = "";
+                    endDayErrorDiv.textContent = "";
+
+                    if (startDate === today && startTime <= now) {
+                        startTimeErrorDiv.textContent = "For events scheduled today, the start time cannot be in the past!";
+                        validationPassed = false;
+                    }
+
+                    if (startDate < today) {
+                        startDayErrorDiv.textContent = "The event cannot start in the past! Please select a future start date.";
+                        validationPassed = false;
+                    }
+
+                    if (startDate > endDate || (startDate === endDate && startTime >= endTime)) {
+                        endDayErrorDiv.textContent = "The event end date and time cannot be earlier than the start date and time!";
+                        validationPassed = false;
+                    }
+
+                    return validationPassed;
+                }
+
                 function checkFormValidity() {
                     const camerasValid = validateCameras();
                     const capacitiesValid = validateAllCapacities();
                     const emptyFieldsValid = checkEmptyFields();
+                    const timeValid = validateTimes();
 
-                    if (camerasValid && capacitiesValid && emptyFieldsValid) {
+                    if (camerasValid && capacitiesValid && emptyFieldsValid && timeValid) {
                         saveButton.disabled = false;
                     } else {
                         saveButton.disabled = true;
                     }
                 }
 
+                [startDateInput, startTimeInput, endDateInput, endTimeInput].forEach(input => {
+                    input.addEventListener("blur", () => {
+                        validateTimes();
+                        checkFormValidity();
+                    });
+
+                    input.addEventListener("input", () => {
+                        if (input === startTimeInput) startTimeErrorDiv.textContent = "";
+                        if (input === startDateInput) startDayErrorDiv.textContent = "";
+                        if (input === endDateInput || input === endTimeInput) endDayErrorDiv.textContent = "";
+
+                        validateTimes();
+                        checkFormValidity();
+                    });
+                });
+
                 inputs.forEach((input) => {
-                    input.addEventListener("blur", function (event) {
+                    input.addEventListener("blur", function () {
                         checkEmptyFields();
                         checkFormValidity();
                     });
 
-                    input.addEventListener("input", function (event) {
+                    input.addEventListener("input", function () {
                         checkEmptyFields();
                         checkFormValidity();
                     });
@@ -1570,7 +1699,12 @@
 
                 saveButton.addEventListener("click", function (e) {
                     e.preventDefault();
-                    if (validateCameras() && validateAllCapacities() && checkEmptyFields()) {
+                    if (
+                        validateCameras() &&
+                        validateAllCapacities() &&
+                        checkEmptyFields() &&
+                        validateTimes()
+                    ) {
                         document.querySelector("form").submit();
                     }
                 });
@@ -1578,6 +1712,7 @@
                 setTimeout(checkFormValidity, 200);
             });
         </script>
+
 
         <?php
             include '../../Back-End/PHP/session.php';
@@ -1748,6 +1883,9 @@
                     const inputs = document.querySelectorAll(".form__input");
                     const halls = document.querySelectorAll(".hall");
                     const errorMessageDiv = document.querySelector(".error-messageForCamera");
+                    
+                    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+                    const isEdge = /Edg/.test(navigator.userAgent);
 
                     let isEditing = false;
                     let originalCameraSelections = {};
@@ -1827,6 +1965,23 @@
                             updateCamera.style.border = "1px solid white";
                             updateCamera.style.backgroundColor = "#f4f7ff";
                         });
+                        if (isChrome || isEdge) {
+                            halls.forEach((input) => {
+                                const cameraNameInput = hall.querySelector(".camera-name");
+                                const updateCamera = hall.querySelector(".update-camera");
+                                cameraNameInput.style.display = "none";
+                                updateCamera.style.display = "";
+                                updateCamera.style.border = "1px solid white";
+                                updateCamera.style.backgroundColor = "#f4f7ff";
+                                updateCamera.style.maxWidth = "610px"; 
+                                updateCamera.style.marginRight = "-20px"; 
+                            });
+                        }
+                         if (isChrome || isEdge) {
+                            inputs.forEach((input) => {
+                                input.style.maxWidth = "610px"; 
+                            });
+                        }
                     }
 
                     function disableEditing() {

@@ -917,7 +917,7 @@
                     
                     <?php
                         date_default_timezone_set('Asia/Riyadh');
-                        $sql = "SELECT EventID, EventName, EventStartDate, EventStartTime, EventEndDate, EventEndTime 
+                        $sql = "SELECT *
                                 FROM events 
                                 WHERE CompanyID = ?"; 
 
@@ -939,6 +939,7 @@
                                 $eventId = $row['EventID'];
                                 $eventName = $row['EventName'];
 
+
                                 $startDate = new DateTime($row['EventStartDate'] . ' ' . $row['EventStartTime']);
                                 $endDate = new DateTime($row['EventEndDate'] . ' ' . $row['EventEndTime']);
 
@@ -956,7 +957,8 @@
                                         'id' => $eventId,
                                         'name' => $eventName,
                                         'start_date' => $startDate,
-                                        'end_date' => $endDate
+                                        'end_date' => $endDate,
+                                        "report_path" => $row["report_path"]
                                     ];
                                 } elseif ($startDate > $now) {
                                     // Event is upcoming
@@ -996,7 +998,7 @@
                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
                                                <p class="EventD">View Details</p>
                                            </a>
-                                           <a href="#" class="EventD" style="text-decoration: none;" onclick="alert('View report feature is not available yet.');"><p>View Report</p></a>
+                                           <a href="/2024-25_GP_02/<?= $event['report_path']; ?>" target="_blank" class="EventD" style="text-decoration: none;"><p>View Report</p></a>
                                        </div>
                                    </div>
                                    <?php if ($index !== count($pastEvents) - 1): ?>
@@ -1138,7 +1140,7 @@
                            </div>
                            <div class="cta-text" style="padding: 0; ">
                                 <h4 style="margin-top: 43%; ">Mail us</h4>
-                                <span id="mail"><a href="mailto:Raqeeb.Project@gmail.com">Raqeeb.Project@gmail.com</a></span>
+                                <span id="mail"><a href="mailto:Contact@RaqeebAI.com">Contact@RaqeebAI.com</a></span>
                             </div>
                        </div>
                    </div>
@@ -1149,7 +1151,7 @@
                    <div class="row">
                        <div class="col-xl-6 col-lg-6 text-center text-lg-left">
                            <div class="copyright-text">
-                               <p>Copyright &copy; 2024 Raqeeb. All Right Reserved </p>
+                               <p>Copyright &copy; 2025 Raqeeb. All Right Reserved </p>
                            </div>
                        </div>
                    </div>
