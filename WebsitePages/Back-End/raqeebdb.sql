@@ -66,6 +66,7 @@ CREATE TABLE `events` (
   `EventEndDate` date NOT NULL,
   `EventStartTime` time NOT NULL,
   `EventEndTime` time NOT NULL,
+  `ReportPath` varchar(255) NOT NULL,
   `CompanyID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
@@ -116,6 +117,7 @@ CREATE TABLE `peoplecount` (
 CREATE TABLE `persontrack` (
   `PersonTrackID` int(11) NOT NULL,
   `ID` int(11) NOT NULL,
+  `Gender` varchar(10) NOT NULL,
   `EntranceTime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `ExitTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `SessionID` int(11) NOT NULL
