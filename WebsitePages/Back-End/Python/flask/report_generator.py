@@ -6,11 +6,18 @@ from reportlab.lib.pagesizes import A4, inch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
+from reportlab.lib.enums import TA_CENTER
 import matplotlib.pyplot as plt
 from io import BytesIO
 import os
 from datetime import datetime
 from database_connection import get_db_connection
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+
 
 # ========== CONFIGURATION ==========
 # Brand colors
@@ -59,7 +66,7 @@ def generate_pdf_report(event_id):
 
     report_path = f'{REPORTS_DIR}/event_{event_id}_report.pdf'
     if os.path.exists(report_path):
-        print(f"Report already exists: {report_path}")
+        # print(f"Report already exists: {report_path}")
         return report_path
 
     report_data = fetch_report_data(cursor, event_id)
@@ -280,6 +287,22 @@ def fetch_report_data(cursor, event_id):
     """, (event_id,))
     data['hall_data'] = cursor.fetchall()
 
+    # dwell time per hall query
+    cursor.execute("""
+        SELECT 
+            h.HallName,
+            AVG(TIMESTAMPDIFF(MINUTE, pt.EntranceTime, pt.ExitTime)) as avg_dwell_minutes
+        FROM persontrack pt
+        JOIN monitoredsession ms ON pt.SessionID = ms.SessionID
+        JOIN hall h ON ms.HallID = h.HallID
+        WHERE h.EventID = %s
+          AND pt.ExitTime IS NOT NULL
+        GROUP BY h.HallName
+        ORDER BY avg_dwell_minutes DESC
+    """, (event_id,))
+    data['dwell_time_data'] = cursor.fetchall()
+
+
     # Hourly attendance
     cursor.execute("""
         SELECT HOUR(pt.EntranceTime) AS hour, COUNT(*) AS count
@@ -360,24 +383,29 @@ def generate_charts(report_data):
     # Make all charts half-width for side-by-side display
     charts['gender_chart'] = create_pie_chart(
         report_data['gender_data'], 
-        "Gender Distribution",
-        colors=[PRIMARY_COLOR, HIGHLIGHT_COLOR, SECONDARY_COLOR],
+        colors=['#EDB8C7', '#ACD6EA', SECONDARY_COLOR],
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
+
+    hall_count = len(report_data['hall_data'])
+    day_count = len(report_data['daily_data']) 
+    num_bars = max(hall_count, day_count)
+
+    gradient_colors = create_gradient_colors(num_bars, '#2f3b69', '#5271ff') 
+
+
     
     charts['hall_chart'] = create_bar_chart(
         report_data['hall_data'], 
-        "Visitors per Hall",
-        color=PRIMARY_COLOR,
+        bar_colors=gradient_colors,
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
     
     # Update time charts to be same size
     charts['hourly_chart'] = create_line_chart(
-        report_data['hourly_data'], 
-        "Hourly Attendance",
+        report_data['hourly_data'],
         color=SECONDARY_COLOR,
         width=HALF_WIDTH,
         height=HALF_HEIGHT
@@ -385,70 +413,66 @@ def generate_charts(report_data):
     
     charts['daily_chart'] = create_bar_chart(
         report_data['daily_data'], 
-        "Daily Attendance",
-        color=HIGHLIGHT_COLOR,
+        bar_colors=gradient_colors,
         x_label_key='date',
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
+
+    charts['dwell_time_chart'] = create_dwell_time_chart(
+        report_data.get('dwell_time_data', []),
+        gcolors=gradient_colors, 
+        width=FULL_WIDTH,      
+        height=HALF_HEIGHT
+    )
+    
     
     return charts
 
 def build_document_story(event, report_data, charts, styles):
     """Build the document content structure with professional layout."""
     story = []
+
+    centered_style = ParagraphStyle(name='CenteredStyle', parent=styles['NormalStyle'], alignment=TA_CENTER)
+
     
-    # ===== Title Section =====
+    # ===== Title Section (Reduced Space) =====
     story.append(Paragraph(f"<font color='{HIGHLIGHT_COLOR}'>{event['EventName']}</font> EVENT REPORT", 
                          styles['TitleStyle']))
-    story.append(Spacer(1, 0.1*inch))
+    story.append(Spacer(1, 0.05*inch))  # Reduced from 0.1*inch
     
-    # Horizontal line separator
-    story.append(Spacer(1, 0.05*inch))
+    # Horizontal line separator (thinner)
     story.append(Table([[""]], colWidths=[6.5*inch], style=[
-        ('LINEABOVE', (0,0), (0,0), 1, colors.HexColor(PRIMARY_COLOR))
+        ('LINEABOVE', (0,0), (0,0), 0.5, colors.HexColor(PRIMARY_COLOR))  # Thinner line
     ]))
-    story.append(Spacer(1, 0.1*inch))
+    story.append(Spacer(1, 0.05*inch))  # Reduced from 0.1*inch
 
-
-
+    # ===== Event Details (Compact Version) =====
     start_time = format_timedelta(event['EventStartTime'])
     end_time = format_timedelta(event['EventEndTime'])
     
-    
-    # ===== Event Details - Side by Side Layout =====
     event_details = Table([
         [
-            # Left column - event info
-            Table([
-                [Paragraph("<b>Event Start:</b>", styles['NormalStyle']),
-                 Paragraph(f"{event['EventStartDate']} at {start_time}", styles['NormalStyle'])],
-                [Paragraph("<b>Event End:</b>", styles['NormalStyle']),
-                 Paragraph(f"{event['EventEndDate']} at {end_time}", styles['NormalStyle'])]
-            ], colWidths=[1.2*inch, 3*inch], style=[
-                ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                ('LEFTPADDING', (0,0), (-1,-1), 0),
-                ('RIGHTPADDING', (0,0), (-1,-1), 0),
-                ('BOTTOMPADDING', (0,0), (0,-1), 8)
-            ]),
-            
-            # Right column - 
-            Table([
-                [Paragraph("<b>Event Location:</b>", styles['NormalStyle']),
-                 Paragraph(event['EventLocation'], styles['NormalStyle'])],
-                 [Paragraph("<b>Number of halls:</b>", styles['NormalStyle']),
-                 Paragraph(f"{report_data['number_of_halls']}", styles['NormalStyle'])]
-            ], colWidths=[1.8*inch, 1*inch], style=[
-                ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                ('LEFTPADDING', (0,0), (-1,-1), 8),
-                ('RIGHTPADDING', (0,0), (-1,-1), 8),
-                ('BOTTOMPADDING', (0,0), (0,-1), 8)
-            ])
+            Paragraph("<b>Event Start:</b>", styles['NormalStyle']),
+            Paragraph(f"{event['EventStartDate']} at {start_time}", styles['NormalStyle']),
+            Paragraph("<b>Location:</b>", styles['NormalStyle']),
+            Paragraph(event['EventLocation'], styles['NormalStyle'])
+        ],
+        [
+            Paragraph("<b>Event End:</b>", styles['NormalStyle']),
+            Paragraph(f"{event['EventEndDate']} at {end_time}", styles['NormalStyle']),
+            Paragraph("<b>Halls:</b>", styles['NormalStyle']),
+            Paragraph(str(report_data['number_of_halls']), styles['NormalStyle'])
         ]
-    ], colWidths=[4.2*inch, 2.8*inch])
+    ], colWidths=[1.2*inch, 2*inch, 1.2*inch, 2*inch], style=[
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 4),  
+        ('LEFTPADDING', (0,0), (-1,-1), 0),
+        ('RIGHTPADDING', (0,0), (-1,-1), 0)
+    ])
     
     story.append(event_details)
-    story.append(Spacer(1, 0.2*inch))
+    story.append(Spacer(1, 0.4*inch))  
     
     # ===== Key Metrics - Card Layout =====
 
@@ -461,31 +485,24 @@ def build_document_story(event, report_data, charts, styles):
         ("Busiest Day", f"{report_data['popular_day']['date']} ({report_data['popular_day']['count']} visitors)")
     ]
     
-    # Create metric cards with alternating colors
-    metric_colors = [PRIMARY_COLOR, SECONDARY_COLOR, HIGHLIGHT_COLOR, ACCENT_COLOR, PRIMARY_COLOR]
-
+    # Create metric cards 
     metric_cards = []
-    for (title, value), color in zip(metrics_data, metric_colors):
+    for title, value in metrics_data:
         card = Table([
             [Paragraph(title, ParagraphStyle(
                 name='MetricTitle',
                 parent=styles['NormalStyle'],
-                textColor=color,
-                fontSize=11,
-                alignment=1,
-                spaceBefore=0,  # Ensure no additional spacing
-                spaceAfter=0
+                textColor=SECONDARY_COLOR,  
+                fontSize=10,
+                alignment=1
             ))],
-            [Spacer(1, 2)],  # Minimal vertical spacer
             [Paragraph(value, ParagraphStyle(
                 name='MetricValue',
                 parent=styles['NormalStyle'],
-                textColor=ACCENT_COLOR,
-                fontSize=12,
+                textColor=PRIMARY_COLOR,  
+                fontSize=11,
                 fontName='Helvetica-Bold',
-                alignment=1,
-                spaceBefore=0,
-                spaceAfter=0
+                alignment=1
             ))]
         ], style=[
             ('BACKGROUND', (0,0), (-1,-1), LIGHT_BG),
@@ -493,32 +510,21 @@ def build_document_story(event, report_data, charts, styles):
             ('ROUNDEDCORNERS', [4,4,4,4]),
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
             ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-            ('LEFTPADDING', (0,0), (-1,-1), 0),  # Zero left padding
-            ('RIGHTPADDING', (0,0), (-1,-1), 0), # Zero right padding
-            ('TOPPADDING', (0,0), (-1,-1), 4),   # Small top padding only
-            ('BOTTOMPADDING', (0,0), (-1,-1), 4) # Small bottom padding only
+            ('PADDING', (0,0), (-1,-1), 6),
         ])
         metric_cards.append(card)
 
-    # Arrange with minimal spacing
+    
+    # Arrange in 2 rows (3 in first row, 2 in second)
     metrics_grid = Table([
-        [metric_cards[0], Spacer(0.05*inch, 0), metric_cards[1], Spacer(0.05*inch, 0), metric_cards[2]],
-        [Spacer(1, 0.05*inch)],
-        [metric_cards[3], Spacer(0.05*inch, 0), metric_cards[4]]
-    ], colWidths=[
-        2.8*inch,    # Wider columns to use space
-        0.05*inch,   # Tiny spacer
-        2.8*inch,
-        0.05*inch,
-        2.8*inch
-    ], style=[
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('LEFTPADDING', (0,0), (-1,-1), 0),
-        ('RIGHTPADDING', (0,0), (-1,-1), 0)
-    ])
+        [metric_cards[0], Spacer(0.2*inch, 0.2*inch), metric_cards[1], Spacer(0.2*inch, 0.2*inch), metric_cards[2]],
+        [Spacer(1, 0.1*inch)],
+        [metric_cards[3], Spacer(0.2*inch, 0.2*inch), metric_cards[4]]
+    ], colWidths=[2.0*inch, 0.1*inch, 2.0*inch, 0.2*inch, 2.0*inch])
 
+    
     story.append(metrics_grid)
-    story.append(Spacer(1, 0.3*inch))  # Reduced final spacer
+    story.append(Spacer(1, 0.9*inch))  # Reduced from 0.5*inch
     
     # ===== Charts Section =====
     story.append(Paragraph("ATTENDANCE ANALYSIS", 
@@ -526,79 +532,87 @@ def build_document_story(event, report_data, charts, styles):
                                        parent=styles['SectionHeaderStyle'],
                                        fontSize=13,
                                        textTransform='uppercase',
-                                       spaceAfter=0.1*inch)))
+                                       spaceAfter=0.5*inch)))
     
-    # Gender and Hall charts with descriptions
+
     chart_row = Table([
         [
-            # Left column - gender chart
+            # Left column 
             Table([
+                [Paragraph("<b>Gender Distribution</b>", centered_style)],
                 [Image(charts['gender_chart'], width=HALF_WIDTH*inch, height=HALF_HEIGHT*inch)],
-                [Spacer(1, 0.1*inch)],
-                [Paragraph("<b>Gender Distribution</b>", styles['NormalStyle'])],
-                [Paragraph("Understanding attendee demographics helps tailor marketing strategies.", 
-                          ParagraphStyle(name='ChartCaption', parent=styles['NormalStyle'], fontSize=8))]
+                [Spacer(1, 0.1*inch)]
             ], style=[
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('ALIGN', (0,0), (-1,-1), 'CENTER')
             ]),
             
-            # Right column - hall chart
+            Spacer(0.6*inch, 0),  
+
+            # Right column 
             Table([
+                [Paragraph("<b>Visitors per Hall</b>", centered_style)],
                 [Image(charts['hall_chart'], width=HALF_WIDTH*inch, height=HALF_HEIGHT*inch)],
-                [Spacer(1, 0.1*inch)],
-                [Paragraph("<b>Hall Popularity</b>", styles['NormalStyle'])],
-                [Paragraph("Shows which content resonated most with attendees.", 
-                          ParagraphStyle(name='ChartCaption', parent=styles['NormalStyle'], fontSize=8))]
+                [Spacer(1, 0.1*inch)]
             ], style=[
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('ALIGN', (0,0), (-1,-1), 'CENTER')
             ])
         ]
-    ], colWidths=[HALF_WIDTH*inch, HALF_WIDTH*inch])
+    ], colWidths=[HALF_WIDTH*inch, 0.6*inch, HALF_WIDTH*inch])
     
     story.append(chart_row)
     story.append(Spacer(1, 0.5*inch))
     
-    # ===== Time-Based Charts =====
-    story.append(Paragraph("ATTENDANCE PATTERNS", 
-                         ParagraphStyle(name='SectionHeaderAllCaps',
-                                      parent=styles['SectionHeaderStyle'],
-                                      fontSize=14,
-                                      textTransform='uppercase',
-                                      spaceAfter=0.3*inch)))
     
-    # Time charts row
     time_chart_row = Table([
         [
-            # Left column - hourly chart
-            Table([
+            # Left column 
+            Table([                
+                [Paragraph("<b>Hourly Attendance</b>", centered_style)],
+                #  [Spacer(1, 0.1*inch)], # Add a caption for the chart
                 [Image(charts['hourly_chart'], width=HALF_WIDTH*inch, height=HALF_HEIGHT*inch)],
-                [Spacer(1, 0.1*inch)],
-                [Paragraph("<b>Hourly Attendance</b>", styles['NormalStyle'])],
-                [Paragraph("Peak times help optimize staff scheduling and session timing.", 
-                         ParagraphStyle(name='ChartCaption', parent=styles['NormalStyle'], fontSize=10))]
             ], style=[
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('ALIGN', (0,0), (-1,-1), 'CENTER')
-            ]),
-            
-            # Right column - daily chart
+            ]),  
+
+            Spacer(0.6*inch, 0),  
+
+            # Right column 
             Table([
+                [Paragraph("<b>Daily Attendance</b>", centered_style )],  
                 [Image(charts['daily_chart'], width=HALF_WIDTH*inch, height=HALF_HEIGHT*inch)],
-                [Spacer(1, 0.1*inch)],
-                [Paragraph("<b>Daily Attendance</b>", styles['NormalStyle'])],
-                [Paragraph(f"Peak day: {report_data['popular_day']['date']} ({report_data['popular_day']['count']} visitors)", 
-                         ParagraphStyle(name='ChartCaption', parent=styles['NormalStyle'], fontSize=10))]
             ], style=[
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
                 ('ALIGN', (0,0), (-1,-1), 'CENTER')
             ])
         ]
-    ], colWidths=[HALF_WIDTH*inch, HALF_WIDTH*inch])
+    ], colWidths=[HALF_WIDTH*inch, 0.6*inch, HALF_WIDTH*inch])
+
     
+
     story.append(time_chart_row)
     story.append(Spacer(1, 0.5*inch))
+
+    story.append(Paragraph("VISITOR ENGAGEMENT", 
+                         styles['SectionHeaderStyle']))
+    story.append(Spacer(1, 0.2*inch))
+
+    max_dwell = max((d['avg_dwell_minutes'] for d in report_data.get('dwell_time_data', [])), default=0)
+
+    dwell_time_table = Table([
+        [Paragraph("<b>Average Time Spent In Each Hall</b>", centered_style)],
+        [Image(charts['dwell_time_chart'], width=FULL_WIDTH*inch, height=HALF_HEIGHT*inch)], 
+        [Paragraph(f"Visitors spent an average of {max_dwell:.1f} minutes in the most engaging hall", centered_style)]
+    ])
+
+    
+    story.append(dwell_time_table)
+    
+    
+    story.append(Spacer(1, 0.3*inch))
+
     
     story.append(PageBreak())
     
@@ -616,60 +630,65 @@ def build_document_story(event, report_data, charts, styles):
     )
     story.append(insights_header)
     
+    # Calculate the hall visit percentage once
+    hall_visit_percentage = float(report_data['avg_visits']) / report_data['number_of_halls'] if report_data['number_of_halls'] > 0 else 0
+
+    # Determine the engagement message
+    if hall_visit_percentage >= 0.75:
+        engagement_message = 'which is more than 75% of the halls. This shows good floor planning and engagement'
+    else:
+        engagement_message = 'which is less than 75% of the halls. Consider changing the entrance/exit plan between halls to make it more fluid, and add more engaging activities in each hall to attract visitors'
+
     insights = [
         {
-            "title": "Peak Day Analysis",
+            "title": "Peak Day",
             "content": f"The busiest day was {report_data['popular_day']['date']} with {report_data['popular_day']['count']} visitors. Consider what made this day particularly successful."
         },
         {
-            "title": "Peak Hours Management",
-            "content": f"Consider adding more staff during {report_data['peak_hour'].split(' (')[0]} to improve visitor experience."
+            "title": "Peak Hour",
+            "content": f"With {report_data['peak_hour'].split(' (')[0]} being the most popular time, consider utilizing this info to improve visitor experience in the future by adding more staff during that time."
         },
         {
-            "title": "Hall Utilization",
-            "content": f"The most popular hall was {report_data['popular_hall'].split(' (')[0]}. Consider expanding similar content."
+            "title": "Hall Popularity",
+            "content": f"The most popular hall was {report_data['popular_hall'].split(' (')[0]}. Evaluate what made this hall popular and capitalize on it in the future."
         },
         {
-            "title": "Visitor Engagement",
-            "content": f"Attendees visited an average of {report_data['avg_visits']:.0f} different halls - higher repeat visits indicate good content distribution."
+            "title": "Visitor Halls Visits",
+            "content": f"Attendees visited an average of {report_data['avg_visits']:.0f} different halls out of {report_data['number_of_halls']} - {engagement_message}"
         },
         {
-            "title": "Underutilized Spaces",
+            "title": "Underutilized Halls",
             "content": "Analyze halls with lower attendance to understand if content or location was the issue."
         },
         {
-            "title": "Timing Optimization",
-            "content": f"With average visit duration of {report_data['avg_duration']}, adjust session lengths accordingly."
+            "title": "Visit Time",
+            "content": f"With average visit duration of {report_data['avg_duration']}, consider if you need to add more engaging activities to lengthen visit duration"
         },
         {
             "title": "Gender Balance",
-            "content": "Review marketing strategies if gender distribution doesn't match target demographics."
-        },
-        {
-            "title": "Daily Trends",
-            "content": "Use daily attendance patterns to optimize resource allocation."
+            "content": "Review marketing strategies if gender distribution doesn't match event's target demographics."
         }
     ]
-    
+
     for insight in insights:
         # Insight title with colored bullet
         story.append(Paragraph(
             f"<font color='{PRIMARY_COLOR}'>•</font> <b>{insight['title']}</b>",
             ParagraphStyle(name='InsightTitle', parent=styles['NormalStyle'], 
-                          leftIndent=10, spaceAfter=4, textColor=ACCENT_COLOR)
+                        leftIndent=10, spaceAfter=4, textColor=ACCENT_COLOR)
         ))
         # Insight content
         story.append(Paragraph(
             insight['content'],
             ParagraphStyle(name='InsightContent', parent=styles['NormalStyle'], 
-                          leftIndent=24, spaceAfter=12, fontSize=11)
+                        leftIndent=24, spaceAfter=12, fontSize=11)
         ))
     
     # Conclusion with colored border
     conclusion_table = Table([
         [Paragraph(
             "This report provides actionable insights to enhance future events. " +
-            "For more detailed analysis or custom reporting, please contact our analytics team.",
+            "For more detailed analysis or custom reporting, please contact our team.",
             ParagraphStyle(name='ConclusionStyle', parent=styles['NormalStyle'],
                           textColor=SECONDARY_COLOR, fontSize=11, alignment=1)
     )]
@@ -685,7 +704,7 @@ def build_document_story(event, report_data, charts, styles):
     return story
 
 
-def create_pie_chart(data, title, colors=None, width=HALF_WIDTH, height=HALF_HEIGHT):
+def create_pie_chart(data, colors=None, width=HALF_WIDTH, height=HALF_HEIGHT):
     """Create a pie chart with the given data."""
     labels = [d['Gender'] for d in data]
     sizes = [d['count'] for d in data]
@@ -713,12 +732,11 @@ def create_pie_chart(data, title, colors=None, width=HALF_WIDTH, height=HALF_HEI
         )
     
     ax.axis('equal')  
-    plt.title(title, pad=15, fontsize=11, fontweight='bold')
     plt.setp(autotexts, size=9, weight="bold")
     plt.setp(texts, size=9)
     plt.tight_layout()
     
-    return save_chart_to_image(fig)
+    return save_chart_to_image(fig, bbox_inches='tight')
 
 # def create_bar_chart(data, title, color=None, x_label_key='HallName', width=HALF_WIDTH, height=HALF_HEIGHT):
 #     """Create a bar chart with the given data."""
@@ -750,7 +768,7 @@ def create_pie_chart(data, title, colors=None, width=HALF_WIDTH, height=HALF_HEI
     
 #     return save_chart_to_image(fig)
 
-def create_line_chart(data, title, color=None, width=HALF_WIDTH, height=HALF_HEIGHT):
+def create_line_chart(data, color=None, width=HALF_WIDTH, height=HALF_HEIGHT):
     """Create a line chart optimized for side-by-side display."""
     x_values = [f"{int(d['hour']):02d}:00" for d in data]
     y_values = [d['count'] for d in data]
@@ -767,7 +785,6 @@ def create_line_chart(data, title, color=None, width=HALF_WIDTH, height=HALF_HEI
         if i % 2 == 0:  # Label every other hour
             ax.text(x, y, f'{y}', ha='center', va='bottom', fontsize=8)
     
-    ax.set_title(title, pad=10, fontsize=11, fontweight='bold')
     ax.set_xlabel('Time', labelpad=6, fontsize=9)
     ax.set_ylabel('Visitors', labelpad=6, fontsize=9)
     plt.xticks(rotation=45, ha='right', fontsize=8)
@@ -780,7 +797,7 @@ def create_line_chart(data, title, color=None, width=HALF_WIDTH, height=HALF_HEI
     
     return save_chart_to_image(fig)
 
-def create_bar_chart(data, title, color=None, x_label_key='HallName', width=HALF_WIDTH, height=HALF_HEIGHT):
+def create_bar_chart(data, bar_colors=None, x_label_key='HallName', width=HALF_WIDTH, height=HALF_HEIGHT):
     """Create a bar chart optimized for side-by-side display."""
     labels = [str(d[x_label_key]) for d in data]
     counts = [d['count'] for d in data]
@@ -788,15 +805,13 @@ def create_bar_chart(data, title, color=None, x_label_key='HallName', width=HALF
     fig, ax = plt.subplots(figsize=(width, height))
     fig.patch.set_facecolor(LIGHT_BG)
     fig.patch.set_alpha(0.7)
-    
-    bar_color = color if color else PRIMARY_COLOR
-    
-    # Highlight max value for daily chart
-    if x_label_key == 'date' and data:
-        max_idx = counts.index(max(counts))
-        colors = [HIGHLIGHT_COLOR if i == max_idx else bar_color for i in range(len(counts))]
+        
+    if bar_colors and len(bar_colors) == len(counts):
+        colors = bar_colors
     else:
-        colors = bar_color
+        colors = [PRIMARY_COLOR] * len(counts)
+
+    bars = ax.bar(labels, counts, color=colors, width=0.6)
     
     bars = ax.bar(labels, counts, color=colors, width=0.6)  # Narrower bars
     
@@ -809,7 +824,6 @@ def create_bar_chart(data, title, color=None, x_label_key='HallName', width=HALF
                    f'{int(height)}',
                    ha='center', va='bottom', fontsize=8)
     
-    ax.set_title(title, pad=10, fontsize=11, fontweight='bold')
     ax.set_ylabel('Visitors', labelpad=6, fontsize=9)
     plt.xticks(rotation=45, ha='right', fontsize=8)
     ax.yaxis.set_major_locator(plt.MaxNLocator(integer=True))
@@ -822,13 +836,77 @@ def create_bar_chart(data, title, color=None, x_label_key='HallName', width=HALF
     
     return save_chart_to_image(fig)
 
-def save_chart_to_image(fig):
-    """Save matplotlib figure to an in-memory PNG file."""
-    buf = BytesIO()
-    fig.savefig(buf, format='PNG', dpi=150, bbox_inches='tight', transparent=True)
+
+def create_dwell_time_chart(data, gcolors, width=HALF_WIDTH, height=HALF_HEIGHT):
+    if not data:
+        return create_empty_chart("No dwell time data", width, height)
+
+    hall_names = [d['HallName'] for d in data]
+    dwell_times = [d['avg_dwell_minutes'] for d in data]
+
+    fig, ax = plt.subplots(figsize=(width, height))
+    fig.patch.set_facecolor(LIGHT_BG)
+    fig.patch.set_alpha(0.7)
+
+    # Get index of the max dwell time
+    max_idx = dwell_times.index(max(dwell_times))
+
+    # Generate gradient colors
+    gradient_colors = gcolors
+
+    # Highlight the bar with the longest dwell time
+    gradient_colors[max_idx] = HIGHLIGHT_COLOR
+
+    # Draw horizontal bars
+    bars = ax.barh(hall_names, dwell_times, color=gradient_colors, height=0.6)
+
+    ax.set_xlabel('Average Minutes', labelpad=8, fontsize=9)
+    ax.set_ylabel('Hall', labelpad=8, fontsize=9)
+
+    for bar in bars:
+        width = bar.get_width()
+        ax.text(width + 1, bar.get_y() + bar.get_height()/2,
+                f'{width:.1f}', va='center', ha='left', fontsize=8)
+
+    ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
+    plt.xticks(fontsize=8)
+    plt.yticks(fontsize=8)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.grid(axis='x', linestyle='--', alpha=0.5)
+    plt.tight_layout()
+
+    return save_chart_to_image(fig)
+
+
+def create_empty_chart(message, width, height):
+    """Create placeholder when no data exists."""
+    fig, ax = plt.subplots(figsize=(width, height))
+    fig.patch.set_facecolor(LIGHT_BG)
+    ax.text(0.5, 0.5, message, 
+            ha='center', va='center', 
+            fontsize=10, color=colors.to_rgba(ACCENT_COLOR, 0.5))
+    ax.axis('off')
+    return save_chart_to_image(fig)
+
+
+def create_gradient_colors(n, color1, color2):
+    """Generate a list of gradient colors."""
+    cmap = LinearSegmentedColormap.from_list("grad", [color1, color2], N=n)
+    return [cmap(i) for i in range(n)]
+
+
+
+
+
+def save_chart_to_image(fig, bbox_inches='tight'):
+    buf = io.BytesIO()
+    canvas = FigureCanvas(fig)
+    fig.savefig(buf, format='PNG', bbox_inches=bbox_inches, transparent=True)
     plt.close(fig)
     buf.seek(0)
     return buf
+
 
 
 # reformate end time

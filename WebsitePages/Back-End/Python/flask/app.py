@@ -624,8 +624,8 @@ def event_status():
             if(datetime.now() > end_datetime):
                 report_path = generate_pdf_report(event_id)
                 print("report generated")
-                print("report_path:", report_path, type(report_path))
-                print("event_id:", event_id, type(event_id))
+                # print("report_path:", report_path, type(report_path))
+                # print("event_id:", event_id, type(event_id))
 
                 return jsonify(True)  
         return jsonify(False)  
@@ -657,13 +657,13 @@ def get_report_path():
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT report_path FROM events WHERE EventID = %s", (event_id,))
+    cursor.execute("SELECT ReportPath FROM events WHERE EventID = %s", (event_id,))
     result = cursor.fetchone()
     cursor.close()
     connection.close()
 
-    if result and result['report_path']:
-        return jsonify({'reportPath': result['report_path']})
+    if result and result['ReportPath']:
+        return jsonify({'reportPath': result['ReportPath']})
     else:
         return jsonify({'reportPath': None})
 
