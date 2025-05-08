@@ -30,6 +30,9 @@
   ```
   pip install apscheduler
   ```
+  ```
+  pip install scikit-learn
+  ```
 
 
   - Navigate to the project directory: <br>
@@ -45,6 +48,7 @@
   ```
   python app.py
   ```
+
 
   
   **3. Run the project:** Open the project folder on your computer and launch it using your local server or preferred development environment. 
