@@ -24,6 +24,7 @@
   ```
   pip install mysql-connector-python
   ```
+  - In addition to Flask, make sure to install other important packages required for the project:
   ```
   pip install opencv-python
   ```
