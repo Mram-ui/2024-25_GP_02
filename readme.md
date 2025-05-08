@@ -25,13 +25,22 @@
   pip install mysql-connector-python
   ```
   ```
+  pip install opencv-python
+  ```
+  ```
   pip install ultralytics
   ```
   ```
   pip install apscheduler
   ```
   ```
-  pip install scikit-learn
+  pip install apscheduler
+  ```
+  ```
+  pip install numpy
+  ```
+  ```
+  pip install torch torchvision
   ```
   ```
   pip install torchreid
