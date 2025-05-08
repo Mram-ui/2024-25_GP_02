@@ -27,8 +27,9 @@
   ```
   pip install ultralytics
   ```
-
-
+  ```
+  pip install apscheduler
+  ```
 
 
   - Navigate to the project directory: <br>
