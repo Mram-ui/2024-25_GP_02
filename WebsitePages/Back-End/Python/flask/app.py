@@ -9,8 +9,19 @@ from datetime import timedelta
 import threading
 from report_generator import generate_pdf_report
 from database_connection import get_db_connection
+from camera_status import camera_connection_status, latest_frames, latest_session_id
+from camera_connection import scheduler
+from event_processor import save_to_database
+
+# from camera_connection import initiate_camera_connection
+# initiate_camera_connection()
+# print("Camera connection status after init:", camera_connection_status)
 
 
+# app.py startup
+from camera_connection import initiate_camera_connection
+
+# initiate_camera_connection()  # Start camera connections from camera_connection.py
 
 
 '''
@@ -23,6 +34,13 @@ latest_session_id={} # key: hall_id, value: session_id
 # Global dictionary to store camera status
 camera_status = {}
 
+# Initialize dictionaries to store the results
+bar_chart_data = {}
+brush_chart_data = {}
+hall_thresholds = {}
+pie_chart_data = {}
+line_chart_data = {}
+halls_pie_chart_data= {}
 
 
 def retrieve_halls(event_id, cursor):
@@ -135,6 +153,7 @@ def retrieve_camera_details():
 
 app = Flask(__name__)
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGES_DIR = os.path.join(BASE_DIR, '../images')
 FRONTEND_DIR = os.path.join(BASE_DIR, '../Front-End')
@@ -157,11 +176,12 @@ def serve_backend(filename):
 
 
 
-
+from flask import has_request_context
 
 # This function starts when dashboard.html load
 @app.route('/')
 def home():
+    
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     # Get the eventId parameter from the URL
@@ -193,6 +213,7 @@ def home():
                 'eventID' : event_id,
             })
             camera_status[camera['CameraName']] = "unknown"  # Initialize camera status
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++", rtsp_link)
 
 
     # Retrieve event information
@@ -211,70 +232,109 @@ def home():
     return render_template('dashboard.html', cameras=detailed_camera_data, eventData=event_data, camera_status=camera_status, numOfHalls=numOfHalls)
 
 
-# This function is called by video_feed 
-def generate_frames(rtsp_link, CameraName):
-    cap = cv2.VideoCapture(rtsp_link)
+# # This function is called by video_feed 
+# def generate_frames(rtsp_link, CameraName):
+#     cap = cv2.VideoCapture(rtsp_link)
 
-    # cap.setExceptionMode(True)
-    # cap.set(cv.CAP_PROP_OPEN_TIMEOUT_MSEC, 1000)
-    # cap.open("http://10.0.0.114")
+#     if not cap.isOpened():
+#         print(f"Failed to open RTSP link: {rtsp_link}")
+#         camera_status[CameraName] = "down"  # Mark camera status as 'failed'
+#         return
 
-
+#     camera_status[CameraName] = "up"  # Mark the camera as active
     
-    if not cap.isOpened():
-        print(f"Failed to open RTSP link: {rtsp_link}")
-        camera_status[CameraName] = "down"  # Mark camera status as 'failed'
-        return
+#     while True:
+#         success, frame = cap.read()
+#         if not success:
+#             camera_status[CameraName] = "down"  # Mark the camera as disconnected if frame reading fails
+#             print('status down. Failed to fetch a frame')
+#             break
 
-    camera_status[CameraName] = "up"  # Mark the camera as active
+
+#         # Stream the frame
+#         ret, buffer = cv2.imencode('.jpg', frame)
+#         frame = buffer.tobytes()
+#         yield (b'--frame\r\n'
+#                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+#     cap.release()
+
+
+def generate_frames(camera_id):
+    camera_id = int(camera_id)  # Ensure integer type
+    placeholder = cv2.imread('static/images/disconection.png')  # Use the correct placeholder
     
     while True:
-        success, frame = cap.read()
-        if not success:
-            camera_status[CameraName] = "down"  # Mark the camera as disconnected if frame reading fails
-            print('status down. Failed to fetch a frame')
-            break
+        try:
+
+            # Check both frame availability AND connection status
+            if camera_id in latest_frames and camera_connection_status.get(camera_id) == "on":
+                frame = latest_frames[camera_id]
+                if frame is not None:
+                    # frame = cv2.resize(frame, (640, 480))
+                    ret, buffer = cv2.imencode('.jpg', frame)
+                    if ret:
+                        yield (b'--frame\r\n'
+                               b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+                        continue  # Skip to next iteration if frame was sent
+            
+            # Fallback to placeholder if any condition fails
+            ret, buffer = cv2.imencode('.jpg', placeholder)
+            if ret:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+            time.sleep(0.1)  # Reduced sleep time for more responsive switching
+            
+        except Exception as e:
+            print(f"Error for camera {camera_id}: {e}")
+            time.sleep(1)
 
 
-        # Stream the frame
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-    cap.release()
-
-def monitor_camera_connections():
-    """Background thread to monitor the camera connections."""
-    print('monitor_camera_connections Thread')
-    while True:
-        for CameraName, status in camera_status.items():
-            if status == "down":
-                print(f"Camera {CameraName} is down. Attempting reconnection...")
-                # Optional: Implement reconnection logic here
-        time.sleep(5)  # Check the connection status every 5 seconds
-
-
-
-# This function is accessed from dashboard.html to display cameras feeds
 @app.route('/video_feed/<camera_id>')
 def video_feed(camera_id):
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
+    return Response(generate_frames(camera_id),
+                   mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/test_frame/<camera_id>')
+def test_frame(camera_id):
+    frame = latest_frames.get(int(camera_id), None)
+    if frame is not None:
+        cv2.imwrite('test_frame.jpg', frame)
+        return send_file('test_frame.jpg')
+    return "No frame available"
+
+
+# def monitor_camera_connections():
+#     """Background thread to monitor the camera connections."""
+#     print('monitor_camera_connections Thread')
+#     while True:
+#         for CameraName, status in camera_status.items():
+#             if status == "down":
+#                 print(f"Camera {CameraName} is down. Attempting reconnection...")
+#                 # Optional: Implement reconnection logic here
+#         time.sleep(5)  # Check the connection status every 5 seconds
+
+
+
+# # This function is accessed from dashboard.html to display cameras feeds
+# @app.route('/video_feed/<camera_id>')
+# def video_feed(camera_id):
+#     try:
+#         connection = get_db_connection()
+#         cursor = connection.cursor(dictionary=True)
         
-        # Retrieve RTSP link for the given camera_id
-        cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
-        camera_info = cursor.fetchone()
-        rtsp_link = f"rtsp://{camera_info['CameraUsername']}:{camera_info['CameraPassword']}@{camera_info['CameraIPAddress']}:{camera_info['PortNo']}/{camera_info['StreamingChannel']}"
+#         # Retrieve RTSP link for the given camera_id
+#         cursor.execute(f'SELECT * FROM camera WHERE CameraID={camera_id}')
+#         camera_info = cursor.fetchone()
+#         rtsp_link = f"rtsp://{camera_info['CameraUsername']}:{camera_info['CameraPassword']}@{camera_info['CameraIPAddress']}:{camera_info['PortNo']}/{camera_info['StreamingChannel']}"
 
-    finally:
-        cursor.close()
-        connection.close()
+#     finally:
+#         cursor.close()
+#         connection.close()
 
-    # Use the RTSP link to stream the video
-    return Response(generate_frames(rtsp_link, camera_info['CameraName']),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+#     # Use the RTSP link to stream the video
+#     return Response(generate_frames(rtsp_link, camera_info['CameraName']),
+#                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 from datetime import datetime, timedelta
@@ -316,19 +376,26 @@ def latest_people_count():
         
         cursor.execute(query)
         data = cursor.fetchall()
-        
+        # print('******************* ********************************************************', data)
         current_time = datetime.now()
         
 
         #This checks if the data is older than 10 seconds, if so it will be marked as 'No Recent Data'
-        # for entry in data:
-        #     if entry['Time']:
-        #         latest_time = datetime.strptime(str(entry['Time']), "%Y-%m-%d %H:%M:%S")
-        #         if (current_time - latest_time) > timedelta(seconds=10):
-        #             entry['Count'] = 'No Recent Data'
-        #         # else:
-        #         #     # Update global dictionary with latest count
-        #         #     bar_chart_data[entry['HallName']] = entry['Count']
+        for entry in data:
+            if entry['Time']:
+                query = "SELECT cameraID FROM hall WHERE HallID = %s"
+                cursor.execute(query, (entry['HallID'],))
+                camera_row = cursor.fetchone()
+                camera_id = camera_row['cameraID']
+                latest_time = datetime.strptime(str(entry['Time']), "%Y-%m-%d %H:%M:%S")
+                if (current_time - latest_time) > timedelta(seconds=300) or (camera_connection_status.get(camera_id) == "off"):
+                    entry['Count'] = 'No Recent Data'
+                    bar_chart_data[entry['HallName']] = 0
+                    # entry['Count'] = 0
+                    print(entry['Count'], entry['HallName'])
+                else:
+                    # Update global dictionary with latest count
+                    bar_chart_data[entry['HallName']] = entry['Count']
 
         return jsonify(data)
     finally:
@@ -351,12 +418,6 @@ def get_all_thresholds():
         cursor.close()
         connection.close()
 
-@app.route('/camera_status', methods=['GET'])
-def get_camera_status():
-    """Endpoint to fetch the current status of all cameras."""
-    return jsonify(camera_status)
-
-
 
 #this function will send the hall names + current count
 @app.route('/graph_data', methods=['GET'])
@@ -365,18 +426,33 @@ def graphs_data():
     cursor = connection.cursor(dictionary=True)
     event_id = 101 ##is this ok?
 
+    # # Initialize dictionaries to store the results
+    # bar_chart_data = {}
+    # brush_chart_data = {}
+    # hall_thresholds = {}
+    # global pie_chart_data
+    # line_chart_data = {}
+    # halls_pie_chart_data= {}
+    global bar_chart_data, brush_chart_data, hall_thresholds, pie_chart_data, line_chart_data, halls_pie_chart_data
+    bar_chart_data.clear()
+    brush_chart_data.clear()
+    hall_thresholds.clear()
+    pie_chart_data.clear()
+    line_chart_data.clear()
+    halls_pie_chart_data.clear()
+
+
+
     halls = retrieve_halls(event_id, cursor)
 
-    # Initialize dictionaries to store the results
-    bar_chart_data = {}
-    brush_chart_data = {}
-    hall_thresholds = {}
-    pie_chart_data = {}
-    line_chart_data = {}
-    halls_pie_chart_data= {}
     try:
         for hall in halls:
-            print(f"Processing hall: {hall['HallName']} (ID: {hall['HallID']})")
+            # print(f"Processing hall: {hall['HallName']} (ID: {hall['HallID']})")
+
+            query = "SELECT cameraID FROM hall WHERE HallID = %s"
+            cursor.execute(query, (hall['HallID'],))
+            camera_id = cursor.fetchone()
+            camera_id = camera_id['cameraID']
 
             # Query to get the latest people count for the session along with the hall name
             current_time = datetime.now()
@@ -424,14 +500,20 @@ def graphs_data():
             else:
                 brush_chart_data[hall['HallName']] = []
 
-            # # If data was older than 10 seconds ago, it will be 0 in the bar chart
+            # If data was older than 10 seconds ago, it will be 0 in the bar chart
             # if bar_chart_result and 'Time' in bar_chart_result:
-            #     latest_time = datetime.strptime(str(bar_chart_result['Time']), "%Y-%m-%d %H:%M:%S")
-            #     if (current_time - latest_time) > timedelta(seconds=10):
-            #         bar_chart_data[hall['HallName']] = 0
-            #         brush_chart_data[hall['HallName']] = 0
-            #     else:
-            #         bar_chart_data[hall['HallName']] = bar_chart_result['count']
+
+            # latest_time = datetime.strptime(str(bar_chart_result['Time']), "%Y-%m-%d %H:%M:%S")
+            latest_time = bar_chart_result['Time']
+
+            if ((current_time - latest_time) > timedelta(seconds=300) or (camera_connection_status.get(camera_id) == "off")):
+                # print('camera_connection_status%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%: ', camera_connection_status)
+                # print(f"camera_id: {camera_id}, type: {type(camera_id)}")
+
+                bar_chart_data[hall['HallName']] = 0
+                # brush_chart_data[hall['HallName']] = 0
+            else:
+                bar_chart_data[hall['HallName']] = bar_chart_result['count']
             # else:
             #     bar_chart_data[hall['HallName']] = 0
             halls_pie_chart_query = '''
@@ -458,33 +540,8 @@ def graphs_data():
 
         for row in halls_pie_chart_results:
             halls_pie_chart_data[row['HallName']] = row['avg_duration_seconds']
-            print(f"Hall {row['HallName']}: Average Duration = {row['avg_duration_seconds']} seconds")
+            # print(f"Hall {row['HallName']}: Average Duration = {row['avg_duration_seconds']} seconds")
             
-
-
-        # pie_chart_data['Main Hall'] = {'Female': 20, 'Male':10}
-        # pie_chart_data['VIP'] = {'Female': 30, 'Male':10}
-
-        # pie_chart_query= '''
-        # SELECT Gender, COUNT(Gender) AS count
-        # FROM PersonTrack
-        # WHERE Gender IN ('male', 'female')
-        # GROUP BY Gender;
-        # '''
-
-        # cursor.execute(pie_chart_query)
-        # pie_chart_result = cursor.fetchall()
-
-        # pie_chart_data = { "Female": 0, "Male": 0 }
-
-        # for row in pie_chart_result:
-        #     gender = row[0]
-        #     count = row[1]
-        #     if gender == "female":
-        #         pie_chart_data["Female"] = count
-        #     elif gender == "male":
-        #         pie_chart_data["Male"] = count
-
 
         # Query to get gender counts per hall
         pie_chart_query = '''
@@ -533,7 +590,7 @@ def graphs_data():
         if not pie_chart_data:
             pie_chart_data = { "Main Hall": { "Female": 0, "Male": 0 } }
 
-        print("Pie Chart Data:", pie_chart_data)
+        # print("Pie Chart Data:", pie_chart_data)
 
         
 
@@ -668,13 +725,63 @@ def get_report_path():
         return jsonify({'reportPath': None})
 
 
+@app.route('/monitor_camera_connection_status')
+def monitor_camera_connection_status():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    result = {}
+
+    try:
+        for camera_id, status in camera_connection_status.items():
+            # Ensure unread results are cleared before next execution
+            cursor.execute("SELECT HallName FROM hall WHERE CameraID = %s", (camera_id,))
+            hall_row = cursor.fetchone()
+            hall_name = hall_row['HallName'] if hall_row else 'Unknown'
+
+            result[camera_id] = {
+                'status': status,
+                'hallName': hall_name
+            }
+
+    except Exception as e:
+        print(f"Error in /monitor_camera_connection_status: {e}")
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify(result)
+
+
+
+# if __name__ == '__main__':
+#     #camera_data = get_shared_camera_data()
+#     # Start background thread to monitor camera connections
+#     initiate_camera_connection()  # Start camera connections from camera_connection.py
+#     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$before scheduler()")
+#     # scheduler()  # Start the scheduler for event processing
+#     scheduler_thread = threading.Thread(target=scheduler, daemon=True).start()
+#     print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$After scheduler()")
+
+#     db_thread = threading.Thread(target=save_to_database, daemon=True).start()
+
+#     time.sleep(1)
+#     app.run(debug=True, port=5000)
+
+
 if __name__ == '__main__':
-    #camera_data = get_shared_camera_data()
-    # Start background thread to monitor camera connections
-    threading.Thread(target=monitor_camera_connections, daemon=True).start()
+    initiate_camera_connection()
+    scheduler()
+    db_thread = threading.Thread(target=save_to_database, daemon=True).start()
+
+    try:
+        print("Application is running. Press Ctrl+C to exit.")
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Application is shutting down.")
     app.run(debug=True, port=5000)
-
-
 
 # DO NOT DELETE IT -->
 # This query retreives the total count of each hall, from the strat of the event

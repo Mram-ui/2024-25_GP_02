@@ -13,9 +13,6 @@ import os
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from tensorflow.keras.applications import ResNet50
-from tensorflow.keras.applications.resnet50 import preprocess_input
-from tensorflow.keras.preprocessing import image
 
 import torch
 import torchreid
@@ -34,8 +31,8 @@ id_mapping = {}
 # Global dictionary to track EnteranceTime and ExitTime for each person in each session
 person_tracking = {}  # Format: {person_id: {"session_id": {"EnteranceTime": timestamp, "ExitTime": timestamp}}}
 
-latest_session_id={} # key: hall_id, value: session_id
-
+# latest_session_id={} # key: hall_id, value: session_id
+from camera_status import latest_session_id
 
 
 # Initialize the YOLO model
@@ -175,116 +172,116 @@ def retrieve_camera_details():
 
 
 
-def generate_frames(rtsp_link, session_id, hall_id, event_id):
-    '''
-    This function initiates the camera connection for a given camera.
-    It is called by the `start_frame_reading()` function using threading, 
-    allowing simultaneous processing for multiple cameras.
+# def generate_frames(rtsp_link, session_id, hall_id, event_id):
+#     '''
+#     This function initiates the camera connection for a given camera.
+#     It is called by the `start_frame_reading()` function using threading, 
+#     allowing simultaneous processing for multiple cameras.
 
-    1- connect to the camera using its RTSP link
-    2- calculate how many frames to skip so that a frame is processed approximately every 5 seconds
-    3- start reading the camera's stream continuously
-    4- Every 5 seconds, send a frame to the `frame_handler` function for further processing (counting people in the frame).
-    '''
-    try: 
-        cap = cv2.VideoCapture(rtsp_link) # Connect to the camera
-        if not cap.isOpened():
-            print(f"Failed to open RTSP link: {rtsp_link}")
-            return
-        fps = cap.get(cv2.CAP_PROP_FPS)  # Get frames per second of the video source
-        # frames_to_skip = int(fps * 5)  # Calculate how many frames to skip for 5 seconds
-        frames_to_skip = int(fps * 2)  # Calculate how many frames to skip for 5 seconds
-        frame_count = 0  # Counter for frames
-        while True:
-            success, frame = cap.read() # Read a frame from the video stream.
-            if not success:
-                break
+#     1- connect to the camera using its RTSP link
+#     2- calculate how many frames to skip so that a frame is processed approximately every 5 seconds
+#     3- start reading the camera's stream continuously
+#     4- Every 5 seconds, send a frame to the `frame_handler` function for further processing (counting people in the frame).
+#     '''
+#     try: 
+#         cap = cv2.VideoCapture(rtsp_link) # Connect to the camera
+#         if not cap.isOpened():
+#             print(f"Failed to open RTSP link: {rtsp_link}")
+#             return
+#         fps = cap.get(cv2.CAP_PROP_FPS)  # Get frames per second of the video source
+#         # frames_to_skip = int(fps * 5)  # Calculate how many frames to skip for 5 seconds
+#         frames_to_skip = int(fps * 2)  # Calculate how many frames to skip for 5 seconds
+#         frame_count = 0  # Counter for frames
+#         while True:
+#             success, frame = cap.read() # Read a frame from the video stream.
+#             if not success:
+#                 break
 
-            # cv2.imshow("Stream", frame)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+#             # cv2.imshow("Stream", frame)
+#             if cv2.waitKey(1) & 0xFF == ord('q'):
+#                 break
                     
-            # Process and send a frame approximately every 5 seconds based on the calculated interval
-            if frame_count % frames_to_skip == 0:
-                # Use threading to send the frame to the `frame_handler` to avoid blocking the stream reading
-                threading.Thread(target=frame_handler, args=(frame.copy(), latest_session_id[hall_id], hall_id, event_id)).start()
+#             # Process and send a frame approximately every 5 seconds based on the calculated interval
+#             if frame_count % frames_to_skip == 0:
+#                 # Use threading to send the frame to the `frame_handler` to avoid blocking the stream reading
+#                 threading.Thread(target=frame_handler, args=(frame.copy(), latest_session_id[hall_id], hall_id, event_id)).start()
 
-            frame_count += 1  # Increment the frame count
+#             frame_count += 1  # Increment the frame count
 
-    except Exception as e:
-        print(f"Exception occurred in generate_frames: {e}")
+#     except Exception as e:
+#         print(f"Exception occurred in generate_frames: {e}")
 
 
 
-#This function initiates reading for all active cameras
-def start_frame_reading():
-        all_cameras = retrieve_camera_details()  # Retrieve all cameras
+# #This function initiates reading for all active cameras
+# def start_frame_reading():
+#         all_cameras = retrieve_camera_details()  # Retrieve all cameras
         
-        for camera in all_cameras:
-            hall_id = camera['HallID']
-            session_id = camera['SessionID']
-            event_id = camera['event_id']
-            if session_id:
-                threading.Thread(target=generate_frames, args=(camera['rtsp_link'], session_id, hall_id, event_id)).start()
-                #print(f"Started reading frames for CameraID: {camera['CameraID']}, SessionID: {session_id}, in HallID: {hall_id}")
+#         for camera in all_cameras:
+#             hall_id = camera['HallID']
+#             session_id = camera['SessionID']
+#             event_id = camera['event_id']
+#             if session_id:
+#                 threading.Thread(target=generate_frames, args=(camera['rtsp_link'], session_id, hall_id, event_id)).start()
+#                 #print(f"Started reading frames for CameraID: {camera['CameraID']}, SessionID: {session_id}, in HallID: {hall_id}")
 
 
 
     
-def scheduler():
-    sched = BackgroundScheduler(daemon=True)
-    sched.add_job(session_scheduler,'interval',hours=24, next_run_time=datetime.datetime.now())
-    sched.start()
-    print("Scheduler started. Latest Session ID updated:", latest_session_id)
-    # Shut down the scheduler when exiting the app
-    atexit.register(lambda: sched.shutdown())
+# def scheduler():
+#     sched = BackgroundScheduler(daemon=True)
+#     sched.add_job(session_scheduler,'interval',hours=24, next_run_time=datetime.datetime.now())
+#     sched.start()
+#     print("Scheduler started. Latest Session ID updated:", latest_session_id)
+#     # Shut down the scheduler when exiting the app
+#     atexit.register(lambda: sched.shutdown())
 
-def session_scheduler():
-    """ Function for test purposes. """
+# def session_scheduler():
+#     """ Function for test purposes. """
 
-    #print("Scheduler is alive! ... ", datetime.now())
+#     #print("Scheduler is alive! ... ", datetime.now())
 
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
+#     try:
+#         connection = get_db_connection()
+#         cursor = connection.cursor(dictionary=True)
         
-        # Call current_events to retrieve: event_id and hall data for the event
-        current_events = retrieve_current_events()
+#         # Call current_events to retrieve: event_id and hall data for the event
+#         current_events = retrieve_current_events()
         
-        temp_session_id = {}
-        # Loop through all events and their halls
-        for event in current_events:
-            for hall in event['Halls']:  # Access each hall in the event
+#         temp_session_id = {}
+#         # Loop through all events and their halls
+#         for event in current_events:
+#             for hall in event['Halls']:  # Access each hall in the event
                 
-                # Insert a new session entry into MonitoredSession
-                cursor.execute("""
-                    INSERT INTO MonitoredSession (HallID) VALUES (%s)
-                """, (hall['HallID'],))
+#                 # Insert a new session entry into MonitoredSession
+#                 cursor.execute("""
+#                     INSERT INTO MonitoredSession (HallID) VALUES (%s)
+#                 """, (hall['HallID'],))
                 
-                # Commit the transaction
-                connection.commit()
+#                 # Commit the transaction
+#                 connection.commit()
 
-                # Get the last inserted session ID
-                session_id = cursor.lastrowid
+#                 # Get the last inserted session ID
+#                 session_id = cursor.lastrowid
                 
-                # Update latest_session_id_list only if insertion was successful
-                if session_id:
-                    #print(f"Successfully inserted HallID {hall['HallID']} with SessionID {session_id}")
+#                 # Update latest_session_id_list only if insertion was successful
+#                 if session_id:
+#                     #print(f"Successfully inserted HallID {hall['HallID']} with SessionID {session_id}")
 
-                    # Add the newly inserted session ID to temp_session_id
-                    temp_session_id[hall['HallID']] = session_id
-                else:
-                    print(f"Failed to insert HallID {hall_id}")
+#                     # Add the newly inserted session ID to temp_session_id
+#                     temp_session_id[hall['HallID']] = session_id
+#                 else:
+#                     print(f"Failed to insert HallID {hall['HallID']}")
         
-        # Update latest_session_id_list 
-        latest_session_id.update(temp_session_id)
-        # Print the updated latest_session_id
-        print("Updated latest_session_id:", latest_session_id)
+#         # Update latest_session_id_list 
+#         latest_session_id.update(temp_session_id)
+#         # Print the updated latest_session_id
+#         print("Updated latest_session_id:", latest_session_id)
         
-    finally:
-        # Ensure resources are properly closed
-        cursor.close()
-        connection.close()
+#     finally:
+#         # Ensure resources are properly closed
+#         cursor.close()
+#         connection.close()
 
 #--------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------
@@ -293,13 +290,14 @@ def session_scheduler():
 #--------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------
+
 def save_to_database():
     """
-    Periodically save data to MySQL every 5 seconds for all the active cameras.
+    Periodically save data to MySQL every 2 seconds for all the active cameras.
     Saves people count data to the `peoplecount` table and tracking data to the `PersonTrack` table.
     """
     while True:
-        time.sleep(3)  # Pause the loop for 3 seconds before the next save attempt
+        time.sleep(2)  # Pause the loop for 3 seconds before the next save attempt
         db_connection = get_db_connection()  # Establish a new database connection
         cursor = db_connection.cursor()  # Create a cursor object for executing queries
         all_data_saved = True  # Flag to track if all insertions were successful
@@ -331,10 +329,10 @@ def save_to_database():
                 tracking_data = sessions[session_id]
                 if tracking_data["ExitTime"] is not None:  # Only save if ExitTime is set
                     # Check if the detection count meets the minimum threshold (e.g., 3 frames)
-                    if tracking_data["DetectionCount"] >= 3:
+                    if tracking_data["DetectionCount"] >= 1:
                         query = """
                             INSERT INTO PersonTrack (ID, EntranceTime, ExitTime, Gender, SessionID)
-                            VALUES (%s, %s, %s, %s)
+                            VALUES (%s, %s, %s, %s, %s)
                         """
                         try:
                             # Convert timestamps to the correct format
@@ -348,7 +346,7 @@ def save_to_database():
 
 
                             # Execute the query
-                            cursor.execute(query, (person_id, entrance_time, exit_time, session_id, gender))
+                            cursor.execute(query, (person_id, entrance_time, exit_time, gender, session_id))
                             db_connection.commit()
                             print("##################################TRACKER_SAVED_INTO_DB#####################")
                         except mysql.connector.Error as err:
@@ -449,7 +447,8 @@ def extract_features(img):
 
 def load_embeddings(event_id, session_id):
     """
-    Load all saved embeddings for a given event and session.
+    <return a dictionary of all the visitors vectors/embeddings in the event>
+    Load all saved embeddings for a given event.
     Directory structure: detection_embeddings/event_id/person_id/session_id/timestamp.npy
     """
     base_dir = "detection_embeddings"
@@ -519,25 +518,56 @@ def save_embedding(embedding, event_id, person_id, session_id, enterance_time, e
     file_path = os.path.join(dir_path, filename)
     np.save(file_path, embedding)
 
-def rename_last_file(event_id, person_id, session_id, enterance_time, exit_time, counter):
+
+
+# def rename_last_file(event_id, person_id, session_id, enterance_time, exit_time, counter, gender):
+#     """
+#     Rename the last saved file to include the ExitTime.
+#     """
+#     base_dir = "detection_imgs"
+#     dir_path = os.path.join(base_dir, str(event_id), str(person_id))
+
+#     # Find the last file with ExitTime=None
+#     for filename in os.listdir(dir_path):
+#         if filename.endswith(f"{enterance_time}, None, {counter}.jpg"):
+#             old_file_path = os.path.join(dir_path, filename)
+#             new_filename = f"{person_id}, {gender}, {session_id}, {enterance_time}, {exit_time}, {counter}.jpg"
+#             new_file_path = os.path.join(dir_path, new_filename)
+#             os.rename(old_file_path, new_file_path)
+#             print(f"Renamed file to: {new_file_path}")
+#             break
+
+def rename_last_file(event_id, person_id, session_id, enterance_time, exit_time, counter, gender):
     """
-    Rename the last saved file to include the ExitTime.
+    <when a person exit the hall, we use this function to rename thier file_name to store exit time>
+    Rename the last saved files (both .jpg and .npy) to include the ExitTime.
+    Processes both detection_imgs and detection_embeddings directories in one pass.
     """
-    base_dir = "detection_imgs"
-    dir_path = os.path.join(base_dir, str(event_id), str(person_id))
+    base_dirs = {
+        'images': ('detection_imgs', '.jpg'),
+        'embeddings': ('detection_embeddings', '.npy')
+    }
 
-    # Find the last file with ExitTime=None
-    for filename in os.listdir(dir_path):
-        if filename.endswith(f"{enterance_time}, None, {counter}.jpg"):
-            old_file_path = os.path.join(dir_path, filename)
-            new_filename = f"{person_id}, {session_id}, {enterance_time}, {exit_time}, {counter}.jpg"
-            new_file_path = os.path.join(dir_path, new_filename)
-            os.rename(old_file_path, new_file_path)
-            print(f"Renamed file to: {new_file_path}")
-            break
+    for dir_type, (base_dir, ext) in base_dirs.items():
+        dir_path = os.path.join(base_dir, str(event_id), str(person_id))
+        
+        if not os.path.exists(dir_path):
+            continue
 
+        target_suffix = f"{enterance_time}, None, {counter}{ext}"
+        new_filename = f"{person_id}, {gender}, {session_id}, {enterance_time}, {exit_time}, {counter}{ext}"
 
-
+        for filename in os.listdir(dir_path):
+            if filename.endswith(target_suffix):
+                old_path = os.path.join(dir_path, filename)
+                new_path = os.path.join(dir_path, new_filename)
+                
+                try:
+                    os.rename(old_path, new_path)
+                    print(f"Renamed {dir_type} file: {filename} → {new_filename}")
+                except OSError as e:
+                    print(f"Error renaming {dir_type} file {filename}: {e}")
+                break
 
 
 
@@ -550,13 +580,16 @@ def frame_handler(frame, session_id, hall_id, event_id):
     4- geneder is predicted.
     5- Updates the global camera_data dictionary with the number of people detected in the frame, timestamp, session ID, and hall ID.
     """
+    # print("@@@@@@@@@@@@@@@@I am frame_handler, processing the frame@@@@@@@@@@@@@@@@")
+
     global id_mapping, person_tracking
+    gender = None  # Initialize
     results = model.track(frame, conf=0.5, classes=0, persist=True, tracker="botsort.yaml")
     people_count = 0  # Initialize people count
 
     # Load saved embeddings for the current event and session
     saved_embeddings = load_embeddings(event_id, session_id)
-    # Track currently detected persons in this frame
+    # Track currently detected people in this frame
     current_detections = set()
 
     # Process detections to count people and save cropped images
@@ -577,46 +610,109 @@ def frame_handler(frame, session_id, hall_id, event_id):
 
                     # Compare the new embedding with saved embeddings
                     matched_person_id = compare_embeddings(new_embedding, saved_embeddings)
+                    # print("#####@@@@@@@@@!!!!!!!!$$$$$$$$$$$$", id_mapping, "#####@@@@@@@@@!!!!!!!!$$$$$$$$$$$$")
+
+
+
 
                     if matched_person_id:
-                        # Merge IDs
-                        print(f"Person {person_id} matched with previously detected person {matched_person_id}")
-                        id_mapping[person_id] = matched_person_id  # Update the global ID mapping
                         merged_id = matched_person_id
+                        id_mapping[person_id] = matched_person_id
+                    elif person_id in id_mapping:
+                        merged_id = id_mapping[person_id]
                     else:
                         merged_id = person_id
-                        gender_results=gender_model.predict(crop)
-                        pred_class = gender_results[0].probs.top1  # returns class 0 or 1
-                        gender = "male" if pred_class == 1 else "female"  # get gender based on class index
+                        id_mapping[person_id] = person_id
+
+                    # Get latest session_id dynamically based on hall_id
+                    session_id = latest_session_id.get(hall_id)
 
                     # Update tracking for the person
                     if merged_id not in person_tracking:
                         person_tracking[merged_id] = {}
 
-
                     if session_id not in person_tracking[merged_id]:
-                        # New entrance: Initialize tracking data
+                        # First-time detection in this hall/session: predict gender and initialize
+                        gender_results = gender_model.predict(crop)
+                        pred_class = gender_results[0].probs.top1
+                        gender = "male" if pred_class == 1 else "female"
+
                         person_tracking[merged_id][session_id] = {
                             "EnteranceTime": timestamp,
                             "LastDetectionTime": timestamp,
                             "ExitTime": None,
-                            "Counter": 0,
-                            "DetectionCount": 0,  # Initialize detection count
-                            "Gender": gender}
-                        print(f"New person detected: {merged_id}")
+                            "Counter": 1,
+                            "DetectionCount": 1,
+                            "Gender": gender,
+                        }
+                        print(f"New person detected: {merged_id} in hall {hall_id} / session {session_id}")
+                    else:
+                        # Already tracked in this session — update only counters & time
+                        session_data = person_tracking[merged_id][session_id]
+                        session_data["DetectionCount"] += 1
+                        session_data["Counter"] += 1
+                        session_data["LastDetectionTime"] = timestamp
 
-                    # Increment the detection count and counter
-                    person_tracking[merged_id][session_id]["DetectionCount"] += 1
-                    person_tracking[merged_id][session_id]["Counter"] += 1
-                    counter = person_tracking[merged_id][session_id]["Counter"]
-                    # Update the last detection time
-                    person_tracking[merged_id][session_id]["LastDetectionTime"] = timestamp
+                    # Persist reused vars
+                    session_data = person_tracking[merged_id][session_id]
+                    counter = session_data["Counter"]
+                    entrance_time = session_data["EnteranceTime"]
+                    exit_time = session_data["ExitTime"]
+                    persisted_gender = session_data["Gender"]
 
-                    # Save the cropped image and embedding
-                    save_cropped_image(crop, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"],
-                                        person_tracking[merged_id][session_id]["ExitTime"], counter, person_tracking[merged_id][session_id]["Gender"])
-                    save_embedding(new_embedding, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"], 
-                                   person_tracking[merged_id][session_id]["ExitTime"], counter, person_tracking[merged_id][session_id]["Gender"])
+                    save_cropped_image(crop, event_id, merged_id, session_id, entrance_time,
+                                    exit_time, counter, persisted_gender)
+                    save_embedding(new_embedding, event_id, merged_id, session_id, entrance_time,
+                                exit_time, counter, persisted_gender)
+
+                    
+
+                    # if matched_person_id:
+                    #     # Merge IDs
+                    #     print(f"Person {person_id} matched with previously detected person {matched_person_id}")
+                    #     id_mapping[person_id] = matched_person_id  # Update the global ID mapping
+                    #     merged_id = matched_person_id
+                    # else:
+                    #     merged_id = person_id
+                    #     gender_results=gender_model.predict(crop)
+                    #     pred_class = gender_results[0].probs.top1  # returns class 0 or 1
+                    #     gender = "male" if pred_class == 1 else "female"  # get gender based on class index
+                    
+
+                    # # Update tracking for the person
+                    # if merged_id not in person_tracking:
+                    #     person_tracking[merged_id] = {}
+
+
+                    # if session_id not in person_tracking[merged_id]:
+                    #     # New entrance: Initialize tracking data
+                    #     person_tracking[merged_id][session_id] = {
+                    #         "EnteranceTime": timestamp,
+                    #         "LastDetectionTime": timestamp,
+                    #         "ExitTime": None,
+                    #         "Counter": 0,
+                    #         "DetectionCount": 0,  # Initialize detection count
+                    #         "Gender": 'female'}
+                    #     print(f"New person detected: {merged_id}")
+                    #     print("##########################", person_tracking[merged_id], "#############################")
+                    # else:
+                    #     # Persist EntranceTime and only update necessary fields
+                    #     person_tracking[merged_id][session_id]["DetectionCount"] += 1
+                    #     person_tracking[merged_id][session_id]["Counter"] += 1
+                    #     person_tracking[merged_id][session_id]["LastDetectionTime"] = timestamp
+                    # # # Increment the detection count and counter
+                    # # person_tracking[merged_id][session_id]["DetectionCount"] += 1
+                    # # #print("++++++++++++++++++++++++++++++++", person_tracking[merged_id][session_id]["DetectionCount"])
+                    # # person_tracking[merged_id][session_id]["Counter"] += 1
+                    # counter = person_tracking[merged_id][session_id]["Counter"]
+                    # # # Update the last detection time
+                    # # person_tracking[merged_id][session_id]["LastDetectionTime"] = timestamp
+
+                    # # Save the cropped image and embedding
+                    # save_cropped_image(crop, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"],
+                    #                     person_tracking[merged_id][session_id]["ExitTime"], counter, person_tracking[merged_id][session_id]["Gender"])
+                    # save_embedding(new_embedding, event_id, merged_id, session_id, person_tracking[merged_id][session_id]["EnteranceTime"], 
+                    #                person_tracking[merged_id][session_id]["ExitTime"], counter, person_tracking[merged_id][session_id]["Gender"])
 
                     # Draw bounding box with the merged ID
                     cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
@@ -635,7 +731,7 @@ def frame_handler(frame, session_id, hall_id, event_id):
 
                     # Rename the last saved image and embedding to include the ExitTime
                     rename_last_file(event_id, person_id, session_id, person_tracking[person_id][session_id]["EnteranceTime"], 
-                                     person_tracking[person_id][session_id]["ExitTime"], person_tracking[person_id][session_id]["Counter"])
+                                     person_tracking[person_id][session_id]["ExitTime"], person_tracking[person_id][session_id]["Counter"], gender)
         elif person_id in current_detections and session_id in person_tracking[person_id]:
             # Update the last detection time
             person_tracking[person_id][session_id]["LastDetectionTime"] = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -701,20 +797,20 @@ def frame_handler(frame, session_id, hall_id, event_id):
 #     print(f"DEBUG: Updated camera_data[{session_id}] = {camera_data[session_id]}")
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    scheduler()
-    time.sleep(0.5)
-    start_frame_reading()
-    db_thread = threading.Thread(target=save_to_database, daemon=True).start()
+#     scheduler()
+#     time.sleep(0.5)
+#     start_frame_reading()
+#     db_thread = threading.Thread(target=save_to_database, daemon=True).start()
 
-    # Keep the main thread alive to allow the scheduler to run
-    try:
-        print("Application is running. Press Ctrl+C to exit.")
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("Application is shutting down.")
+#     # Keep the main thread alive to allow the scheduler to run
+#     try:
+#         print("Application is running. Press Ctrl+C to exit.")
+#         while True:
+#             time.sleep(1)
+#     except KeyboardInterrupt:
+#         print("Application is shutting down.")
     
 
 
