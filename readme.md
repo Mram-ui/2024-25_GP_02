@@ -26,34 +26,7 @@
   ```
   - In addition to Flask, make sure to install other important packages required for the project:
   ```
-  pip install opencv-python
-  ```
-  ```
-  pip install ultralytics
-  ```
-  ```
-  pip install apscheduler
-  ```
-  ```
-  pip install apscheduler
-  ```
-  ```
-  pip install numpy
-  ```
-  ```
-  pip install torch torchvision
-  ```
-  ```
-  pip install torchreid
-  ```
-  ```
-  pip install gdown
-  ```
-  ```
-  pip install tensorboard
-  ```
-  ```
-  pip install reportlab
+  pip install opencv-python ultralytics apscheduler apscheduler numpy torch torchvision torchreid gdowntensorboard reportlab
   ```
 
 
