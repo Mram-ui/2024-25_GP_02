@@ -36,14 +36,9 @@
   cd "path\to\2024-25_GP_02-main\WebsitePages\flask"
   ```
   - Run the Flask server: <br>
-    You need to run two separate terminal windows to start the Flask server:<br>
+    Once in the project directory,:<br>
       **In Terminal 1:**<br>
-      Once in the project directory, start the event processor by running:<br>
- ```
- python event_processor.py
- ```
-      **In Terminal 2:**<br>
-      Once in the project directory, start the Flask app by running:
+      Once in the project directory, start the Flask app by running
  ```
  python app.py
  ```
