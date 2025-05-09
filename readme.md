@@ -71,6 +71,7 @@
   ```
       **In Terminal 2:**<br>
       Start the Flask app by running: 
+  ```
   python app.py
   ```
 
