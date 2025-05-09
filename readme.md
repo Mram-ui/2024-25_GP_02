@@ -69,7 +69,7 @@
 
   ## **Website Hosting Link** 🌍  
 You can access the Raqeeb system online through the following link:  
-🔗 [Visit Raqeeb Website](https://RaqeebAI.com) <br>
+🔗 [Visit Raqeeb Website](https://RaqeebAI.com) <br><br>
 Take a look around, manage your events, and make the most out of every feature.  
 ✨ ENJOYY exploring Raqeeb!
 
