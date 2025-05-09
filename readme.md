@@ -19,10 +19,7 @@
   - Install Flask and MySQL Connector: <br>
     To install Flask, open the Command Prompt (or Terminal) on your computer and enter the following command to install the necessary dependencies:
   ```
-  pip install Flask
-  ```
-  ```
-  pip install mysql-connector-python
+  pip install Flask mysql-connector-python
   ```
   - In addition to Flask, make sure to install other important packages required for the project:
   ```
