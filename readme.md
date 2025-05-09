@@ -69,8 +69,8 @@
   ```
   python event_processor.py
   ```
-      **In Terminal 2:**<br>
-      Once in the project directory, start the Flask app by running: 
+**In Terminal 2:**<br>
+Once in the project directory, start the Flask app by running: 
   ```
   python app.py
   ```
