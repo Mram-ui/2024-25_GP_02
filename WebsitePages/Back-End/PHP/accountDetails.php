@@ -31,6 +31,7 @@
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="../../Front-End/CSS/accountDetails.css">
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="../../images/LogoIconURL.png">
         <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <title>Account Details</title>

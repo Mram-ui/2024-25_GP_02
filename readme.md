@@ -24,11 +24,37 @@
   ```
   pip install mysql-connector-python
   ```
+  - In addition to Flask, make sure to install other important packages required for the project:
+  ```
+  pip install opencv-python
+  ```
   ```
   pip install ultralytics
   ```
-
-
+  ```
+  pip install apscheduler
+  ```
+  ```
+  pip install apscheduler
+  ```
+  ```
+  pip install numpy
+  ```
+  ```
+  pip install torch torchvision
+  ```
+  ```
+  pip install torchreid
+  ```
+  ```
+  pip install gdown
+  ```
+  ```
+  pip install tensorboard
+  ```
+  ```
+  pip install reportlab
+  ```
 
 
   - Navigate to the project directory: <br>
@@ -37,18 +63,29 @@
   cd "path\to\2024-25_GP_02-main\WebsitePages\flask"
   ```
   - Run the Flask server: <br>
-    Once in the project directory, start the Flask server by entering:
-  ```
-  python event_processor.py
-  ```
-  ```
-  python app.py
-  ```
+    You need to run two separate terminal windows to start the Flask server:<br>
+      **In Terminal 1:**<br>
+      Once in the project directory, start the event processor by running:<br>
+```
+python event_processor.py
+```
+      **In Terminal 2:**<br>
+      Once in the project directory, start the Flask app by running:
+```
+python app.py
+```
+    
+Both processes need to run simultaneously for the Flask application and event processor to work together.
 
   
   **3. Run the project:** Open the project folder on your computer and launch it using your local server or preferred development environment. 
   <br> <br> 
   🌟 That's it! The project should now be running on your local machine. <br>
+
+  ## **Website Hosting Link** 🌍  
+You can access the Raqeeb system online through the following link:  
+🔗 [Visit Raqeeb Website](https://RaqeebAI.com) <br><br>
+✨ Take a look around, manage your events, and make the most out of every feature. ENJOYY exploring Raqeeb!
 
 
 

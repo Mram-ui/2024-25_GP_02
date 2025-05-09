@@ -958,7 +958,7 @@
                                         'name' => $eventName,
                                         'start_date' => $startDate,
                                         'end_date' => $endDate,
-                                        "report_path" => $row["report_path"]
+                                        "ReportPath" => $row["ReportPath"]
                                     ];
                                 } elseif ($startDate > $now) {
                                     // Event is upcoming
@@ -998,7 +998,7 @@
                                            <a href="../../Back-End/PHP/viewEditEvent.php?eventId=<?= $event['id']; ?>" style="text-decoration: none;">
                                                <p class="EventD">View Details</p>
                                            </a>
-                                           <a href="/2024-25_GP_02/<?= $event['report_path']; ?>" target="_blank" class="EventD" style="text-decoration: none;"><p>View Report</p></a>
+                                           <a href="/2024-25_GP_02/<?= $event['ReportPath']; ?>" target="_blank" class="EventD" style="text-decoration: none;"><p>View Report</p></a>
                                        </div>
                                    </div>
                                    <?php if ($index !== count($pastEvents) - 1): ?>
