@@ -66,9 +66,9 @@
     You need to run two separate terminal windows to start the Flask server:<br>
       **In Terminal 1:**<br>
       Once in the project directory, start the event processor by running:
-         ```
-         python event_processor.py
-         ```
+```
+python event_processor.py
+```
      **In Terminal 2:**<br>
      Once in the project directory, start the Flask app by running: 
        ```
