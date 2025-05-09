@@ -70,11 +70,10 @@
           python event_processor.py
           ```
       **In Terminal 2:**<br>
-      Once in the project directory, start the Flask app by running: <br>
-          ```
-          python app.py
-          ```
-    <br>
+      Once in the project directory, start the Flask app by running:
+
+    ```python app.py```
+    
 Both processes need to run simultaneously for the Flask application and event processor to work together.
 
   
