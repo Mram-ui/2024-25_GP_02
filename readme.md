@@ -49,6 +49,9 @@
   ```
   pip install gdown
   ```
+  ```
+  pip install tensorboard
+  ```
 
   - Navigate to the project directory: <br>
     Replace `path\to\` in the command below with the actual path to the extracted project files on your computer:
