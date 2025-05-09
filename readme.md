@@ -38,7 +38,6 @@
  python app.py
  ```
     
-Both processes need to run simultaneously for the Flask application and event processor to work together.
 
   
   **3. Run the project:** Open the project folder on your computer and launch it using your local server or preferred development environment. 
