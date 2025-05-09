@@ -67,6 +67,12 @@
   <br> <br> 
   🌟 That's it! The project should now be running on your local machine. <br>
 
+  ## **Website Hosting Link** 🌍  
+You can access the Raqeeb system online through the following link:  
+🔗 [Visit Raqeeb Website](https://RaqeebAI.com)
+Take a look around, manage your events, and make the most out of every feature.  
+**ENJOYY exploring Raqeeb! ✨
+
 
 
 
