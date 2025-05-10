@@ -773,15 +773,14 @@ def monitor_camera_connection_status():
 if __name__ == '__main__':
     initiate_camera_connection()
     scheduler()
-    db_thread = threading.Thread(target=save_to_database, daemon=True).start()
+    db_thread = threading.Thread(target=save_to_database, daemon=True)
+    db_thread.start()
 
     try:
         print("Application is running. Press Ctrl+C to exit.")
-        while True:
-            time.sleep(1)
+        app.run(host='0.0.0.0', port=5000, debug=True)
     except KeyboardInterrupt:
         print("Application is shutting down.")
-    app.run(debug=True, port=5000)
 
 # DO NOT DELETE IT -->
 # This query retreives the total count of each hall, from the strat of the event
