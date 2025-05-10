@@ -17,6 +17,7 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.colors import to_rgba
 
 
 # ========== CONFIGURATION ==========
@@ -71,8 +72,6 @@ def generate_pdf_report(event_id):
 
     report_data = fetch_report_data(cursor, event_id)
     charts = generate_charts(report_data)
-    cursor.close()
-    connection.close()
 
     # ===== PDF Setup with Letterhead =====
     doc = BaseDocTemplate(
@@ -173,6 +172,18 @@ def generate_pdf_report(event_id):
     ]
 
     doc.build(story)
+    # Save report path to database
+    try:
+        cursor.execute("UPDATE events SET ReportPath = %s WHERE EventID = %s", 
+                      (report_path, event_id))
+        connection.commit()
+    except Exception as e:
+        print(f"Error saving report path to database: {str(e)}")
+        connection.rollback()
+    finally:
+        cursor.close()
+        connection.close()
+    
     return report_path
 
 
@@ -245,16 +256,16 @@ def fetch_report_data(cursor, event_id):
     """Fetch all data needed for the report from the database."""
     data = {}
 
-    # Number of halls
+    # Number of halls (always returns at least 0)
     cursor.execute("""
         SELECT COUNT(*) AS numOfhalls
         FROM hall
         WHERE EventID = %s
     """, (event_id,))
-    data['number_of_halls'] = cursor.fetchone()['numOfhalls']
+    result = cursor.fetchone()
+    data['number_of_halls'] = result['numOfhalls'] if result else 0
 
-    
-    # Total attendance
+    # Total attendance (default to 0 if empty)
     cursor.execute("""
         SELECT COUNT(DISTINCT pt.ID) AS total
         FROM persontrack pt
@@ -262,10 +273,10 @@ def fetch_report_data(cursor, event_id):
         JOIN hall h ON ms.HallID = h.HallID
         WHERE h.EventID = %s;
     """, (event_id,))
-    data['total_attendance'] = cursor.fetchone()['total']
+    result = cursor.fetchone()
+    data['total_attendance'] = result['total'] if result else 0
 
-
-    # Gender distribution
+    # Gender distribution (default empty list)
     cursor.execute("""
         SELECT Gender, COUNT(DISTINCT pt.ID) AS count
         FROM persontrack pt
@@ -274,9 +285,12 @@ def fetch_report_data(cursor, event_id):
         WHERE h.EventID = %s
         GROUP BY pt.Gender;
     """, (event_id,))
-    data['gender_data'] = cursor.fetchall()
+    data['gender_data'] = cursor.fetchall() or [
+        {'Gender': 'Male', 'count': 0},
+        {'Gender': 'Female', 'count': 0}
+    ]
 
-    # Hall distribution
+    # Hall distribution (default empty list)
     cursor.execute("""
         SELECT h.HallName, COUNT(*) AS count
         FROM persontrack pt
@@ -285,9 +299,9 @@ def fetch_report_data(cursor, event_id):
         WHERE h.EventID = %s
         GROUP BY h.HallName;
     """, (event_id,))
-    data['hall_data'] = cursor.fetchall()
+    data['hall_data'] = cursor.fetchall() or []
 
-    # dwell time per hall query
+    # Dwell time per hall (default empty list)
     cursor.execute("""
         SELECT 
             h.HallName,
@@ -300,10 +314,9 @@ def fetch_report_data(cursor, event_id):
         GROUP BY h.HallName
         ORDER BY avg_dwell_minutes DESC
     """, (event_id,))
-    data['dwell_time_data'] = cursor.fetchall()
+    data['dwell_time_data'] = cursor.fetchall() or []
 
-
-    # Hourly attendance
+    # Hourly attendance (default empty list)
     cursor.execute("""
         SELECT HOUR(pt.EntranceTime) AS hour, COUNT(*) AS count
         FROM persontrack pt
@@ -313,9 +326,10 @@ def fetch_report_data(cursor, event_id):
         GROUP BY hour
         ORDER BY hour;
     """, (event_id,))
-    data['hourly_data'] = cursor.fetchall()
+    hourly_data = cursor.fetchall()
+    data['hourly_data'] = hourly_data or [{'hour': i, 'count': 0} for i in range(24)]
 
-    # Daily attendance
+    # Daily attendance (default empty list)
     cursor.execute("""
         SELECT DATE(pt.EntranceTime) AS date, COUNT(*) AS count
         FROM persontrack pt
@@ -326,9 +340,9 @@ def fetch_report_data(cursor, event_id):
         ORDER BY date;
     """, (event_id,))
     daily_data = cursor.fetchall()
-    data['daily_data'] = daily_data
+    data['daily_data'] = daily_data or []
 
-        # Find most popular day
+    # Find most popular day
     if daily_data:
         popular_day = max(daily_data, key=lambda x: x['count'])
         data['popular_day'] = {
@@ -337,8 +351,8 @@ def fetch_report_data(cursor, event_id):
         }
     else:
         data['popular_day'] = {'date': "N/A", 'count': 0}
-    
-    # Average visit duration
+
+    # Average visit duration (default to "N/A")
     cursor.execute("""
         SELECT AVG(TIMESTAMPDIFF(MINUTE, pt.EntranceTime, pt.ExitTime)) AS avg_duration
         FROM persontrack pt
@@ -346,11 +360,11 @@ def fetch_report_data(cursor, event_id):
         JOIN hall h ON ms.HallID = h.HallID
         WHERE h.EventID = %s AND pt.ExitTime IS NOT NULL;
     """, (event_id,))
-    avg_duration = cursor.fetchone()['avg_duration']
+    result = cursor.fetchone()
+    avg_duration = result['avg_duration'] if result else None
     data['avg_duration'] = f"{int(avg_duration // 60)}h {int(avg_duration % 60)}m" if avg_duration else "N/A"
 
-
-    # Calculate average visits per person
+    # In fetch_report_data():
     cursor.execute("""
         SELECT AVG(visit_count) as avg_visits 
         FROM (SELECT ID, COUNT(*) as visit_count FROM persontrack WHERE SessionID IN 
@@ -358,74 +372,95 @@ def fetch_report_data(cursor, event_id):
             (SELECT HallID FROM hall WHERE EventID = %s)) 
             GROUP BY ID) as visits
     """, (event_id,))
-    data['avg_visits'] = cursor.fetchone()['avg_visits']
-    
-    # Peak hour
-    if data['hourly_data']:
-        peak_hour_data = max(data['hourly_data'], key=lambda x: x['count'])
+    result = cursor.fetchone()
+    data['avg_visits'] = float(result['avg_visits']) if result and result['avg_visits'] is not None else 0.0
+
+    # Peak hour (default to "N/A")
+    if hourly_data:
+        peak_hour_data = max(hourly_data, key=lambda x: x['count'])
         data['peak_hour'] = f"{peak_hour_data['hour']}:00 - {peak_hour_data['hour']+1}:00 ({peak_hour_data['count']} visitors)"
     else:
         data['peak_hour'] = "N/A"
-    
-    # Most popular hall
+
+    # Most popular hall (default to "N/A")
     if data['hall_data']:
         popular_hall = max(data['hall_data'], key=lambda x: x['count'])
         data['popular_hall'] = f"{popular_hall['HallName']} ({popular_hall['count']} visitors)"
     else:
         data['popular_hall'] = "N/A"
-    
+
     return data
 
 def generate_charts(report_data):
     """Generate all charts for the report with consistent sizing."""
     charts = {}
     
-    # Make all charts half-width for side-by-side display
+    # Ensure gender data exists and has valid counts
+    gender_data = report_data.get('gender_data', [])
+    gender_data = [d for d in gender_data if d.get('count') is not None]
+    if not gender_data:
+        gender_data = [{'Gender': 'Male', 'count': 0}, {'Gender': 'Female', 'count': 0}]
+        
     charts['gender_chart'] = create_pie_chart(
-        report_data['gender_data'], 
+        gender_data, 
         colors=['#EDB8C7', '#ACD6EA', SECONDARY_COLOR],
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
 
-    hall_count = len(report_data['hall_data'])
+    # Handle empty hall data
+    hall_data = report_data['hall_data']
+    if not hall_data:
+        hall_data = [{'HallName': 'No data', 'count': 0}]
+    
+    hall_count = len(hall_data)
     day_count = len(report_data['daily_data']) 
     num_bars = max(hall_count, day_count)
-
     gradient_colors = create_gradient_colors(num_bars, '#2f3b69', '#5271ff') 
 
-
-    
     charts['hall_chart'] = create_bar_chart(
-        report_data['hall_data'], 
+        hall_data, 
         bar_colors=gradient_colors,
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
     
-    # Update time charts to be same size
+    # Handle empty hourly data
+    hourly_data = report_data['hourly_data']
+    if not hourly_data:
+        hourly_data = [{'hour': i, 'count': 0} for i in range(24)]
+    
     charts['hourly_chart'] = create_line_chart(
-        report_data['hourly_data'],
+        hourly_data,
         color=SECONDARY_COLOR,
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
     
+    # Handle empty daily data
+    daily_data = report_data['daily_data']
+    if not daily_data:
+        daily_data = [{'date': 'No data', 'count': 0}]
+    
     charts['daily_chart'] = create_bar_chart(
-        report_data['daily_data'], 
+        daily_data, 
         bar_colors=gradient_colors,
         x_label_key='date',
         width=HALF_WIDTH,
         height=HALF_HEIGHT
     )
 
+    # Handle empty dwell time data
+    dwell_time_data = report_data.get('dwell_time_data', [])
+    if not dwell_time_data:
+        dwell_time_data = [{'HallName': 'No data', 'avg_dwell_minutes': 0}]
+    
     charts['dwell_time_chart'] = create_dwell_time_chart(
-        report_data.get('dwell_time_data', []),
+        dwell_time_data,
         gcolors=gradient_colors, 
         width=FULL_WIDTH,      
         height=HALF_HEIGHT
     )
-    
     
     return charts
 
@@ -631,8 +666,8 @@ def build_document_story(event, report_data, charts, styles):
     story.append(insights_header)
     
     # Calculate the hall visit percentage once
-    hall_visit_percentage = float(report_data['avg_visits']) / report_data['number_of_halls'] if report_data['number_of_halls'] > 0 else 0
-
+    avg_visits = report_data.get('avg_visits', 0) or 0  # Default to 0 if None
+    hall_visit_percentage = float(avg_visits) / report_data['number_of_halls'] if report_data['number_of_halls'] > 0 else 0
     # Determine the engagement message
     if hall_visit_percentage >= 0.75:
         engagement_message = 'which is more than 75% of the halls. This shows good floor planning and engagement'
@@ -706,37 +741,45 @@ def build_document_story(event, report_data, charts, styles):
 
 def create_pie_chart(data, colors=None, width=HALF_WIDTH, height=HALF_HEIGHT):
     """Create a pie chart with the given data."""
-    labels = [d['Gender'] for d in data]
-    sizes = [d['count'] for d in data]
+    if not data or all(d.get('count', 0) == 0 for d in data):
+        return create_empty_chart("No gender data", width, height)
     
-    fig, ax = plt.subplots(figsize=(width, height))
-    fig.patch.set_facecolor(LIGHT_BG)
-    fig.patch.set_alpha(0.7)
+    try:
+        labels = [str(d.get('Gender', 'Unknown')) for d in data]
+        sizes = [int(d.get('count', 0)) for d in data]
+        
+        fig, ax = plt.subplots(figsize=(width, height))
+        fig.patch.set_facecolor(LIGHT_BG)
+        fig.patch.set_alpha(0.7)
+        
+        if colors and len(colors) >= len(labels):
+            wedges, texts, autotexts = ax.pie(
+                sizes, 
+                labels=labels, 
+                autopct='%1.1f%%', 
+                startangle=90,
+                colors=colors,
+                textprops={'fontsize': 9}
+            )
+        else:
+            wedges, texts, autotexts = ax.pie(
+                sizes, 
+                labels=labels, 
+                autopct='%1.1f%%', 
+                startangle=90,
+                textprops={'fontsize': 9}
+            )
+        
+        ax.axis('equal')  
+        plt.setp(autotexts, size=9, weight="bold")
+        plt.setp(texts, size=9)
+        plt.tight_layout()
+        
+        return save_chart_to_image(fig)
     
-    if colors and len(colors) >= len(labels):
-        wedges, texts, autotexts = ax.pie(
-            sizes, 
-            labels=labels, 
-            autopct='%1.1f%%', 
-            startangle=90,
-            colors=colors,
-            textprops={'fontsize': 9}
-        )
-    else:
-        wedges, texts, autotexts = ax.pie(
-            sizes, 
-            labels=labels, 
-            autopct='%1.1f%%', 
-            startangle=90,
-            textprops={'fontsize': 9}
-        )
-    
-    ax.axis('equal')  
-    plt.setp(autotexts, size=9, weight="bold")
-    plt.setp(texts, size=9)
-    plt.tight_layout()
-    
-    return save_chart_to_image(fig, bbox_inches='tight')
+    except Exception as e:
+        print(f"Error creating pie chart: {str(e)}")
+        return create_empty_chart("Error displaying gender data", width, height)
 
 # def create_bar_chart(data, title, color=None, x_label_key='HallName', width=HALF_WIDTH, height=HALF_HEIGHT):
 #     """Create a bar chart with the given data."""
@@ -770,35 +813,47 @@ def create_pie_chart(data, colors=None, width=HALF_WIDTH, height=HALF_HEIGHT):
 
 def create_line_chart(data, color=None, width=HALF_WIDTH, height=HALF_HEIGHT):
     """Create a line chart optimized for side-by-side display."""
-    x_values = [f"{int(d['hour']):02d}:00" for d in data]
-    y_values = [d['count'] for d in data]
+    if not data or not all('hour' in d and 'count' in d for d in data):
+        return create_empty_chart("No hourly data", width, height)
     
-    fig, ax = plt.subplots(figsize=(width, height))
-    fig.patch.set_facecolor(LIGHT_BG)
-    fig.patch.set_alpha(0.7)
+    try:
+        x_values = [f"{int(d['hour']):02d}:00" for d in data]
+        y_values = [int(d['count']) for d in data]
+        
+        fig, ax = plt.subplots(figsize=(width, height))
+        fig.patch.set_facecolor(LIGHT_BG)
+        fig.patch.set_alpha(0.7)
+        
+        line_color = color if color else PRIMARY_COLOR
+        line = ax.plot(x_values, y_values, marker='o', color=line_color, linewidth=2, markersize=5)
+        
+        # Only label every other point to reduce clutter
+        max_y = max(y_values) if y_values else 0
+        for i, (x, y) in enumerate(zip(x_values, y_values)):
+            if i % 2 == 0 and y > max_y * 0.1:  # Label every other significant point
+                ax.text(x, y, f'{y}', ha='center', va='bottom', fontsize=8)
+        
+        ax.set_xlabel('Time', labelpad=6, fontsize=9)
+        ax.set_ylabel('Visitors', labelpad=6, fontsize=9)
+        plt.xticks(rotation=45, ha='right', fontsize=8)
+        plt.yticks(fontsize=8)
+        
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.grid(axis='y', linestyle='--', alpha=0.5)
+        plt.tight_layout()
+        
+        return save_chart_to_image(fig)
     
-    line_color = color if color else PRIMARY_COLOR
-    line = ax.plot(x_values, y_values, marker='o', color=line_color, linewidth=2, markersize=5)
-    
-    # Only label every other point to reduce clutter
-    for i, (x, y) in enumerate(zip(x_values, y_values)):
-        if i % 2 == 0:  # Label every other hour
-            ax.text(x, y, f'{y}', ha='center', va='bottom', fontsize=8)
-    
-    ax.set_xlabel('Time', labelpad=6, fontsize=9)
-    ax.set_ylabel('Visitors', labelpad=6, fontsize=9)
-    plt.xticks(rotation=45, ha='right', fontsize=8)
-    plt.yticks(fontsize=8)
-    
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.grid(axis='y', linestyle='--', alpha=0.5)
-    plt.tight_layout()
-    
-    return save_chart_to_image(fig)
+    except Exception as e:
+        print(f"Error creating line chart: {str(e)}")
+        return create_empty_chart("Error displaying hourly data", width, height)
 
 def create_bar_chart(data, bar_colors=None, x_label_key='HallName', width=HALF_WIDTH, height=HALF_HEIGHT):
     """Create a bar chart optimized for side-by-side display."""
+    if not data:
+        return create_empty_chart("No data available", width, height)
+        
     labels = [str(d[x_label_key]) for d in data]
     counts = [d['count'] for d in data]
     
@@ -812,8 +867,6 @@ def create_bar_chart(data, bar_colors=None, x_label_key='HallName', width=HALF_W
         colors = [PRIMARY_COLOR] * len(counts)
 
     bars = ax.bar(labels, counts, color=colors, width=0.6)
-    
-    bars = ax.bar(labels, counts, color=colors, width=0.6)  # Narrower bars
     
     # Only label bars above certain height to reduce clutter
     max_count = max(counts) if counts else 0
@@ -837,57 +890,85 @@ def create_bar_chart(data, bar_colors=None, x_label_key='HallName', width=HALF_W
     return save_chart_to_image(fig)
 
 
-def create_dwell_time_chart(data, gcolors, width=HALF_WIDTH, height=HALF_HEIGHT):
+def create_dwell_time_chart(data, gcolors, width=FULL_WIDTH, height=HALF_HEIGHT):
+    """Create a horizontal bar chart for dwell times."""
     if not data:
         return create_empty_chart("No dwell time data", width, height)
+    
+    try:
+        # Filter out None values and convert to 0
+        valid_data = [{
+            'HallName': str(d.get('HallName', 'Unknown')),
+            'avg_dwell_minutes': float(d.get('avg_dwell_minutes', 0)) or 0
+        } for d in data]
+        
+        hall_names = [d['HallName'] for d in valid_data]
+        dwell_times = [d['avg_dwell_minutes'] for d in valid_data]
 
-    hall_names = [d['HallName'] for d in data]
-    dwell_times = [d['avg_dwell_minutes'] for d in data]
+        if all(time <= 0 for time in dwell_times):
+            return create_empty_chart("No dwell time measurements", width, height)
 
-    fig, ax = plt.subplots(figsize=(width, height))
-    fig.patch.set_facecolor(LIGHT_BG)
-    fig.patch.set_alpha(0.7)
+        fig, ax = plt.subplots(figsize=(width, height))
+        fig.patch.set_facecolor(LIGHT_BG)
+        fig.patch.set_alpha(0.7)
 
-    # Get index of the max dwell time
-    max_idx = dwell_times.index(max(dwell_times))
+        # Ensure we have enough colors
+        if len(gcolors) < len(hall_names):
+            gcolors = [PRIMARY_COLOR] * len(hall_names)
+        
+        # Highlight the longest dwell time
+        highlight_colors = gcolors.copy()
+        if dwell_times:
+            max_idx = dwell_times.index(max(dwell_times))
+            highlight_colors[max_idx] = HIGHLIGHT_COLOR
 
-    # Generate gradient colors
-    gradient_colors = gcolors
+        bars = ax.barh(hall_names, dwell_times, color=highlight_colors, height=0.6)
 
-    # Highlight the bar with the longest dwell time
-    gradient_colors[max_idx] = HIGHLIGHT_COLOR
+        ax.set_xlabel('Average Minutes', labelpad=8, fontsize=9)
+        ax.set_ylabel('Hall', labelpad=8, fontsize=9)
 
-    # Draw horizontal bars
-    bars = ax.barh(hall_names, dwell_times, color=gradient_colors, height=0.6)
+        # Add value labels
+        max_width = max(dwell_times) if dwell_times else 0
+        for bar in bars:
+            width = bar.get_width()
+            if max_width > 0 and width > max_width * 0.1:
+                ax.text(width + (max_width * 0.05),
+                       bar.get_y() + bar.get_height()/2,
+                       f'{width:.1f}',
+                       va='center', ha='left', fontsize=8)
 
-    ax.set_xlabel('Average Minutes', labelpad=8, fontsize=9)
-    ax.set_ylabel('Hall', labelpad=8, fontsize=9)
+        ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
+        plt.xticks(fontsize=8)
+        plt.yticks(fontsize=8)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.grid(axis='x', linestyle='--', alpha=0.5)
+        plt.tight_layout()
 
-    for bar in bars:
-        width = bar.get_width()
-        ax.text(width + 1, bar.get_y() + bar.get_height()/2,
-                f'{width:.1f}', va='center', ha='left', fontsize=8)
+        return save_chart_to_image(fig)
+    
+    except Exception as e:
+        print(f"Error creating dwell time chart: {str(e)}")
+        return create_empty_chart("Error displaying dwell times", width, height)
 
-    ax.xaxis.set_major_locator(plt.MaxNLocator(integer=True))
-    plt.xticks(fontsize=8)
-    plt.yticks(fontsize=8)
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.grid(axis='x', linestyle='--', alpha=0.5)
-    plt.tight_layout()
 
-    return save_chart_to_image(fig)
 
 
 def create_empty_chart(message, width, height):
     """Create placeholder when no data exists."""
     fig, ax = plt.subplots(figsize=(width, height))
     fig.patch.set_facecolor(LIGHT_BG)
+    fig.patch.set_alpha(0.7)
+
+    # Convert hex to RGBA using matplotlib
+    rgba_color = to_rgba(ACCENT_COLOR, alpha=0.5)
+
     ax.text(0.5, 0.5, message, 
             ha='center', va='center', 
-            fontsize=10, color=colors.to_rgba(ACCENT_COLOR, 0.5))
+            fontsize=10, color=rgba_color)
     ax.axis('off')
     return save_chart_to_image(fig)
+
 
 
 def create_gradient_colors(n, color1, color2):
